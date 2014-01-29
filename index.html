@@ -1,0 +1,10 @@
+---
+title: CSS polyfills from the future
+layout: default
+---
+{% for post in site.categories.home %}
+  <section id="{{ post.id | replace_first: '/', '' | replace: '/', '_' | replace: '-', '_' }}">
+    <h1>{{ post.title }}</h1>
+    {{ post.content }}
+  </section>
+{% endfor %}
