@@ -1,2 +1,4 @@
 title: GSS
 permalink: /:categories/:title
+exclude:
+  - "README.md"
