@@ -1,0 +1,25 @@
+---
+title: Documentation
+layout: default
+---
+<h1>{{ page.title }}</h1>
+<section id="guides">
+  <h1>Guides</h1>
+  <ul>
+  {% for post in site.categories.guide %}
+    <li id="{{ post.id | replace_first: '/', '' | replace: '/', '_' | replace: '-', '_' }}">
+      <a href="{{ post.url }}">{{ post.title }}</a>
+    </li>
+  {% endfor %}
+  </ul>
+</section>
+<section id="examples">
+  <h1>Examples</h1>
+  <ul>
+  {% for post in site.categories.example %}
+    <li id="{{ post.id | replace_first: '/', '' | replace: '/', '_' | replace: '-', '_' }}">
+      <a href="{{ post.url }}">{{ post.title }}</a>
+    </li>
+  {% endfor %}
+  </ul>
+</section>
