@@ -35,13 +35,17 @@ section {
    bottom: <= ::parent[bottom]; 
   }
   
-  h1 {
-    font-size: == [title-font-size];
-    top: == ::parent[top] + [top-margin];
-    height: == ::[intrinsic-height];    
+  header {
+    height: == ::[intrinsic-height];
+    top: == ::parent[top] + [top-margin];        
     @horizontal |-[::]-| in(::parent) gap([col-size]);    
+    
     /* bridge vars b/c no floats */
     bottom: == ::parent[title-bottom];
+  }
+  
+  h1 {
+    font-size: == [title-font-size];    
   }
   
   .content {
@@ -70,7 +74,9 @@ p {
 
 {% for post in site.categories.home %}
   <section id="{{ post.id | replace_first: '/', '' | replace: '/', '_' | replace: '-', '_' }}">
-    <h1>{{ post.title }}</h1>
+    <header>
+      <h1>{{ post.title }}</h1>
+    </header>
     <div class="content">{{ post.content }}</div>
   </section>
 {% endfor %}
