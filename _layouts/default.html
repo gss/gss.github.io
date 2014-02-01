@@ -4,6 +4,12 @@
     <meta charset="utf-8">
     <title>{{ page.title }} | {{ site.title }}</title>
     <link rel="shortcut icon" href="/favicon.ico">
+    <script>
+    GSS_CONFIG = {
+      workerURL: "../bower_components/gss/worker/gss-solver.js"
+    }
+    </script>
+    <script src="../bower_components/gss/browser/gss.js" type="text/javascript" charset="utf-8"></script>    
   </head>
   <body>
     {{ content }}

@@ -1,0 +1,17 @@
+{
+  "name": "test",
+  "keywords": [],
+  "description": "Site",
+  "dependencies": {
+    "gss": "git://github.com/the-gss/engine.git"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "docs",
+    "tools"
+  ]
+}

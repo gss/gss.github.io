@@ -2,9 +2,75 @@
 title: CSS polyfills from the future
 layout: default
 ---
+
+<style type="text/gss">
+
+[Wwin] == ::window[width];
+[Hwin] == ::window[height];
+
+@if [Wwin] >= 960 {
+  [baseline] == 36;
+  [top-margin] == [baseline];
+  [col-size] == [Wwin] / 12;
+  [max-p-width] == 800;
+  [title-font-size] == 60;
+  [content-font-size] == 20;
+} @else {
+  [baseline] == 24;
+  [top-margin] == [baseline];
+  [col-size] == [Wwin] / 6;
+  [max-p-width] == [col-size] * 4;
+  [title-font-size] == 40;
+  [content-font-size] == 16;
+}
+
+@vertical section;
+
+section {
+  top: >= ::window[top];
+  height: >= 500;
+  @horizontal |[::]| in(::window);    
+  
+  > * {
+   bottom: <= ::parent[bottom]; 
+  }
+  
+  h1 {
+    font-size: == [title-font-size];
+    top: == ::parent[top] + [top-margin];
+    height: == ::[intrinsic-height];    
+    @horizontal |-[::]-| in(::parent) gap([col-size]);    
+    /* bridge vars b/c no floats */
+    bottom: == ::parent[title-bottom];
+  }
+  
+  .content {
+    font-size: == [content-font-size];
+    line-height: == [baseline];
+    top: == ::parent[title-bottom] + [baseline];
+    height: == ::[intrinsic-height];
+    width: <= [max-p-width];
+    center-x: == ::parent[center-x];
+  }
+  
+}
+
+/* */
+</style>
+
+<style>
+h1 {
+  margin: 0;
+  text-align: center; 
+}
+p {
+  margin: 0;
+}
+</style>
+
 {% for post in site.categories.home %}
   <section id="{{ post.id | replace_first: '/', '' | replace: '/', '_' | replace: '-', '_' }}">
     <h1>{{ post.title }}</h1>
-    {{ post.content }}
+    <div class="content">{{ post.content }}</div>
   </section>
 {% endfor %}
