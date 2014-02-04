@@ -1,0 +1,37 @@
+<style>
+#spaceman {
+  background-image:url('assets/images/spaceman-purple.png');
+  background-size:contain;
+  opacity: .5;
+}
+</style>
+<style type="text/gss">
+  #spaceman {
+    width:  <= 267;
+    height: <= 604;
+    center-y: == ::parent[center-y];
+  }
+  #{{ post.uid }} {
+    @if [Wwin] >= [breakpoint1] {
+      p, blockquote {
+        padding-left: == 2 * [col-size];
+      }
+      #spaceman {
+        right: == ::parent[content-left] + [col-size];
+      }
+    }
+    @else {
+      blockquote {
+       padding-left: == [baseline];
+     }
+      p {
+        padding-left: == 0;
+      }
+      #spaceman {
+        right: == ::parent[content-left];
+      }
+    }
+  }
+</style>
+
+<div id="spaceman" class="trans"></div>

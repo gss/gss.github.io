@@ -1,4 +1,6 @@
 title: GSS
 permalink: /:categories/:title
+pygments: true
+markdown: redcarpet
 exclude:
   - "README.md"
