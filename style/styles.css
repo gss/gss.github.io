@@ -1,0 +1,126 @@
+.app-not-ready body {
+  opacity: 0;
+}
+
+.app-ready body {
+  opacity: 1;
+}
+
+body {
+  text-decoration: none;
+  font-family: "museo-sans",sans-serif;
+  font-style: normal;
+  font-weight: 300;
+}
+em {
+  font-family: "museo-sans",sans-serif;
+  font-style: italic;
+  font-weight: 500;
+}
+header {
+  text-align: center;
+  font-family: "ltc-bodoni-175",serif;
+  font-style: normal;
+  font-weight: 400;
+}
+h1, h2, h3, h4, h5 {
+  margin: 0;
+  font-weight: normal;
+}
+h2 {
+  font-family: "ltc-bodoni-175",serif;
+  font-style: italic;
+  font-weight: 400;
+}
+.content h2 {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-style: normal;
+  text-align: center;
+  border-bottom: solid 1px hsl(58, 100%, 85%);
+  padding: 1em;
+}
+h1 {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.content ul {  
+  -webkit-column-count: 3;
+     -moz-column-count: 3;
+          column-count: 3;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+div, p, blockquote {
+  margin: 0;
+}
+blockquote {
+  font-family: "kepler-std",serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.2em;
+  line-height: 1.6em;
+}
+ul, ol, li { 
+  margin: 0;
+}
+
+
+.trans {
+  -webkit-transition: -webkit-transform 2s;
+      transition:transform 2s;
+}
+
+
+
+a {
+  color: hsl(282, 99%, 31%);
+  text-decoration: none;  
+}
+
+.color-a { /* yellow bg */
+  background-color: hsl(58, 100%, 84%);  
+  color: hsl(282, 99%, 31%);
+} 
+#top-section.color-a {
+  background-image:      
+    url('../assets/images/gss-didot-white.svg'),
+    url('../assets/images/pug-purple-on-yellow.jpg');
+  background-position: 
+    center center,
+    center center;
+  background-repeat: 
+    no-repeat,
+    no-repeat;
+  /*background-size: 
+    calc(100% - 72),
+    547px 623px;*/
+}
+
+.color-b { /* white bg */
+  background-color: hsl(58, 100%, 100%); 
+  color: hsl(282, 99%, 31%);
+} 
+.color-b p, li {
+  color: hsl(282, 0%, 30%);
+}
+.color-b blockquote {
+  padding: 36px;
+  border: solid 8px hsl(58, 100%, 84%);
+  font-style: italic;
+}
+
+.color-c {
+  background-color: #d692f3;
+  color: black;
+} .color-c 
+
+blockquote {
+  color: white;
+}
+
+

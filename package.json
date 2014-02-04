@@ -1,0 +1,34 @@
+{
+  "name": "gridstylesheets.org",
+  "description": "GSS website",
+  "version": "0.1.0",
+  "author": {
+    "name": "Dan Tocchini",
+    "email": "d4@rituwall.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/the-gss/the-gss.github.io"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "undefined/blob/master/LICENSE-MIT"
+    }
+  ],
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-coffee": "~0.6.6",
+    "chai": "~1.5.0",
+    "mocha": "~1.9.0",
+    "grunt-contrib-uglify": "~0.2.0",
+    "grunt-exec": "~0.4.2",
+    "component": "~0.17.6",
+    "grunt-contrib-watch": "~0.3.1",
+    "grunt-combine": "~0.8.3"
+  },
+  "keywords": [],
+  "scripts": {
+    "test": "grunt test"
+  }
+}
