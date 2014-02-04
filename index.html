@@ -40,7 +40,8 @@ layout: default
   height: == [Hwin] - [baseline] * 2 !strong100;
   
   header {
-    bottom: == ::parent[bottom] - [bottom-margin] !require;            
+    bottom: == ::parent[bottom] !require;
+    padding-bottom: == [bottom-margin] / 2;
   }
 }
 
@@ -91,16 +92,23 @@ section {
   
 }
 
-#home_constraint_css .content {
-  -webkit-column-count: == 2;
-  -webkit-column-gap: == [col-size];
-}
+
 
 /* */
 </style>
 
 
 <section id="top-section" class="color-a">
+  <style>
+  #top-section header {
+   padding-top: 1em; 
+   background-color: hsla(58, 100%, 84%,.8);
+  }
+    
+  
+  
+  
+  </style>
   <header>
     <h1>CSS Polyfills</h1>
     <h2>from the future</h2>
