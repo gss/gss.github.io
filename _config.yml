@@ -4,3 +4,4 @@ pygments: true
 markdown: redcarpet
 exclude:
   - "README.md"
+  - "Gruntfile.coffee"
