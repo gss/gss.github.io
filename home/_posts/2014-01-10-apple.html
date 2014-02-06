@@ -5,16 +5,14 @@ subtitle: Try to do this with CSS
 color: c
 ---
 
-Let's say we have a `#panel` and four buttons, `#b1`, `#b2`, `#b3` and `#b4`.  We want the panel to `#panel` be in the middle of the screen and we want `#b3` to strongly prefer to be in middle of the panel unless it gets too close to the other buttons, and we want the other buttons to align horizontally separated by a gap.  
-
-This sort of layout problem quickly becomes verbose.  Apple had...
+Let's say we have a `#panel` and four buttons, `#b1`, `#b2`, `#b3` and `#b4`.  We want the panel to `#panel` be in the middle of the screen and we want `#b3` to strongly prefer to be in middle of the panel unless it gets too close to the other buttons, and we want the other buttons to align horizontally separated by a gap of 8px. 
 
 {% highlight css %}
 #panel[center-x] == ::window[center-x];
 
 #b3[center-x] == #panel[center-x] !strong;
 
-@horizontal |-[#b1]-[#b2]~-~[b3]~-~[#b]-| in(#panel) gap(16);
+@horizontal |-[#b1]-[#b2]~-~[b3]~-~[#b]-| in(#panel) gap(8);
 {% endhighlight %}
 
-...
+WIP...

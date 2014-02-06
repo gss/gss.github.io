@@ -1,0 +1,25 @@
+---
+uid: ifelse
+title: @if @else
+subtitle: Responsive to any prop w/o media queries
+color: a
+---
+
+WIP...
+
+{% highlight css %}
+
+@if #panel[width] >= 500 {
+  @horizontal .item;  
+  #button {
+    font-size: == 18;
+  }
+}
+@else {
+  @vertical .item;
+  #button {
+    font-size: == 14;
+  }
+}
+
+{% endhighlight %}
