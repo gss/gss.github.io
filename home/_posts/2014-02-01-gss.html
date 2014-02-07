@@ -6,6 +6,10 @@ color: b
 include: spaceman.html
 ---
 
+<blockquote>
+<strong>WARNING:</strong> This site is currently under heavy development, but left open to garner feedback and start the conversation.  Please direct bugs or suggestions <a style="font-weight:bold;" href="https://github.com/the-gss/the-gss.github.io/issues">here</a>.
+</blockquote>
+
 <p>
   CSS was designed to decouple presentation &amp; content, but even with Flexbox, a trivial change in layout can require manic HTML reshuffling.  The CSS layout primitives are inadequate; it doesn't really matter that some div is 720px wide - what matters is how it relates to other elements in the layout.  WTF, why can't we position &amp; size elements relative to each other, not just relative to their positioned parents?  Because "cyclic dependencies" would naturally arise... Sounds like a classic constraint satisfaction problem - JavaScript to the rescue!
 </p>
@@ -14,7 +18,7 @@ include: spaceman.html
 "GSS levels up CSS with Relative Positioning &amp; Sizing, True Source-Order Independence, ..."
 </blockquote>
 
-GSS is a CSS preprocessor &amp; JS runtime that harnesses [Cassowary.js](https://github.com/slightlyoff/cassowary.js), the JS port of the same constraint solving algorithm Apple uses in [Cocoa Autolayout](https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/VisualFormatLanguage/VisualFormatLanguage.html) for iOS &amp; OS X, to rectify CSS's most vexing problems.  GSS levels up CSS with Relative Positioning &amp; Sizing, True Source Order Independence and Weighted Inequality Constraints.  GSS polyfills (with a pinch of sugar) Apple's [Visual Format Language (VFL)](https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/VisualFormatLanguage/VisualFormatLanguage.html) and Greg Badros's [Constraint CSS (CCSS)](http://citeseer.ist.psu.edu/viewdoc/summary?doi=10.1.1.101.4819).  
+GSS is a CSS preprocessor &amp; JS runtime that harnesses [Cassowary.js](https://github.com/slightlyoff/cassowary.js), the JS port of the same constraint solving algorithm Apple uses in [Cocoa Autolayout](https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/VisualFormatLanguage/VisualFormatLanguage.html) for iOS &amp; OS X.  GSS levels up CSS with Relative Positioning &amp; Sizing, True Source Order Independence and Weighted Inequality Constraints.  GSS polyfills (with a pinch of sugar) Apple's [Visual Format Language (VFL)](https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/VisualFormatLanguage/VisualFormatLanguage.html) and Greg Badros's [Constraint CSS (CCSS)](http://citeseer.ist.psu.edu/viewdoc/summary?doi=10.1.1.101.4819).  
 
 Because it would be against the spirit of our enterprise to do otherwise - GSS allows for nested rules (like SASS & Less) & custom constraint variables, uses webworkers & harware accelerated matrix3d transforms when available, and replaces media queries with `@if` & `@else` directives that allow not only a layout to adapt to the window size, but individual elements to adapt to any condition.  No jQuery here, only dependencies are Cassowary.js and the lightweight [GlMatrix](http://glmatrix.net/).  This site was designed with GSS.
 
