@@ -1,0 +1,273 @@
+---
+uid: vfl
+title: Grid-Flavored VFL
+subtitle: Visual Format Language
+color: b
+---
+
+<style>
+.vfl-small-img {
+  float: right;
+}
+</style>
+
+With only inequality constraints at your disposal, constraining common layout scenarios quickly becomes tedious.  To horizontally align 4 buttons within a panel with a gap of 10px requires something like:
+
+{% highlight css %}
+#panel[left] + 10 == #button1[left];
+#button1[right] + 10 == #button2[left];
+#button2[right] + 10 == #button3[left];
+#button4[right] + 10 == #button4[left];
+#panel[right] - 10 == #button4[right];
+{% endhighlight %}
+
+Not to mention the obligatory size & vertical constraints needed to fully specify the panel and buttons - ugh...  
+
+This is where Grid-flavored VFL comes in.  The brains at Apple came up with VFL as a more programatic way to install constraints in Cocoa AutoLayout.  The idea is rather simple, the syntax should visually depict the layout.  GSS takes the good parts of VFL and makes it more suitable for CSS, and throws in some sugar, and drops the cruft.  So the above example of 4 buttons in a panel becomes:
+
+{% highlight css %}
+@horizontal |-[#button1]-[#button2]-[#button3]-[#button4]-| in(#panel) gap(10);
+
+/* which is the same as */
+
+@horizontal |-10-[#button1]-10-[#button2]-10-[#button3]-10-[#button4]-10-| in(#panel);
+
+/* which is the same, assuming we're using button tags, as */
+
+@horizontal button in(#panel) gap(10);
+{% endhighlight %}
+
+## Basics
+
+Horizontal layouts can be created with the CSS directive `@horizontal` or `@-gss-horizontal`.  
+
+Vertical layouts with the CSS directive `@vertical` or `@-gss-vertical`.
+
+An element is queried within square brackets, and a `connection` between elements is represented using a hyphen (or two hyphens separated by a number to represent the number of pixels apart the views should be).  Similarly, a `cushion` between elements is made with a tilda.
+
+Internally, GSS compiles VFL into CCSS (in)equality constraints, so after each VFL example the compiled CCSS is included.
+
+## Connections
+
+Two elements can be connected without any gap:
+
+<img class="vfl-small-img" src="../../assets/images/vfl/flushViews.png" width="99" height="20" alt="FlushViews">
+
+{% highlight css %}
+/* VFL */
+@horizontal [#maroon][#blue];
+
+/* Equivalent CCSS */
+#maroon[right] == #blue[left];
+{% endhighlight %}
+
+
+Whenever a hyphen, without an explicit number, is used to make a connection as with:
+
+<img class="vfl-small-img" src="../../assets/images/vfl/standardSpace.png" width="215" height="23" alt="StandardSpace">
+
+{% highlight css %}
+/* VFL */
+@horizontal [#button]-[#textField] gap(8);
+/* or */
+@horizontal [#button]-8-[#textField];
+
+/* Equivalent CCSS */
+#button[right] + 8 == #textField[left];
+{% endhighlight %}
+
+If no `gap()` is defined, but a hyphen is used to make a connection then a `standard gap` variable is created,
+
+{% highlight css %}
+/* VFL */
+@horizontal [#button]-[#textField];
+@vertical [#button]-[#textField];
+
+/* Equivalent CCSS */
+#button[right] + [hgap] == #textField[left];
+#button[bottom] + [vgap] == #textField[top];
+{% endhighlight %}
+
+The `[hgap]` & `[vgap]` variables can be used like normal variables, and again like all constraint variables are globally scoped.
+
+User defined variables can be used for gaps as well:
+
+{% highlight css %}
+/* VFL */
+@horizontal [#box1]-[#box2] gap([col-gap]);
+
+/* Equivalent CCSS */
+#box1[right] + [col-gap] == #box2[left];
+{% endhighlight %}
+
+{% highlight css %}
+/* VFL */
+@horizontal [#b1]-100-[#b2]-[#b3]-[#b4] gap(#box1[width]);
+
+/* Equivalent CCSS */
+#b1[right] + 100 == #b2[left];
+#b2[right] + #box1[width] == #b3[left];
+#b3[right] + #box1[width] == #b4[left];
+{% endhighlight %}
+
+## Cushions
+
+Cushions are similar to connections, only they use inequality instead of equality constraints. 
+
+{% highlight css %}
+/* VFL */
+@horizontal [#box1]~[#box2];
+
+/* Equivalent CCSS */
+#box1[right] <= #box2[left];
+{% endhighlight %}
+
+{% highlight css %}
+/* VFL */
+@vertical [#box1]~100~[#box2];
+
+/* Equivalent CCSS */
+#box1[bottom] + 100 <= #box2[top];
+{% endhighlight %}
+
+{% highlight css %}
+/* VFL */
+@horizontal [#box1]~-~[#box2];
+@vertical [#box3]~-~[#box4];
+
+/* Equivalent CCSS */
+#box1[right] + [hgap] <= #box2[left];
+#box3[bottom] + [vgap] <= #box4[top];
+{% endhighlight %}
+
+## Containment
+
+<img class="vfl-small-img" src="../../assets/images/vfl/connectionToSuperview.png" width="152" height="32" alt="ConnectionToSuperview">
+
+{% highlight css %}
+/* VFL */
+@horizontal |-50-[#purple-box]-50-| in(#container);
+
+/* Equivalent CCSS */
+#container[left] + 50 == #purple-box[left];
+#container[right] - 50 == #purple-box[right];
+{% endhighlight %}
+
+{% highlight css %}
+/* VFL */
+@vertical |[#sub]| in(#parent);
+
+/* Equivalent CCSS */
+#parent[top] == #sub[top];
+#sub[bottom] == #parent[bottom];
+{% endhighlight %}
+
+## Size Predicates
+
+<img class="vfl-small-img" src="../../assets/images/vfl/priority.png" width="102" height="40" alt="Priority">
+
+{% highlight css %}
+/* VFL */
+@horizontal [#button(100)];
+
+/* Equivalent CCSS */
+#button[width] == 100;
+{% endhighlight %}
+
+<img class="vfl-small-img" src="../../assets/images/vfl/equalWidths.png" width="194" height="41" alt="EqualWidths">
+
+{% highlight css %}
+/* VFL */
+@horizontal [#button1(==#button2)];
+/* or */
+@horizontal [#button1(==#button2[width])];
+
+/* Equivalent CCSS */
+#button1[width] == #button2[width];
+{% endhighlight %}
+
+<img class="vfl-small-img" src="../../assets/images/vfl/multiplePredicates.png" width="101" height="57" alt="MultiplePredicates">
+
+{% highlight css %}
+/* VFL */
+@horizontal [#flexibleButton(>= 70, <= 100))];
+
+/* Equivalent CCSS */
+#flexibleButton[width] >= 70;
+#flexibleButton[width] <= 100;
+{% endhighlight %}
+
+<img class="vfl-small-img" src="../../assets/images/vfl/completeLayout.png" width="315" height="27" alt="CompleteLayout">
+
+{% highlight css %}
+/* VFL */
+@horizontal |-24-[#find]-[#findNext]-[#findField(>=30)]-24-| in(#popup);
+
+/* Equivalent CCSS */
+#popup[left] + 24 == #find[left];
+#find[right] + [hgap] == #findNext[left];
+#findField[width] >= 30;
+#findNext[right] + [hgap] == #findField[left];
+#findField[right] + 24 == #popup[right];
+{% endhighlight %}
+
+## VFL Strength & Weight
+
+<img class="vfl-small-img" src="../../assets/images/vfl/verticalLayout.png" width="96" height="54" alt="VerticalLayout">
+
+{% highlight css %}
+/* VFL */
+@vertical [#topfield]-10-[#bottomfield] !strong100;
+
+/* Equivalent CCSS */
+#topfiled[bottom] + 10 == #bottomfield[top] !strong100;
+{% endhighlight %}
+
+{% highlight css %}
+/* VFL */
+@vertical [#box1(>= [row-height] !require, == 20 !strong)][#box2][#box3] !medium;
+
+/* Equivalent CCSS */
+#box1[height] == 20 !strong;
+#box1[height] >= [row-height] !require;
+#box1[bottom] == #box2[top] !medium;
+#box2[bottom] == #box3[top] !medium;
+{% endhighlight %}
+
+## VFL Chains
+
+{% highlight css %}
+/* VFL */
+@horizontal [#b1][#b2] chain-height chain-width(250);
+
+/* Equivalent CCSS */
+#b1[right] == #b2[left];
+#b1[height] == #b2[height];
+#b1[width] == 250 == #b2[width];
+{% endhighlight %}
+
+{% highlight css %}
+/* VFL */
+@vertical |-8-[#b1][#b2]-8-| 
+  in(#panel) 
+  chain-center-x(#panel[centerX] !required) 
+  chain-width(>= 50 <= !weak10);
+
+/* Equivalent CCSS */
+#panel[top] + 8 == #b1[top];
+#b1[bottom] == #b2[top];
+#b2[bottom] + 8 == #panel[bottom];
+#b1[centerX] == #panel[center-x] == #b2[center-x] !required;
+#b1[width] >= 50 <= #b2[width] !weak10;
+{% endhighlight %}
+
+## Plural selectors
+
+{% highlight css %}
+/* VFL */
+@horizontal .hbox;
+@vertical   .vbox;
+
+{% endhighlight %}
+
+WIP...

@@ -1,0 +1,25 @@
+---
+uid: rel_pos_size
+title: Relative Positioning & Sizing
+subtitle: Center stuff w/ a 1-liner...
+color: c
+include: demo-idevices.html
+---
+
+Notice how you naturally would describe the nearby layout of iOS devices:
+
+<blockquote>
+"Horizontally center the devices, & the bottom of the iPhone &amp; iPad should be equal."
+</blockquote>
+
+With GSS, the syntax is true to our intentions:
+
+{% highlight css %}
+
+#iphone[center-x] == #ipad[center-x];
+#iphone[bottom] == #ipad[bottom];
+
+{% endhighlight %}
+
+
+

@@ -1,0 +1,106 @@
+---
+uid: client-use
+title: Client-side
+layout: default
+color: b
+---
+
+<strong>WARNING:</strong> This site is currently under heavy development, but left open to garner feedback and start the conversation.  Please direct bugs or suggestions to the issues list on <a style="font-weight:bold;" href="https://github.com/the-gss/">one of our repos</a>  
+</blockquote>
+
+## Installation
+
+GSS will go parallel with [Web Workers](http://www.html5rocks.com/en/tutorials/workers/basics/) when the browser supports it.  Thus, you need two JS files to get started; `gss.js` & it's helpful `worker.js`.  Use the `GSS_CONFIG` object to set worker URL.
+
+If you download via Bower:
+
+{% highlight javascript %}
+$ bower install gss
+{% endhighlight %}
+
+Use the following:
+
+{% highlight html %}
+<script>
+  GSS_CONFIG = {
+    worker: "../bower_components/gss/dist/worker.js"
+  }
+</script>
+<script src="../bower_components/gss/dist/gss.js"></script>
+{% endhighlight %}
+
+Otherwise, clone the [github repo](https://github.com/the-gss/engine) or [download most recent build](http://gridstylesheets.s3.amazonaws.com/dist.zip).
+
+**IMPORTANT** worker URL must be configured!
+
+## Usage
+
+To load your `.gss` stylesheets, just add `type=text/gss`:
+
+{% highlight html %}
+<link rel="stylesheet" type="text/gss" href="my-awesome-styles.gss"></link>
+{% endhighlight %}
+
+Likewise, inline GSS works with a simple `type="text/gss"`:
+
+{% highlight html %}
+<style type="text/gss">
+
+  /* Your GSS */
+
+</style>
+{% endhighlight %}
+
+
+## Configuration
+
+Options can be given on the following global object before the `<script src="gss.js"></script>`:
+
+{% highlight html %}
+<script>
+GSS_CONFIG = {
+  
+  /* Cassowary defaults */
+  defaultStrength: 'required', // 'weak', 'medium', 'strong' 
+  defaultWeight: 0,
+  
+  /* Web Worker */
+  worker: '../dist/worker.js', 
+  useWorker: !!window.Worker,
+  
+  /* Mutation Observers */
+  observe: true,      
+  observerOptions: { 
+    subtree: true,
+    childList: true,
+    attributes: true,
+    characterData: true
+  },    
+  
+  /* Round all computed props,
+  good for text, bad for accuracy */
+  roundBeforeSet: false,
+  
+  /* Callback to process variables
+  bevore setting to DOM */
+  processBeforeSet: null,
+  
+  useOffsetParent: true,
+  maxDisplayRecursionDepth: 30,
+    
+  /* ::window */
+  resizeDebounce: 32, /* ms */
+  
+  /* Logging */
+  debug: false,
+  warn: false,
+  perf: false
+  
+};
+</script>
+<script src="gss.js"></script>
+{% endhighlight %}
+
+
+
+
