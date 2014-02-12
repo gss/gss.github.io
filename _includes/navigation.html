@@ -32,20 +32,26 @@
     -moz-transform: translateY(0px);
     transform: translateY(0px);
   }
+  .app-show-menu #nav {
+    -webkit-transform: translateY(0px) !important;
+       -moz-transform: translateY(0px) !important;
+            transform: translateY(0px) !important;
+  }
 </style>
 
 <div id="nav" class="trans">
-  
-  <svg id="badge" class="badge-icon trans" 
-  	 width="45.142px" height="48px" version="1.1" xmlns="http://www.w3.org/2000/svg" baseProfile="full">
-  <g>
-  	<path d="M11.991,34.812l10.595,2.902l10.453-2.874l1.185-13.159l-11.638-0.001v5.193h6.06l-0.425,3.959l-5.636,1.508l-5.777-1.536
-  		l-1.454-17.127h7.242v0.002h7.356l-0.317,4.251h4.954l0.842-9.353H22.626V8.575H9.719L11.991,34.812z M0,0l4.279,42.998L21.951,48
-  		l18.912-5.002L45.142,0H0z M36.765,39.919l-14.814,3.634L8.036,39.235L4.44,3.992h36.263L36.765,39.919z"/>
-  </g>
-  </svg>
+  <a href="/">
+    <svg id="badge" class="badge-icon trans" 
+    	 width="45.142px" height="48px" version="1.1" xmlns="http://www.w3.org/2000/svg" baseProfile="full">
+    <g>
+    	<path d="M11.991,34.812l10.595,2.902l10.453-2.874l1.185-13.159l-11.638-0.001v5.193h6.06l-0.425,3.959l-5.636,1.508l-5.777-1.536
+    		l-1.454-17.127h7.242v0.002h7.356l-0.317,4.251h4.954l0.842-9.353H22.626V8.575H9.719L11.991,34.812z M0,0l4.279,42.998L21.951,48
+    		l18.912-5.002L45.142,0H0z M36.765,39.919l-14.814,3.634L8.036,39.235L4.44,3.992h36.263L36.765,39.919z"/>
+    </g>
+    </svg>
+  </a>
 
-  <svg id="menu-icon" class="badge-icon trans" 
+  <!--svg id="menu-icon" class="badge-icon app-menu-trigger trans" 
   	 width="45.142px" height="48px" version="1.1" xmlns="http://www.w3.org/2000/svg" baseProfile="full">
   <g>
     <polygon points="3.071,26 3.574,31 41.568,31 42.071,26 "/>
@@ -53,6 +59,7 @@
     <polygon points="2.571,16 3.064,21 42.078,21 42.571,16 "/>
     <polygon points="1.571,7 2.066,12 43.076,12 43.571,7 "/>
   </g>
+  </svg-->
   
 </div>
 
@@ -60,46 +67,37 @@
 
 <style type="text/gss">
   
+
+  
   #toc {
-    height: == ::window[height];
-    width:  == ::window[width];    
-    x: == 0;
-    y: == 0;
+    height: == [Hwin] !require;
+    width:  == [Wwin] !require;    
+    x: == 0 !require;
+    y: == 0 !require;
   }
   
-  @horizontal [#toc-link1]-[#toc-link2]-[#toc-link3]
-    gap([toc-link-gap])
-    chain-center-y(#badge[center-y]);
-  
-  [toc-link-gap] >= 16;
-  [toc-link-gap] == [col-size]!strong;
-  
-  #toc-link2 {
-    center-x: == #toc[center-x] !strong;
-  }
-  .toc-link {
-    height: == ::[intrinsic-height];
-    width: == ::[intrinsic-width];
-    font-size: == [content-font-size];
-  }
   
   /* */
-  
+    
   @vertical .toc-section 
     gap([baseline]);
   
   .toc-section {
-    top: >= 0 !strong;
-    height: == ::[intrinsic-height];
-    width: == ::[intrinsic-width];
+    top: >= 0 !require;
+    height: == ::[intrinsic-height] !require;
     center-x: == #toc[center-x] !strong;
   }
+  
+  .toc-section-middle[center-y] == #toc[center-y];
+  
+  
   
   /* */
   
   @vertical [#toc-links][#toc-sections(>=0)];
   
   /* */
+
 </style>
 <style>
 
@@ -107,61 +105,63 @@
     position: fixed !important;
     z-index: 90;
     top: 0;
+    bottom: 0;
     left: 0;
   }
+  #toc-layer {
+    -webkit-transform: translateY(-110%);
+       -moz-transform: translateY(-110%);
+            transform: translateY(-110%);
+    -webkit-transition: -webkit-transform 0.3s;
+       -moz-transition: -moz-transform 0.3s;
+            transition: transform 0.3s;
+  }
+  .app-show-menu #toc-layer {
+    -webkit-transform: translateY(0px);
+       -moz-transform: translateY(0px);
+            transform: translateY(0px);
+  }
   #toc {
-    background-color: white;
+    position: fixed !important;
+    z-index: 90;    
+    background-color: hsl(282, 99%, 31%);
+    -webkit-transition: background-color 0.3s;
+       -moz-transition: background-color 0.3s;
+            transition: background-color 0.3s;
+  }
+  .app-show-menu #toc {
+    background-color: hsl(160, 56%, 88%);
   }
   .toc-link {
     text-align: center;    
   }
-  .toc-sections {
+  .toc-section {
     text-align: center;
+    color: hsl(282, 99%, 31%);
   }
 
 </style>
 
 <div id="toc-layer">
   <nav id="toc">
-    <ul id="toc-links">
-      <li id="toc-link1" class="toc-link"><a href="/">Usage</a></li>
-      <li id="toc-link2" class="toc-link"><a href="/documentation/">Github</a></li>
-      <li id="toc-link3" class="toc-link"><a href="/documentation/">Support</a></li>    
-    </ul>
     <ul id="toc-sections">
-      <li class="toc-section-head"><a href="/">Guides</a></li>
       <li class="toc-section">
-        <h1><a href="/">Constraint CSS</a></h1>
+        <h1><a href="https://github.com/the-gss/">Github</a></h1>
       </li>
       <li class="toc-section">
-        <h1><a href="/documentation/">Visual Format Language</a></h1>
+        <h1><a href="/usage/">Usage</a></h1>
       </li>
       <li class="toc-section">
-        <h1><a href="/documentation/">@if Responsive @else</a></h1>
+        <h1><a href="/">About</a></h1>
+      </li>
+      <li class="toc-section toc-section-middle">
+        <h1><a href="/#c_101">CCSS</a></h1>
       </li>
       <li class="toc-section">
-        <h1><a href="/documentation/">New Pseudo Selectors</a></h1>
+        <h1><a href="/documentation/">VFL</a></h1>
       </li>
       <li class="toc-section">
-        <h1><a href="/documentation/">Scoped Styles</a></h1>
-      </li>
-      <li class="toc-section">
-        <h1><a href="/documentation/">GSS Architecture</a></h1>
-      </li>
-      <li class="toc-section">
-        <h1><a href="/documentation/">Cassowary Constraint Solver</a></h1>
-      </li>
-      <li class="toc-section">
-        <h1><a href="/documentation/">Gotchas</a></h1>
-      </li>
-      <li class="toc-section">
-        <h1><a href="/documentation/">Simulating Flexbox</a></h1>
-      </li>
-      <li class="toc-section">
-        <h1><a href="/documentation/">Simulating size:cover</a></h1>
-      </li>
-      <li class="toc-section">
-        <h1><a href="/documentation/">GSS: The Hardcore Parts</a></h1>
+        <h1><a href="/documentation/">@if @else</a></h1>
       </li>
     </ul>
   </nav>

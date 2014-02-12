@@ -15,10 +15,9 @@ layout: default
   }
     
   </style>
-  <header>
-    <h1>CSS Polyfills</h1>
-    <h2>from the future</h2>
-  </header>
+  
+  <button id="top-button1"><a href="/usage">Install</a></button>
+  
 </section>
 
 {% for post in site.categories.home %}
@@ -26,7 +25,7 @@ layout: default
     {% if post.title %}
     <header>
       <h1>{{ post.title }}</h1>
-      <h2>{{ post.subtitle }}</h2>
+      <h2 class="subtitle">{{ post.subtitle }}</h2>
     </header>
     {% endif %}
     <div class="content">
@@ -42,7 +41,7 @@ layout: default
 <section id="grid-section" class="color-a">
   <header>
     <h1>Made with ♥ by the Grid</h1>
-    <h2>Open source b/c we believe</h2>
+    <h2 class="subtitle">Open source b/c we believe</h2>
   </header>
   <div class="content">
     <p>

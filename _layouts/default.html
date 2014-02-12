@@ -15,11 +15,12 @@
     
     {% include analytics.html %}
     
-    <script src="/js/script.js"></script>    
+    <script src="/js/script.js"></script>
+    <script src="/js/vendor/classie.js"></script>    
     <script>
     GSS_CONFIG = {
       worker: "/bower_components/gss/dist/worker.js",
-      defaultStrength: "weak"
+      defaultStrength: "medium"
     }
     </script>
     <script src="/bower_components/gss/dist/gss.js"></script>        
@@ -34,35 +35,49 @@
 
     @if [Wwin] >= [breakpoint1] {
       [baseline] == 30 !require;
-      [top-margin] == [baseline] * 4;
-      [bottom-margin] == [baseline] * 4;
+      [top-margin] == [baseline] * 4 !require;
+      [bottom-margin] == [baseline] * 4 !require;
       [col-size] == [Wwin] / 12 !strong;
       [col-size] <= 72 !require;
       [max-p-width] == 720 !require;
-      [title-font-size] == 55;
-      [subtitle-font-size] == 24;
-      [content-font-size] == 20;
-  
+      [title-font-size] == 65 !require;
+      [subtitle-font-size] == 18 !require;
+      [content-font-size] == 20 !require;
+      [button-font-size] == 26 !require;
     } @else {
       [baseline] == 24 !require;
-      [top-margin] == [baseline] * 3;
-      [bottom-margin] == [baseline] * 2;
-      [col-size] == [Wwin] / 6;
-      [max-p-width] == [col-size] * 4;
-      [title-font-size] == 30;
-      [subtitle-font-size] == 18;
-      [content-font-size] == 16;
+      [top-margin] == [baseline] * 3 !require;
+      [bottom-margin] == [baseline] * 2 !require;
+      [col-size] == [Wwin] / 6 !require;
+      [max-p-width] == [col-size] * 4 !require;
+      [title-font-size] == 35 !require;
+      [subtitle-font-size] == 14 !require;
+      [content-font-size] == 16 !require;
+      [button-font-size] == 20 !require;
     }
-
+    
+    button {
+      font-size: == [button-font-size];
+    }
+    
     @vertical section;
-
+    
+    #top-button1 {
+      center-x: == ::parent[center-x] !require;
+      height: == ::[intrinsic-height] !require;
+      width: == ::[intrinsic-width] !require;
+      bottom: == ::parent[bottom] - [bottom-margin] !require;
+    }
     #top-home-section {
       height: == [Hwin] - [baseline] * 2 !strong100;
-  
+      
       header {
-        bottom: == ::parent[bottom] !strong100;
-        padding-bottom: == [bottom-margin] / 2;
+        bottom: == ::parent[bottom] - [bottom-margin] / 2 !require;
       }
+    }
+    
+    .top-section {      
+      height: >= 0;      
     }
     
     /*
@@ -80,7 +95,7 @@
   
       header {
         
-        height: == ::[intrinsic-height];
+        height: == ::[intrinsic-height] !require;
         top: == ::parent[top] + [top-margin] !strong;        
         @horizontal |-[::]-| in(::parent) gap([col-size]);    
     
@@ -93,7 +108,7 @@
       }
   
       .content h2 {
-        font-size: == [subtitle-font-size] * 1.3;
+        font-size: == [subtitle-font-size] * 1.9;
         padding: == [baseline];
         margin-top: == [baseline] * 2;
       }
@@ -101,7 +116,7 @@
       h1 {
         font-size: == [title-font-size];
         margin-bottom: == [baseline] / 2;
-      }  
+      }
   
       .content {
         bottom: <= ::parent[bottom] - [bottom-margin] !medium;

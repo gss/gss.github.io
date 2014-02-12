@@ -1,3 +1,9 @@
+*, *:after, *::before {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
 .app-not-ready body {
   opacity: 0;
 }
@@ -6,15 +12,48 @@
   opacity: 1;
 }
 
-#toc-layer {
-  display:none;
-}
+
 
 ul, menu, dir {
   list-style-type: none;
   list-style: none;
   margin: 0;
   padding: 0;
+}
+.content a {
+  position: relative;
+}
+.content a::after {
+opacity: 0;
+-webkit-transition: top 0.3s, opacity 0.3s, -webkit-transform 0.3s;
+   -moz-transition: top 0.3s, opacity 0.3s, -moz-transform 0.3s;
+        transition: top 0.3s, opacity 0.3s, transform 0.3s;
+}
+.content a::before, 
+.content a::after {
+position: absolute;
+top: 110%;
+left: 0;
+width: 100%;
+height: 2px;
+background: hsl(282, 99%, 41%);
+opacity: .1;
+content: '';
+-webkit-transition: opacity 0.3s, -webkit-transform 0.3s;
+   -moz-transition: opacity 0.3s, -moz-transform 0.3s;
+        transition: opacity 0.3s, transform 0.3s;
+-webkit-transform: scale(0.95);
+-moz-transform: scale(0.95);
+transform: scale(0.95);
+}
+.content a:hover::before, 
+.content a:hover::after, 
+.content a:focus::before, 
+.content a:focus::after {
+opacity: .3;
+-webkit-transform: scale(1.1);
+-moz-transform: scale(1.1);
+transform: scale(1.1);
 }
 
 body {
@@ -28,9 +67,9 @@ em {
   font-style: italic;
   font-weight: 500;
 }
-header {
+header, h1 {
   text-align: center;
-  font-family: "ltc-bodoni-175",serif;
+  font-family: "adelle", georgia,serif;
   font-style: normal;
   font-weight: 400;
 }
@@ -39,19 +78,22 @@ h1, h2, h3, h4, h5 {
   font-weight: normal;
 }
 h2 {
-  font-family: "ltc-bodoni-175",serif;
-  font-style: italic;
+  font-family: "adelle", georgia,serif;
   font-weight: 400;
 }
-.content h2 {
+.subtitle {
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: .16em;  
+}
+.content h2 {
+  /*text-transform: uppercase;
+  letter-spacing: 0.1em;*/
   font-style: normal;
   text-align: center;
 }
 h1 {
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
+  /*text-transform: uppercase;
+  letter-spacing: 0.1em;*/
 }
 
 .content ul {  
@@ -61,11 +103,11 @@ h1 {
   text-align: center;  
 }
 
-div, p, blockquote {
+div, p, blockquote, button {
   margin: 0;
 }
 blockquote {
-  font-family: "kepler-std",serif;
+  font-family: "adelle", georgia, serif;
   font-style: italic;
   font-weight: 400;
   font-size: 1.2em;
@@ -76,24 +118,46 @@ ul, ol, li {
 }
 
 
+button {
+  outline: none;
+  box-shadow: none;
+  padding: .2em .6em;
+  background: none;
+  border: 5px solid;
+  font-family: "adelle", georgia, serif;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
 .trans {
-  -webkit-transition: -webkit-transform 2s;
-      transition:transform 2s;
+  -webkit-transition: -webkit-transform .3s;
+  -moz-transition: -moz-transform .3s;
+      transition:transform .3s;
 }
 
 
 
 a {
-  color: hsl(282, 99%, 31%);
+  color: inherit;
   text-decoration: none;  
 }
 
 p a {
-  font-weight: bold;
+  font-weight: inherit;
 }
 
 /* Color Schemes
 ============================================================= */
+
+button {
+  color: hsl(282, 99%, 31%);
+  background-color: hsl(58, 100%, 84%);
+}
+button:hover {
+  border-color: hsl(282, 99%, 31%);
+  background-color: hsl(282, 99%, 31%);
+  color: hsl(58, 100%, 84%);  
+}
 
 #badge g {
   fill: #6f019e;
@@ -103,10 +167,10 @@ p a {
 }
 
 .content h2 {
-  border-bottom: solid 1px hsl(58, 100%, 85%);
+  border-bottom: solid 3px hsl(58, 100%, 85%);
 }
 .color-c .content h2 {
-  border-bottom: solid 1px hsl(282, 99%, 71%);
+  border-bottom: solid 3px hsl(282, 99%, 71%);
 }
 
 .color-a { /* yellow bg */
@@ -115,13 +179,10 @@ p a {
 } 
 #top-home-section.color-a {
   background-image:      
-    url('../assets/images/gss-didot-white.svg'),
     url('../assets/images/pug-purple-on-yellow.jpg');
   background-position: 
-    center center,
     center center;
   background-repeat: 
-    no-repeat,
     no-repeat;
   /*background-size: 
     calc(100% - 72),

@@ -48,7 +48,7 @@ module.exports = ->
     # Automated recompilation and testing when developing
     watch:
       build:
-        files: ['**/*.coffee', '**/*.html']
+        files: ['**/*.coffee', '**/*.html', '**/*.css', '!_site/**/*']
         tasks: ['build']
 
   # Grunt plugins used for building
