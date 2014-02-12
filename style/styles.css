@@ -6,6 +6,17 @@
   opacity: 1;
 }
 
+#toc-layer {
+  display:none;
+}
+
+ul, menu, dir {
+  list-style-type: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   text-decoration: none;
   font-family: "museo-sans",sans-serif;
@@ -37,8 +48,6 @@ h2 {
   letter-spacing: 0.1em;
   font-style: normal;
   text-align: center;
-  border-bottom: solid 1px hsl(58, 100%, 85%);
-  padding: 1em;
 }
 h1 {
   text-transform: uppercase;
@@ -49,10 +58,7 @@ h1 {
   -webkit-column-count: 3;
      -moz-column-count: 3;
           column-count: 3;
-  text-align: center;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  text-align: center;  
 }
 
 div, p, blockquote {
@@ -86,11 +92,28 @@ p a {
   font-weight: bold;
 }
 
+/* Color Schemes
+============================================================= */
+
+#badge g {
+  fill: #6f019e;
+}
+#menu-icon polygon {
+  fill: #6f019e;
+}
+
+.content h2 {
+  border-bottom: solid 1px hsl(58, 100%, 85%);
+}
+.color-c .content h2 {
+  border-bottom: solid 1px hsl(282, 99%, 71%);
+}
+
 .color-a { /* yellow bg */
   background-color: hsl(58, 100%, 84%);  
   color: hsl(282, 99%, 31%);
 } 
-#top-section.color-a {
+#top-home-section.color-a {
   background-image:      
     url('../assets/images/gss-didot-white.svg'),
     url('../assets/images/pug-purple-on-yellow.jpg');

@@ -3,7 +3,10 @@ pre {
   font-size: 14px;
   line-height: 1.6;
   background-color: hsla(58, 100%, 88%, 0.25);
-  padding: 2em;  
+  padding: 1em 1em 1em 1em;
+  margin-left: -1em;
+  margin-right: -1em;
+  /* overflow: auto; fucks up floats? */
   margin: none;
 }
 

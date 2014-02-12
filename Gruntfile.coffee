@@ -29,14 +29,33 @@ module.exports = ->
       src:
         files:
           './js/script.min.js': ['./js/script.js']
+    
+    # jekyll    
+    jekyll:
+      dev:
+        options:
+          config: '_config.yml'
+          serve: false
+    
+    connect:
+      dev:
+        options:
+          port: 4000
+          base: "./_site"
+          open: true
+          keepalive: true
 
     # Automated recompilation and testing when developing
     watch:
-      files: ['**/*.coffee', '**/*.html']
-      tasks: ['build']
+      build:
+        files: ['**/*.coffee', '**/*.html']
+        tasks: ['build']
 
   # Grunt plugins used for building
   @loadNpmTasks 'grunt-contrib-coffee'
+  @loadNpmTasks('grunt-contrib-connect')
+  @loadNpmTasks('grunt-jekyll')
+  
   #@loadNpmTasks 'grunt-exec'
   @loadNpmTasks 'grunt-contrib-uglify'
 
@@ -44,7 +63,9 @@ module.exports = ->
   @loadNpmTasks 'grunt-contrib-watch'
 
   # Our local tasks
-  @registerTask 'build', ['coffee']
+  @registerTask 'build', ['coffee', 'jekyll']
+  
+  @registerTask 'serve', ['build','connect']
 
   #@registerTask 'test', 
 

@@ -3,109 +3,17 @@ title: CSS polyfills from the future
 layout: default
 ---
 
-<style type="text/gss">
-
-[Wwin] == ::window[width];
-[Hwin] == ::window[height];
-
-
-[breakpoint1] == 900;
-
-@if [Wwin] >= [breakpoint1] {
-  [baseline] == 36;
-  [top-margin] == [baseline] * 4;
-  [bottom-margin] == [baseline] * 4;
-  [col-size] == [Wwin] / 12 !strong;
-  [col-size] <= 80;
-  [max-p-width] == 800;
-  [title-font-size] == 55;
-  [subtitle-font-size] == 24;
-  [content-font-size] == 20;
-  
-} @else {
-  [baseline] == 24;
-  [top-margin] == [baseline] * 3;
-  [bottom-margin] == [baseline] * 2;
-  [col-size] == [Wwin] / 6;
-  [max-p-width] == [col-size] * 4;
-  [title-font-size] == 30;
-  [subtitle-font-size] == 18;
-  [content-font-size] == 16;
-}
-
-@vertical section;
-
-#top-section {
-  top: == ::window[top];
-  height: == [Hwin] - [baseline] * 2 !strong100;
-  
-  header {
-    bottom: == ::parent[bottom] !require;
-    padding-bottom: == [bottom-margin] / 2;
-  }
-}
-
-section {
-  /*top: >= ::window[top];*/
-  
-  height: >= 500;
-  @horizontal |[::]| in(::window);    
-  
-  
-  header {
-    height: == ::[intrinsic-height];
-    top: == ::parent[top] + [top-margin] !strong;        
-    @horizontal |-[::]-| in(::parent) gap([baseline]);    
-    
-    /* bridge vars b/c no floats */
-    bottom: == ::parent[title-bottom];
-    
-    h2 {
-      font-size: == [subtitle-font-size];
-    }
-  }
-  
-  .content h2 {
-    font-size: == [subtitle-font-size] * 1.3;
-  }
-  
-  h1 {
-    font-size: == [title-font-size];
-    margin-bottom: == [baseline] / 2;
-  }  
-  
-  .content {
-    bottom: <= ::parent[bottom] - [bottom-margin] !medium;
-    
-    font-size: == [content-font-size];
-    line-height: == [baseline];
-    top: == ::parent[title-bottom] + [baseline];
-    height: == ::[intrinsic-height];
-    width: <= [max-p-width];
-    center-x: == ::parent[center-x] !medium;
-    x: == ::[content-left];
-  }
-  
-  p, blockquote, pre, h2, ul, ol {
-    margin-bottom: == [baseline];
-  }  
-  
-}
 
 
 
-/* */
-</style>
 
-
-<section id="top-section" class="color-a">
+<section id="top-home-section" class="top-section color-a">
   <style>
   #top-section header {
    padding-top: 1em; 
    background-color: hsla(58, 100%, 84%,.8);
   }
-  
-  
+    
   </style>
   <header>
     <h1>CSS Polyfills</h1>

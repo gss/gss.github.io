@@ -4,31 +4,126 @@
     <meta charset="utf-8">
     <title>{{ page.title }} | {{ site.title }}</title>
     <link rel="shortcut icon" href="/favicon.ico">
-    <link rel="stylesheet" href="../style/pygments.css" type="text/css" media="screen" title="no title" charset="utf-8">
-    <link rel="stylesheet" href="../style/styles.css" type="text/css" media="screen" title="no title" charset="utf-8">
+    <link rel="stylesheet" href="/style/pygments.css" type="text/css" media="screen" title="no title" charset="utf-8">
+    <link rel="stylesheet" href="/style/styles.css" type="text/css" media="screen" title="no title" charset="utf-8">
         
     <script type="text/javascript" src="//use.typekit.net/les8uug.js"></script>
     <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
     
   </head>
   <body class="style-a">
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-      ga('create', 'UA-47811332-1', 'gridstylesheets.org');
-      ga('send', 'pageview');
-
-    </script>
-    <script src="../js/script.js" type="text/javascript" charset="utf-8"></script>    
+    
+    {% include analytics.html %}
+    
+    <script src="/js/script.js"></script>    
     <script>
     GSS_CONFIG = {
-      workerURL: "../bower_components/gss/worker/gss-solver.js"
+      worker: "/bower_components/gss/dist/worker.js",
+      defaultStrength: "weak"
     }
     </script>
-    <script src="../bower_components/gss/browser/gss.js" type="text/javascript" charset="utf-8"></script>  
+    <script src="/bower_components/gss/dist/gss.js"></script>        
+    
+    <style type="text/gss">
+
+    [Wwin] == ::window[width] !require;
+    [Hwin] == ::window[height] !require;
+
+
+    [breakpoint1] == 900 !require;
+
+    @if [Wwin] >= [breakpoint1] {
+      [baseline] == 30 !require;
+      [top-margin] == [baseline] * 4;
+      [bottom-margin] == [baseline] * 4;
+      [col-size] == [Wwin] / 12 !strong;
+      [col-size] <= 72 !require;
+      [max-p-width] == 720 !require;
+      [title-font-size] == 55;
+      [subtitle-font-size] == 24;
+      [content-font-size] == 20;
+  
+    } @else {
+      [baseline] == 24 !require;
+      [top-margin] == [baseline] * 3;
+      [bottom-margin] == [baseline] * 2;
+      [col-size] == [Wwin] / 6;
+      [max-p-width] == [col-size] * 4;
+      [title-font-size] == 30;
+      [subtitle-font-size] == 18;
+      [content-font-size] == 16;
+    }
+
+    @vertical section;
+
+    #top-home-section {
+      height: == [Hwin] - [baseline] * 2 !strong100;
+  
+      header {
+        bottom: == ::parent[bottom] !strong100;
+        padding-bottom: == [bottom-margin] / 2;
+      }
+    }
+    
+    /*
+    .top-section {
+      top: == ::window[top];
+    }
+    */
+
+    section {
+      top: >= ::window[top];
+  
+      /*height: >= 500;*/
+      @horizontal |[::]| in(::window);    
+  
+  
+      header {
+        
+        height: == ::[intrinsic-height];
+        top: == ::parent[top] + [top-margin] !strong;        
+        @horizontal |-[::]-| in(::parent) gap([col-size]);    
+    
+        /* bridge vars b/c no floats */
+        bottom: == ::parent[title-bottom];
+    
+        h2 {
+          font-size: == [subtitle-font-size];          
+        }
+      }
+  
+      .content h2 {
+        font-size: == [subtitle-font-size] * 1.3;
+        padding: == [baseline];
+        margin-top: == [baseline] * 2;
+      }
+  
+      h1 {
+        font-size: == [title-font-size];
+        margin-bottom: == [baseline] / 2;
+      }  
+  
+      .content {
+        bottom: <= ::parent[bottom] - [bottom-margin] !medium;
+    
+        font-size: == [content-font-size];
+        line-height: == [baseline];
+        top: == ::parent[title-bottom] + [baseline];
+        height: == ::[intrinsic-height];
+        width: <= [max-p-width];
+        center-x: == ::parent[center-x] !medium;
+        x: == ::[content-left];
+      }
+  
+      p, blockquote, pre, h2, ul, ol {
+        margin-bottom: == [baseline];
+      }  
+  
+    }
+
+    /* */
+    </style>                            
+    
     {{ content }}
     {% include navigation.html %}
     {% include analytics.html %}

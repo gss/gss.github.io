@@ -6,8 +6,10 @@
   ],
   "description": "Grid Style Sheets Runtime",
   "main": [
-    "browser/gss.js",
-    "browser/gss.min.js"
+    "dist/gss.js",
+    "dist/gss.min.js",
+    "dist/worker.js",
+    "dist/worker.min.js"
   ],
   "keywords": [
     "gss"
@@ -33,11 +35,11 @@
     "index.html",
     ".travis.yml"
   ],
-  "_release": "a9736ff15d",
+  "_release": "dac4ea59c7",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "a9736ff15d4cbea2a27bf55c052d8f912e1f0837"
+    "commit": "dac4ea59c700193b6d3d0727002ea1657c335625"
   },
   "_source": "git://github.com/the-gss/engine.git",
   "_target": "*",

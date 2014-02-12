@@ -5,3 +5,4 @@ markdown: redcarpet
 exclude:
   - "README.md"
   - "Gruntfile.coffee"
+  - "node_modules"

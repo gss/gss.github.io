@@ -25,7 +25,9 @@
     "grunt-exec": "~0.4.2",
     "component": "~0.17.6",
     "grunt-contrib-watch": "~0.3.1",
-    "grunt-combine": "~0.8.3"
+    "grunt-combine": "~0.8.3",
+    "grunt-jekyll": "~0.4.1",
+    "grunt-contrib-connect": "~0.6.0"
   },
   "keywords": [],
   "scripts": {
