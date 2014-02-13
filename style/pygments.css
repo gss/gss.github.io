@@ -6,7 +6,7 @@ pre {
   padding: 1em 1em 1em 1em;
   border-left: solid 3px hsl(58, 100%, 85%);
   margin-right: -1em;
-  /* overflow: auto; fucks up floats? */
+  overflow-x: auto; /*fucks up floats? */
   margin: none;
 }
 

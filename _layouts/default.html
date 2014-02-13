@@ -29,8 +29,8 @@
     
     <style type="text/gss">
 
-    [Wwin] == ::window[width] !require;
-    [Hwin] == ::window[height] !require;
+    [Wwin] == ::window[width] == body[width] !require;
+    [Hwin] == ::window[height] == body[height] !require;
 
 
     [breakpoint1] == 900 !require;
@@ -51,7 +51,7 @@
       [top-margin] == [baseline] * 3 !require;
       [bottom-margin] == [baseline] * 2 !require;
       [col-size] == [Wwin] / 6 !require;
-      [max-p-width] == [col-size] * 4 !require;
+      [max-p-width] == [col-size] * 5 !require;
       [title-font-size] == 35 !require;
       [subtitle-font-size] == 14 !require;
       [content-font-size] == 16 !require;
