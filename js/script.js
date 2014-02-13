@@ -26,6 +26,9 @@
         _this = this;
       trigger = document.querySelector('.app-menu-trigger');
       eventtype = (mobilecheck() ? 'touchstart' : 'click');
+      if (!trigger) {
+        return;
+      }
       return trigger.addEventListener(eventtype, function(e) {
         e.stopPropagation();
         e.preventDefault();

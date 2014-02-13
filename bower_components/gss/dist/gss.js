@@ -15894,12 +15894,15 @@ View = (function() {
   };
 
   View.prototype._displayChildrenIfNeeded = function(el, offsets, recurseLevel) {
-    var child, view, _i, _len, _ref, _results;
+    var child, children, view, _i, _len, _results;
     if (recurseLevel <= GSS.config.maxDisplayRecursionDepth) {
-      _ref = el.children;
+      children = el.children;
+      if (!children) {
+        return null;
+      }
       _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        child = _ref[_i];
+      for (_i = 0, _len = children.length; _i < _len; _i++) {
+        child = children[_i];
         view = GSS.get.view(child);
         if (view) {
           _results.push(view.displayIfNeeded(offsets));
@@ -15966,7 +15969,7 @@ module.exports = View;
 
 });
 require.register("gss/lib/dom/Observer.js", function(exports, require, module){
-var LOG, observer, setupObserver,
+var LOG, observer, setupObserver, _unobservedElements,
   __slice = [].slice;
 
 LOG = function() {
@@ -15974,6 +15977,36 @@ LOG = function() {
 };
 
 observer = null;
+
+GSS.is_observing = false;
+
+GSS.observe = function() {
+  if (!GSS.is_observing && GSS.config.observe) {
+    observer.observe(document.body, GSS.config.observerOptions);
+    return GSS.is_observing = true;
+  }
+};
+
+GSS.unobserve = function() {
+  observer.disconnect();
+  return GSS.is_observing = false;
+};
+
+GSS._unobservedElements = _unobservedElements = [];
+
+GSS.observeElement = function(el) {
+  if (_unobservedElements.indexOf(el) === -1) {
+    return _unobservedElements.push(el);
+  }
+};
+
+GSS.unobserveElement = function(el) {
+  var i;
+  i = _unobservedElements.indexOf(el);
+  if (i > -1) {
+    return _unobservedElements.splice(i, 1);
+  }
+};
 
 setupObserver = function() {
   if (!window.MutationObserver) {
@@ -15984,14 +16017,20 @@ setupObserver = function() {
     }
   }
   return observer = new MutationObserver(function(mutations) {
-    var e, engine, enginesToReset, gid, i, invalidMeasureIds, m, needsUpdateQueries, nodesToIgnore, removed, scope, sheet, target, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m, _ref;
+    var e, engine, enginesToReset, gid, i, invalidMeasureIds, m, needsUpdateQueries, nodesToIgnore, observableMutation, removed, scope, sheet, target, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m, _ref;
     LOG("MutationObserver");
     enginesToReset = [];
     nodesToIgnore = [];
     needsUpdateQueries = [];
     invalidMeasureIds = [];
+    observableMutation = false;
     for (_i = 0, _len = mutations.length; _i < _len; _i++) {
       m = mutations[_i];
+      if (_unobservedElements.indexOf(m.target) !== -1) {
+        continue;
+      } else {
+        observableMutation = true;
+      }
       if (m.type === "characterData") {
         if (!m.target.parentElement) {
           continue;
@@ -16031,6 +16070,9 @@ setupObserver = function() {
           }
         }
       }
+    }
+    if (!observableMutation) {
+      return null;
     }
     removed = GSS.styleSheets.findAllRemoved();
     for (_j = 0, _len1 = removed.length; _j < _len1; _j++) {
@@ -16117,20 +16159,6 @@ setupObserver = function() {
 
     return GSS.load();
   });
-};
-
-GSS.is_observing = false;
-
-GSS.observe = function() {
-  if (!GSS.is_observing && GSS.config.observe) {
-    observer.observe(document.body, GSS.config.observerOptions);
-    return GSS.is_observing = true;
-  }
-};
-
-GSS.unobserve = function() {
-  observer.disconnect();
-  return GSS.is_observing = false;
 };
 
 document.addEventListener("DOMContentLoaded", function(e) {

@@ -37,6 +37,7 @@
     init: ->            
       trigger = document.querySelector( '.app-menu-trigger' )     
       eventtype = (if mobilecheck() then 'touchstart' else 'click')
+      return unless trigger
       trigger.addEventListener eventtype, (e) =>
         e.stopPropagation()
         e.preventDefault()
