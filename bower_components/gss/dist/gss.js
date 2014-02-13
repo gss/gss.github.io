@@ -15000,7 +15000,7 @@ c._api = function() {
 
 });
 require.register("gss/lib/GSS-with-compiler.js", function(exports, require, module){
-var Compiler, link, remoteGSS, runRemotes, _i, _len;
+var Compiler;
 
 require("./GSS.js");
 
@@ -15038,33 +15038,6 @@ GSS.Getter.prototype['readAST:text/gss'] = function(node) {
   ast = GSS.compile(source);
   return ast;
 };
-
-runRemotes = function(url) {
-  var req;
-  req = new XMLHttpRequest;
-  req.onreadystatechange = function() {
-    var engine;
-    if (req.readyState !== 4) {
-      return;
-    }
-    if (req.status !== 200) {
-      return;
-    }
-    engine = GSS(document);
-    return engine.compile(req.responseText);
-  };
-  req.open('GET', url, true);
-  return req.send(null);
-};
-
-remoteGSS = document.querySelectorAll('link[rel="stylesheet"][type="text/gss"]');
-
-if (remoteGSS) {
-  for (_i = 0, _len = remoteGSS.length; _i < _len; _i++) {
-    link = remoteGSS[_i];
-    runRemotes(link.getAttribute('href'));
-  }
-}
 
 });
 require.register("gss/lib/GSS.js", function(exports, require, module){
@@ -15119,7 +15092,7 @@ GSS.config = {
   debug: false,
   warn: false,
   perf: false,
-  roundBeforeSet: false,
+  fractionalPixels: true,
   processBeforeSet: null,
   maxDisplayRecursionDepth: 30,
   useWorker: !!window.Worker,
@@ -15828,6 +15801,10 @@ View = (function() {
       } else {
         yLocal = 0;
       }
+      if (!GSS.config.fractionalPixels) {
+        xLocal = Math.round(xLocal);
+        yLocal = Math.round(yLocal);
+      }
       this.values.xLocal = xLocal;
       this.values.yLocal = yLocal;
       this._positionMatrix(xLocal, yLocal);
@@ -15842,15 +15819,14 @@ View = (function() {
       delete o['line-height']
     */
 
-    /*
-    if o.width?
-      @style.width = o.width + "px"
-      delete o.width
-    if o.height?
-      @style.height = o.height + "px"
-      delete o.height
-    */
-
+    if (!GSS.config.fractionalPixels) {
+      if (o.width != null) {
+        o.width = Math.round(o.width);
+      }
+      if (o.height != null) {
+        o.height = Math.round(o.height);
+      }
+    }
     for (key in o) {
       val = o[key];
       key = GSS._.camelize(key);
@@ -16022,7 +15998,7 @@ setupObserver = function() {
         }
         sheet = m.target.parentElement.gssStyleSheet;
         if (sheet) {
-          sheet.loadRulesFromNode();
+          sheet.reinstall();
           e = sheet.engine;
           if (enginesToReset.indexOf(e) === -1) {
             enginesToReset.push(e);
@@ -16195,7 +16171,7 @@ StyleSheet = (function() {
 
 
   function StyleSheet(o) {
-    var key, val;
+    var key, tagName, val;
     if (o == null) {
       o = {};
     }
@@ -16208,6 +16184,14 @@ StyleSheet = (function() {
     }
     this.engine.styleSheets.push(this);
     GSS.styleSheets.push(this);
+    this.isRemote = false;
+    this.remoteSourceText = null;
+    if (this.el) {
+      tagName = this.el.tagName;
+      if (tagName === "LINK") {
+        this.isRemote = true;
+      }
+    }
     this.rules = [];
     if (o.rules) {
       this.addRules(o.rules);
@@ -16232,16 +16216,74 @@ StyleSheet = (function() {
   StyleSheet.prototype.needsInstall = true;
 
   StyleSheet.prototype.install = function() {
-    var rule, _i, _len, _ref;
     if (this.needsInstall) {
       this.needsInstall = false;
-      _ref = this.rules;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        rule = _ref[_i];
-        rule.install();
-      }
+      this._install();
     }
     return this;
+  };
+
+  StyleSheet.prototype.reinstall = function() {
+    return this._install();
+  };
+
+  StyleSheet.prototype.installNewRules = function(rules) {
+    var rule, _i, _len, _ref, _results;
+    this.rules = [];
+    this.addRules(rules);
+    _ref = this.rules;
+    _results = [];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      rule = _ref[_i];
+      _results.push(rule.install());
+    }
+    return _results;
+  };
+
+  StyleSheet.prototype._install = function() {
+    var rule, _i, _len, _ref, _results;
+    if (this.isRemote) {
+      return this._installRemote();
+    } else if (this.el) {
+      return this._installInline();
+    } else {
+      _ref = this.rules;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        rule = _ref[_i];
+        _results.push(rule.install());
+      }
+      return _results;
+    }
+  };
+
+  StyleSheet.prototype._installInline = function() {
+    return this.installNewRules(GSS.get.readAST(this.el));
+  };
+
+  StyleSheet.prototype._installRemote = function() {
+    var req, url,
+      _this = this;
+    if (this.remoteSourceText) {
+      return this.installNewRules(GSS.compile(this.remoteSourceText));
+    }
+    url = this.el.getAttribute('href');
+    if (!url) {
+      return null;
+    }
+    req = new XMLHttpRequest;
+    req.onreadystatechange = function() {
+      if (req.readyState !== 4) {
+        return;
+      }
+      if (req.status !== 200) {
+        return;
+      }
+      _this.remoteSourceText = req.responseText.trim();
+      return _this.installNewRules(GSS.compile(_this.remoteSourceText));
+    };
+    req.open('GET', url, true);
+    return req.send(null);
   };
 
   StyleSheet.prototype.reset = function() {
@@ -16254,13 +16296,6 @@ StyleSheet = (function() {
       _results.push(rule.reset());
     }
     return _results;
-  };
-
-  StyleSheet.prototype.loadRulesFromNode = function() {
-    var rules;
-    this.rules = [];
-    rules = GSS.get.readAST(this.el);
-    return this.addRules(rules);
   };
 
   StyleSheet.prototype.destroyRules = function() {
@@ -16297,9 +16332,6 @@ StyleSheet.fromNode = function(node) {
   if (node.gssStyleSheet) {
     return node.gssStyleSheet;
   }
-  if (!GSS.get.isStyleNode(node)) {
-    return null;
-  }
   engine = GSS({
     scope: GSS.get.scopeForStyleNode(node)
   });
@@ -16308,7 +16340,6 @@ StyleSheet.fromNode = function(node) {
     engine: engine,
     engineId: engine.id
   });
-  sheet.loadRulesFromNode();
   node.gssStyleSheet = sheet;
   return sheet;
 };
@@ -16335,7 +16366,7 @@ StyleSheet.Collection = (function() {
 
   Collection.prototype.findAndInstall = function() {
     var node, nodes, sheet, _i, _len;
-    nodes = document.querySelectorAll("style");
+    nodes = document.querySelectorAll('[type="text/gss"], [type="text/gss-ast"]');
     for (_i = 0, _len = nodes.length; _i < _len; _i++) {
       node = nodes[_i];
       sheet = GSS.StyleSheet.fromNode(node);
@@ -19109,8 +19140,9 @@ Getter = (function() {
   };
 
   Getter.prototype.isStyleNode = function(node) {
-    var mime;
-    if ((node != null ? node.tagName : void 0) === "STYLE") {
+    var mime, tagName;
+    tagName = node != null ? node.tagName : void 0;
+    if (tagName === "STYLE" || tagName === "LINK") {
       mime = typeof node.getAttribute === "function" ? node.getAttribute("type") : void 0;
       if (mime) {
         return mime.indexOf("text/gss") === 0;

@@ -77,9 +77,10 @@ GSS_CONFIG = {
     characterData: true
   },    
   
-  /* Round all computed props,
-  good for text, bad for accuracy */
-  roundBeforeSet: false,
+  /* allow fractional pixels values
+  for size and position.
+  bad for text, good for accuracy */
+  fractionalPixels: true,
   
   /* Callback to process variables
   bevore setting to DOM */
