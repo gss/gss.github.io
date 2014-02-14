@@ -16,8 +16,6 @@
     
     {% include analytics.html %}
     
-    <script src="/js/script.js"></script>
-    <script src="/js/vendor/classie.js"></script>    
     <script>
     GSS_CONFIG = {
       worker: "/bower_components/gss/dist/worker.js",
@@ -26,6 +24,8 @@
     }
     </script>
     <script src="/bower_components/gss/dist/gss.js"></script>        
+    <script src="/js/script.js"></script>
+    <script src="/js/vendor/classie.js"></script>    
     
     <style type="text/gss">
 
@@ -63,36 +63,12 @@
     }
     
     @vertical section;
-    
-    #top-button1 {
-      center-x: == ::parent[center-x] !require;
-      height: == ::[intrinsic-height] !require;
-      width: == ::[intrinsic-width] !require;
-      bottom: == ::parent[bottom] - [bottom-margin] !require;
-    }
-    #top-home-section {
-      height: == [Hwin] - [baseline] * 2 !strong100;
-      
-      header {
-        bottom: == ::parent[bottom] - [bottom-margin] / 2 !require;
-      }
-    }
-    
-    .top-section {      
-      height: >= 0;      
-    }
-    
-    /*
-    .top-section {
-      top: == ::window[top];
-    }
-    */
 
     section {
       top: >= ::window[top];
   
       /*height: >= 500;*/
-      @horizontal |[::]| in(::window);    
+      @horizontal |[::]| in(::window) !require;    
   
   
       header {

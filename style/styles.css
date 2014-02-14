@@ -179,17 +179,16 @@ button:hover {
   background-color: hsl(58, 100%, 84%);  
   color: hsl(282, 99%, 31%);
 } 
-#top-home-section.color-a {
+
+.color-a #top-home-image {
   background-image:      
     url('../assets/images/pug-purple-on-yellow.jpg');
-
   background-position: 
     center center;
   background-repeat: 
     no-repeat;
-  /*background-size: 
-    calc(100% - 72),
-    547px 623px;*/
+  background-size: 
+    contain;
 }
 
 .color-b { /* white bg */

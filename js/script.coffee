@@ -7,20 +7,14 @@
   # Setup when GSS ready... 
   # -------------------------------------------------
   
-  count = 0
-  #console.time "FIRST LOAD"
-  onSolved = ->
-    count++
-    if count is 2
-      classie.add html, "app-ready"
-      classie.remove html, "app-not-ready"
-      #console.timeEnd "FIRST LOAD"
-      document.body.removeEventListener "solved", onSolved
-      
-      setupWayPoints()
-      app.menu.init()
-
-  document.body.addEventListener "solved", onSolved
+  console.time "display"
+  
+  GSS.once "display", ->
+    classie.add html, "app-ready"
+    classie.remove html, "app-not-ready"
+    console.timeEnd "display"
+    setupWayPoints()
+    app.menu.init()
 
   
   # Menu stuff...

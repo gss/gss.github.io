@@ -1,19 +1,15 @@
 (function() {
-  var app, checkWayPoints, count, html, menu, mobilecheck, onSolved, scrollDiff, scrollDirection, scrollPrev, setupWayPoints;
+  var app, checkWayPoints, html, menu, mobilecheck, scrollDiff, scrollDirection, scrollPrev, setupWayPoints;
   window.app = app = {};
   html = document.getElementsByTagName("html")[0];
-  count = 0;
-  onSolved = function() {
-    count++;
-    if (count === 2) {
-      classie.add(html, "app-ready");
-      classie.remove(html, "app-not-ready");
-      document.body.removeEventListener("solved", onSolved);
-      setupWayPoints();
-      return app.menu.init();
-    }
-  };
-  document.body.addEventListener("solved", onSolved);
+  console.time("display");
+  GSS.once("display", function() {
+    classie.add(html, "app-ready");
+    classie.remove(html, "app-not-ready");
+    console.timeEnd("display");
+    setupWayPoints();
+    return app.menu.init();
+  });
   app.mobilecheck = mobilecheck = function() {
     var check;
     check = false;

@@ -4,17 +4,47 @@ layout: default
 ---
 
 
+<style type="text/gss">
+#top-button1 {
+  center-x: == ::parent[center-x] !require;
+  height: == ::[intrinsic-height] !require;
+  width: == ::[intrinsic-width] !require;
+  bottom: == ::parent[bottom] - [bottom-margin] !require;
+}
+
+[top-image-gap] == [baseline];
+[top-image-gap] >= 0 !require;
+#top-home-image {
+  width: <= 656 !require;
+  height: == ::[width] * 754/656 !require;
+  center-x: == ::parent[center-x] !require;
+  center-y: == ::parent[center-y] !medium;
+  @horizontal |~-~[::]~-~| in(::parent) gap([top-image-gap]) !require;
+  @vertical   [::]-[#top-button1] gap([top-image-gap]) !require;
+  @vertical   |-[::] in(::parent) gap([top-image-gap]) !strong;
+}
+.top-section {      
+  height: >= 0;      
+}
+#top-home-section {
+  bottom: == ::window[bottom] - [baseline] !strong;
+  top: == 0 !require;
+  height: >= 500 !require;
+  height: <= 1000 !require;
+}
+
+/*
+.top-section {
+  top: == ::window[top];
+}
+*/
+</style>
 
 
 
 <section id="top-home-section" class="top-section color-a">
-  <style>
-  #top-section header {
-   padding-top: 1em; 
-   background-color: hsla(58, 100%, 84%,.8);
-  }
-    
-  </style>
+  
+  <div id="top-home-image"></div>
   
   <button id="top-button1"><a href="/usage">Install</a></button>
   
