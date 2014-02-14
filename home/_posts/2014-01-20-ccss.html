@@ -4,9 +4,11 @@ title: Constraint CSS
 subtitle: lay it out like it's 1999
 color: b
 ---
-Soon after the W3C introduced Cascading Style Sheets, [Greg Badros](http://www.badros.com/greg/), the author of the Cassowary Constraint Solver & recently retired Facebook VP, proposed [Constraint CSS (CCSS)](http://www.cs.washington.edu/research/constraints/web/ccss-uwtr.pdf) as a general solution for CSS layout.  Little today has changed.  Back in '99 Badros demonstrated *responsive* layouts with CSS that today's designers still can't reproduce without grinding out piles of JavaScript.
+Soon after the W3C introduced Cascading Style Sheets, [Greg Badros](http://www.badros.com/greg/), the author of the Cassowary Constraint Solver & [recently retired Facebook VP](http://allthingsd.com/20130920/facebook-engineering-and-products-vp-greg-badros-to-leave-company/), proposed [Constraint CSS (CCSS)](http://www.cs.washington.edu/research/constraints/web/ccss-uwtr.pdf) as a general solution for CSS layout.  Back in '99 Badros demonstrated *responsive* layouts with CCSS that today's designers still can't reproduce without grinding out piles of JavaScript.  For more than a decade, no one seemed to take notice outside academia... Until Apple implemented Cassowary & Greg's pioneering concepts in it's new AutoLayout engine with the launch of OS X Lion. Despite the evolutionary leap for app developers, web designer's have had to settle with [float-based](http://www.sitepoint.com/give-floats-the-flick-in-css-layouts/) & table-based layouts that have remained unimproved to this day.  
 
-The foundation of GSS is a modernized implementation of CCSS.  From CCSS primitives other, more exotic layout API's can and are accomplished.  
+> "We should contemplate how very, very far behind the web platform is in making it delightful to build the sorts of things that are work-a-day in native environments." <a href="http://infrequently.org/2012/02/misdirection/">Alex Russell</a>
+
+The foundation of GSS is a modernized implementation of CCSS.  From CCSS primitives other, more exotic layout API's can and are accomplished.
 
 ## Constraints, the basics
 
@@ -82,7 +84,7 @@ x = 100;
 
 {% endhighlight %}
 
-x will be 1000, and y will be 10.  With constraint programming, equality constraints are two-way, so:
+x will be 100, and y will be 10.  With constraint programming, equality constraints are two-way, so:
 
 {% highlight javascript %}
 
@@ -98,7 +100,7 @@ y >= 10;
 
 x and y have a constraint to be equal, so x and y will be 100.  
 
-Constraints are incrementally added to a `solver`, then the solver computes a feasible & optimal solution to all the constraints.  With normal procedural programming, the last assignment overcomes the previous.  But, with constraint solvers like Cassowary, earlier statements are stronger than later ones in the "Constraint Hierarchy".
+Constraints are incrementally added to a `solver`, then the solver computes a feasible & optimal solution to all the constraints.  With constraint programming you input the *what* you want to happen, not *how* it will happen. With procedural programming, you focus on the *how*.  This makes constraints a perfect fit for empowering declarative languages like CSS.
 
 ## Custom Constraint Variables
 
@@ -107,12 +109,12 @@ A custom constraint variable can be created by simply using it in a constraint.
 {% highlight css %}
 
 .post {
-  width: 6 * [col-size];
+  width: == 6 * [col-size];
 }
 
 {% endhighlight %}
 
-This automatically defines a constraint variable called `[col-size]` that can be be used in other constraints.
+This automatically defines the constraint variable `[col-size]` that can be be used in other constraints.  
 
 ## Custom Element Constraint Variables
 
@@ -124,9 +126,30 @@ You can create a custom variable for an element by, again, simply using it:
 
 {% endhighlight %}
 
-This will automatically create a `[col-size]` variable for each element with the class post, and constrains it to be the same as 3 times that post's line-height.  Don't forget this relationship is 2-way, so further constraining a post's [col-size] can effect it's line-height, which can be remedied using [Stays](#stays) or taking advantage of the "Constraint Hierarchy".
+This will automatically create a `[col-size]` variable for each element with the class post, and constrains it to be the same as 3 times that post's line-height.  Don't forget this relationship is 2-way, so further constraining a post's [col-size] can effect it's line-height, which can be remedied using by taking advantage of the "Constraint Hierarchy" with [Strengths]() or [Stays](#stays).
 
-Constraint variables are defined in a global scope, as is right in the constraint-based world.  Internally, a constraint variable for an element is created of the form $ + ELEMENT.ID + [ PROP ].  
+## Global Scope
+
+Constraint variables are defined in a global scope, as is right in the constraint-based world.  So, all uses of `[col-size]` below refer to the same constraint variable.
+
+{% highlight css %}
+
+/* the !require strength ensures this constraint will hold */
+[col-size] == ::window[width] / 12 !require; 
+
+.menu {
+  width: == [col-size];
+}
+
+.post {
+  width: == 6 * [col-size];  
+  h1 {
+    padding-left: == [col-size];
+  }
+}
+
+{% endhighlight %}
+
 
 ## Hardware Accelerated Layout Variables
 
@@ -136,24 +159,9 @@ By default, GSS uses Matrix3D transforms to hardware accelerate the browsers tha
 - `y` or `top`
 - `right`
 - `bottom`
-- `position`
 - `center-x`
 - `center-y`
-- `center`
 
-## Ambiguity
-
-`bottom` & `right` are expressions of position & size, which can lead to ambiguous constraints like:
-
-{% highlight css %}
-
-#box[right] == ::window[right];
-
-/* this is too ambiguous without constraining #box[width] or #box[left] */
-
-{% endhighlight %}
-
-Should the box move it's position to the right or stretch it's width to make it's right edge flush with the window?  A critical best practice is to *fully constrain* an element, in other words, you should adequately specify an element's position & size.  If an element's size & position are not constrained GSS you will likely have unpredictable results. 
 
 ## Special Pseudo Selectors
 
@@ -172,12 +180,12 @@ The this and parent selectors can only be used in a nested ruleset, as with:
 
 {% endhighlight %}
 
-**PRO TIP:** parent selectors can be used to "bridge" variables in interesting ways.  A contrived example:
+**PRO TIP:** parent selectors can be used to "bridge" variables in interesting ways.  Also a recommended practice is to prefix custom element variables with `$` to avoid confusion with native CSS properties.  A contrived example:
 
 {% highlight css %}
 #product {
   
-  $col-width: == ::[width] / 12
+  $col-width: == ::[width] / 12 !require;
   $col-left: == ::[left] + ::[$col-width];
   
   .price {
@@ -194,7 +202,7 @@ The this and parent selectors can only be used in a nested ruleset, as with:
 
 ## Intrinsic Properties
 
-What if we want an paragraph's height to be the *intrinsic* height of it's text content?  We use an intrinsic property!
+What if we want an paragraph's height to be the *intrinsic* height of it's text content?  We use an `intrinsic` property!
 
 {% highlight css %}
 /* all paragraphs will have a height equal to it's text-height */
@@ -205,9 +213,75 @@ p {
 {% endhighlight %}
 
 
-When you add `intrinsic-` before a property, GSS will try to measure that property from the DOM every time it needs to solve for new values, as when a paragraph text-content changes or when the window size changes & you used `::window` somewhere.  GSS defers things to avoid serial DOM read / writes, but reading the DOM can be expensive.
+When you add `intrinsic-` before a property, GSS will try to measure that property from the DOM every time it needs to solve for new values, as when a paragraph text-content changes or when the window size changes & you used `::window` somewhere.  GSS uses a deferred run loop to avoid serial DOM read / writes, but reading the DOM can always cost perf.
 
-**PRO TIP:** minimize use of intrinsic properties.  For example, best hardcode image width & height in equality constraints if can be known ahead of time.
+**PRO TIP:** minimize use of intrinsic properties.  For example, best to hardcode image width & height in equality constraints if can be known ahead of time.
+
+
+## Strengths
+
+Stronger constraints completely overcome weaker ones - this is the phenomena of the [Constraint Hierarchy](http://www.cs.washington.edu/research/constraints/theory/hierarchies-92.html).  Strengths are declared in the same fashion of CSS's `!important`:
+
+{% highlight css %}
+
+/* Stronger constraints completely overcome weaker ones */
+
+#light[years] == 100 !weak;
+#light[years] == 200 !medium;
+#light[years] == 300 !strong;
+
+/* #light[years] will be 300 */
+
+{% endhighlight %}
+
+There 4 levels of built-in strength:
+
+- `!weak`
+- `!medium`
+- `!strong`
+- `!require`
+
+All constraints have a strength.  `!weak` is the default for all constraints.
+
+`!require` is a special strength that guarantees the constraint will hold, othwerise everything breaks.
+
+**Pro Tip** Use `!require` carefully & sparingly.  `!require`'s quickly lead to systems where all required constraints cannot be satisfied.
+
+
+## Weights
+
+Constraints of the same strength can be made relatively stronger or weaker with weights, like so:
+
+{% highlight css %}
+
+/* Constraints of the same strength... */
+
+#planet[weight] == 600 !medium1000; 
+#planet[weight] == 30 !medium;
+#planet[weight] == 10 !medium;
+#planet[weight] == 20 !medium;
+
+/* #planet[weight] will be 600 */
+
+{% endhighlight %}
+
+`#planet[weight]` will be 600.  The first constraint has an additional weight of `1000` used in calculating it's potential error, making not satisfying it more costly.
+
+
+## Ambiguity
+
+`bottom` & `right` are expressions of position & size, which can lead to ambiguous constraints like:
+
+{% highlight css %}
+
+#box[right] == ::window[right];
+
+/* this is too ambiguous without constraining #box[width] or #box[left] */
+
+{% endhighlight %}
+
+Should the box move it's position to the right or stretch it's width to make it's right edge flush with the window?  A critical best practice is to *fully constrain* an element, in other words, you should adequately specify an element's position & size.  If an element is under-constrained you will have unpredictable results. 
+
 
 ## Stays
 
@@ -237,9 +311,35 @@ Will the `#box` move or stretch to satisfy the last constraint?  Again, the earl
 
 Many `stay`s can be declared at once with `@stay([var1],[var2],[var3])`.
 
+
+## Minimized Total Error
+
+For constraints at the same strength, GSS tries to minimize the degree to which all constraints are not satisfied.  Internally, Cassowary finds what's called a "locally-error-better", "weighted-sum-better" solution to constraints.  As an example,
+
+{% highlight css %}
+
+/* Constraints of the same strength... */
+
+#laser[amo] == 1 !strong;
+#laser[amo] == 2 !strong;
+#laser[amo] == 3 !strong;
+
+/* #laser[amo] will be 2 */
+
+{% endhighlight %}
+
+`#laser[amo]` will be 2 because that minimizes the total degree to which all constraints would not be satisfied, or the total of each constraint's "error".  
+
+**When `#laser[amo]` is 2**; the first constraint has error of 1, the second has an error of 0 & the third has error of 1, **total error = 2**.  
+
+**If `#laser[amo]` was 3**; the first constraint has error of 0, the second with 1 & the third with 2, **total error = 3**.  
+
+The total error is always minimized.
+
+
 ## Linear Arithmetic
 
-Cassowary only allows for "Linear Arithmetic" constraints, you can do simple math operations like `+`, `-`, `*` and `/`, but all expressions must be linear (of the form y = mx + b).  Basically, you can add & subtract anything, but you can't multiply or divide two constraint variables.  
+Cassowary only allows for "Linear Arithmetic" constraints, you can do simple math operations like `+`, `-`, `*` and `/`, but all expressions must be linear (of the form `y = mx + b`).  Basically, you can do most things except multiply or divide two constraint variables.  
 
 {% highlight css %}
 
@@ -250,12 +350,3 @@ Cassowary only allows for "Linear Arithmetic" constraints, you can do simple mat
 {% endhighlight %}
 
 I wish we could go non-linear, but we can't because math.
-
-
-## Strength & Weight
-
-WIP...
-
-
-
-

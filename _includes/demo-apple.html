@@ -1,0 +1,46 @@
+<style type="text/gss">
+  #apple-panel {
+    width: == [max-p-width];
+    height: == 360;
+    center-x: == ::parent[center-x];
+  }
+  
+  @horizontal |-[#b1]-[#b2]~-~[#b3]~-~[#b4]-| 
+    in(#apple-panel)
+    gap(16) !strong;  
+  
+  #b3 {
+    center-x: == ::parent[center-x];
+  }
+  
+  .apple-b {
+    width: == 90;
+    height: == 60;
+    @vertical [::]-| 
+      in(#apple-panel)
+      gap([baseline]);
+  }
+  
+  #{{ post.uid }} {
+
+      bottom: == #apple-panel[bottom] + [baseline] * 5; 
+      #apple-panel {
+        top: == ::parent[bottom] + [baseline];
+      }
+
+  }
+  
+</style>
+<style>
+  #apple-panel {
+    background-color: white;
+  }
+</style>
+
+<div id="apple-panel">
+</div>
+
+<button id="b1" class="apple-b">B1</button>
+<button id="b2" class="apple-b">B2</button>
+<button id="b3" class="apple-b">B3</button>
+<button id="b4" class="apple-b">B4</button>

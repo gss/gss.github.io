@@ -1,0 +1,87 @@
+<section id="grid-section" class="color-a">
+  <style type="text/gss">
+    .astro-person {
+      width: >= 200;
+      height: >= 200;
+      width: == ::[height] * 666/777;
+      bottom: <= #grid-section[bottom] - [baseline] * 5;
+    }
+    #grid-section-content[width] == [max-p-width] !require;
+    [astro-gap1] == [col-size];
+    [astro-gap0] == [col-size];
+    @if [Wwin] >= 720 {
+      @horizontal |[#astro-d4]-[#astro-greg]| 
+        in(#grid-section-content) gap([astro-gap1])
+        chain-top chain-width;
+      @horizontal |[#astro-tom]-[#astro-alex]-[#astro-bergie]| 
+        in(#grid-section-content) gap([astro-gap2])
+        chain-top chain-width;
+      @vertical [#grid-section-content][#astro-d4]-[#astro-tom]
+        in(#grid-section)
+        gap([baseline] * 3);
+    } @else {
+      .astro-person {
+        @horizontal |-[::]-|
+          in(#grid-section)
+          gap([astro-gap0]);
+      }
+      @vertical [#grid-section-content][#astro-greg]-[#astro-d4]-[#astro-alex]-[#astro-bergie]-[#astro-tom]
+        gap([baseline] * 3);
+    }
+  </style>
+  <style>
+    .astro-person p {
+      text-align: center;
+      font-style: italic;
+    }
+  </style>
+  <header>
+    <h1>Made with ♥ by the Grid</h1>
+    <h2 class="subtitle">Open source b/c we believe</h2>    
+  </header>
+  <div id="grid-section-content" class="content">
+    
+    <p>
+      GSS was created by <a data-person="d4" href="https://twitter.com/d4tocchini">Dan Tocchini</a>, leader of the stealth upstart, the Grid.  GSS is an scrumptious piece of the Grid's platform, hence the name <em>Grid</em> Style Sheets.
+    </p>
+    <p>
+      GSS would not be possible without:
+    </p>
+  </div>
+  
+  <div id="astro-d4" class="astro-person link">
+    <a href="https://twitter.com/d4tocchini">
+      <img src="/assets/images/purple-yellow/d4.jpg" width="100%" alt="D4">
+    </a>
+    <p><a href="https://twitter.com/d4tocchini">Dan Tocchini</a></p>
+  </div>
+  
+  <div id="astro-greg" class="astro-person link">
+    <a href="http://www.badros.com/greg/">
+      <img src="/assets/images/purple-yellow/greg.jpg" width="100%" alt="D4">
+    </a>
+    <p><a href="http://www.badros.com/greg/">Greg Badros</a></p>
+  </div>
+  
+  <div id="astro-alex" class="astro-person link">
+    <a href="http://infrequently.org/">
+      <img src="/assets/images/purple-yellow/alex.jpg" width="100%" alt="D4">
+    </a>
+    <p><a href="http://infrequently.org/">Alex Russell</a></p>
+  </div>
+  
+  <div id="astro-bergie" class="astro-person link">
+    <a href="http://bergie.iki.fi/">
+      <img src="/assets/images/purple-yellow/bergie.jpg" width="100%" alt="D4">
+    </a>
+    <p><a href="http://bergie.iki.fi/">Henri Bergius</a></p>
+  </div>
+  
+  <div id="astro-tom" class="astro-person link">
+    <a href="http://subtlegradient.com/">
+      <img src="/assets/images/purple-yellow/tom2.jpg" width="100%" alt="D4">
+    </a>
+    <p><a href="http://subtlegradient.com/">Thomas Alyott</a></p>
+  </div>
+  
+</section>

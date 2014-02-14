@@ -5,18 +5,29 @@ layout: default
 
 
 <style type="text/gss">
-#top-button1 {
-  center-x: == ::parent[center-x] !require;
+
+.top-button {
   height: == ::[intrinsic-height] !require;
   width: == ::[intrinsic-width] !require;
   bottom: == ::parent[bottom] - [bottom-margin] !require;
+/* setting up virtual element */
+  left:  >= [top-buttons-left] !require;
+  right: <= [top-buttons-right] !require;
 }
+[top-buttons-width] == [top-buttons-right] - [top-buttons-left] !require;
+[top-buttons-center-x] ==  [top-buttons-left] + [top-buttons-width] / 2 !require;
+/* center the buttons */
+[top-buttons-center-x] == #top-home-section[center-x];
+
+@horizontal [#top-button1]-[#top-button2] 
+  gap([baseline])
+  chain-top;
 
 [top-image-gap] == [baseline];
 [top-image-gap] >= 0 !require;
 #top-home-image {
-  width: <= 656 !require;
-  height: == ::[width] * 754/656 !require;
+  width: <= 666 !require;
+  height: == ::[width] * 775/600 !require;
   center-x: == ::parent[center-x] !require;
   center-y: == ::parent[center-y] !medium;
   @horizontal |~-~[::]~-~| in(::parent) gap([top-image-gap]) !require;
@@ -46,7 +57,8 @@ layout: default
   
   <div id="top-home-image"></div>
   
-  <button id="top-button1"><a href="/usage">Install</a></button>
+  <button class="top-button" id="top-button1"><a href="/usage">Install</a></button>
+  <button class="top-button" id="top-button2"><a href="https://github.com/the-gss">Source</a></button>
   
 </section>
 
@@ -68,19 +80,6 @@ layout: default
 {% endfor %}
 
 
-<section id="grid-section" class="color-a">
-  <header>
-    <h1>Made with ♥ by the Grid</h1>
-    <h2 class="subtitle">Open source b/c we believe</h2>
-  </header>
-  <div class="content">
-    <p>
-      GSS was created by <a href="https://github.com/d4tocchini">Dan Tocchini</a>, leader of the stealth upstart, the Grid.  GSS is an scrumptious piece of the Grid's platform, hence the name <em>Grid</em> Style Sheets.
-    </p>
-    <p>
-      GSS would not be possible without <a href="http://infrequently.org/">Alex Russell</a>, <a href="http://www.badros.com/greg/">Greg Badros</a>, <a href="http://bergie.iki.fi/">Henri Bergius</a> and <a href="http://subtlegradient.com/">Thomas Aylott</a>.
-    </p>
-  </div>
-</section>
+{% include made-with-love.html %}
 
 
