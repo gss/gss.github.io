@@ -4,6 +4,17 @@
   box-sizing: border-box;
 }
 
+html, body {
+  margin: 0px;
+}
+
+body {
+  text-decoration: none;
+  font-family: "museo-sans",sans-serif;
+  font-style: normal;
+  font-weight: 300;
+}
+
 .app-not-ready body {
   opacity: 0;
 }
@@ -58,12 +69,7 @@ opacity: .3;
 transform: scale(1.1);
 }
 
-body {
-  text-decoration: none;
-  font-family: "museo-sans",sans-serif;
-  font-style: normal;
-  font-weight: 300;
-}
+
 em {
   font-family: "museo-sans",sans-serif;
   font-style: italic;

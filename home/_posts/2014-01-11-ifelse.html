@@ -1,11 +1,48 @@
 ---
 uid: ifelse
-title: if else Directives
-subtitle: Responsive to any prop w/o media queries
+title: @if @else
+subtitle: Responsive to any prop w/o Media Queries
 color: a
 ---
 
-WIP...
+"Responsive" web design is all the rage & is made possible with [CSS Media Queries](https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Media_queries)... but [Media Queries are a hack](http://ianstormtaylor.com/media-queries-are-a-hack/).  Media Queries allow layouts to adapt to the size of the viewport, but if you want to adapt to anything else, tough luck.  The CSS standards body has received an [onslaught](http://www.xanthir.com/b4PR0) of requests for "Element Queries" - because web designers are desperate to achieve higher levels of adaptiveness with their layouts.  The idea with Element Queries is simple - individual elements can be responsive to their own size, which would allow for richer designs & more modular Style Sheets.  Instead of addressing the engineering challenges, the [W3C has decided to avoid it all together](http://www.xanthir.com/b4PR0).
+
+Which brings us to `@if` and `@else` directives.  Think of them as a general replacement for Media Queries and the much desired Element Query.  
+
+As an example, if we wanted a set of CSS rules to kick when the screen is less than 960px:
+
+{% highlight css %}
+
+/* GSS: */
+
+@if ::window[width] < 960 {
+  /* ... */
+}
+
+/* Old-school Media Queries: */
+
+@media screen and (max-width: 960px) {
+  /* ... */
+}
+
+{% endhighlight %}
+
+But, any property can be used within an `@if`, `@else` conditional.  So, if you want a layout to be responsive to a panel's width:
+
+{% highlight css %}
+@if #panel[width] >= 800 {
+  /* ... */
+}
+@else #panel[width] >= 500 {
+  /* ... */
+}
+@else {
+  /* ... */
+}
+
+/* Not possible with Media Queries */
+{% endhighlight %}
+
 
 {% highlight css %}
 
@@ -21,5 +58,4 @@ WIP...
     font-size: == 14;
   }
 }
-
 {% endhighlight %}

@@ -15078,7 +15078,7 @@ GSS = window.GSS = function(o) {
 };
 
 GSS.config = {
-  defaultStrength: 'required',
+  defaultStrength: 'weak',
   defaultWeight: 0,
   resizeDebounce: 32,
   defaultMatrixType: 'mat4',
@@ -17655,7 +17655,7 @@ Commander = (function() {
 
   Commander.prototype.spawnForWindowWidth = function() {
     var w;
-    w = window.innerWidth;
+    w = window.innerWidth - GSS.get.scrollBarWidth();
     if (this.engine.vars["::window[width]"] !== w) {
       return this.engine.registerCommand(['suggest', ['get', "::window[width]"], ['number', w], 'required']);
     }
@@ -17663,7 +17663,7 @@ Commander = (function() {
 
   Commander.prototype.spawnForWindowHeight = function() {
     var h;
-    h = window.innerHeight;
+    h = window.innerHeight - GSS.get.scrollBarWidth();
     if (this.engine.vars["::window[height]"] !== h) {
       return this.engine.registerCommand(['suggest', ['get', "::window[height]"], ['number', h], 'required']);
     }
@@ -19033,7 +19033,35 @@ if (typeof module !== "undefined" && module !== null ? module.exports : void 0) 
 
 });
 require.register("gss/lib/dom/Getter.js", function(exports, require, module){
-var Getter;
+var Getter, getScrollBarWidth, scrollBarWidth;
+
+getScrollBarWidth = function() {
+  var inner, outer, w1, w2;
+  inner = document.createElement("p");
+  inner.style.width = "100%";
+  inner.style.height = "200px";
+  outer = document.createElement("div");
+  outer.style.position = "absolute";
+  outer.style.top = "0px";
+  outer.style.left = "0px";
+  outer.style.visibility = "hidden";
+  outer.style.width = "200px";
+  outer.style.height = "150px";
+  outer.style.overflow = "hidden";
+  outer.style.zoom = "document";
+  outer.appendChild(inner);
+  document.body.appendChild(outer);
+  w1 = inner.offsetWidth;
+  outer.style.overflow = "scroll";
+  w2 = inner.offsetWidth;
+  if (w1 === w2) {
+    w2 = outer.clientWidth;
+  }
+  document.body.removeChild(outer);
+  return w1 - w2;
+};
+
+scrollBarWidth = null;
 
 Getter = (function() {
   function Getter(scope) {
@@ -19049,6 +19077,13 @@ Getter = (function() {
   Getter.prototype.destroy = function() {
     this.scope = null;
     return this.styleNodes = null;
+  };
+
+  Getter.prototype.scrollBarWidth = function() {
+    if (!scrollBarWidth) {
+      scrollBarWidth = getScrollBarWidth();
+    }
+    return scrollBarWidth;
   };
 
   Getter.prototype.get = function(selector) {
