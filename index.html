@@ -18,7 +18,7 @@ layout: default
   }
 
   /* center the buttons */  
-  #top-button1[right] == ::window[center-x] - [baseline] / 2 !require;
+  #top-button1[right] == ::window[center-x] - [baseline] / 2;
 
   @horizontal [#top-button1]-[#top-button2] 
     gap([baseline])
@@ -33,7 +33,7 @@ layout: default
     height: >= 400 !require;
     center-x: == ::parent[center-x] !require;
     center-y: == ::parent[center-y] !medium;
-    @horizontal |~-~[::]~-~| in(::parent) gap([top-image-gap]) !require;    
+    @horizontal |~-~[::]~-~| in(::parent) gap([other-top-image-gap]) !require;    
     @vertical   |-[::] in(::parent) gap([top-image-gap]) !strong;
   }
   .top-section {      
