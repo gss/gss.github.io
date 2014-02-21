@@ -4,69 +4,140 @@ layout: default
 ---
 
 
-<style type="text/gss">
-
-.top-button {
-  height: == ::[intrinsic-height] !require;
-  width: == ::[intrinsic-width] !require;
-  bottom: == ::parent[bottom] - [bottom-margin] !require;
-/* setting up virtual element */
-  left:  >= [top-buttons-left] !require;
-  right: <= [top-buttons-right] !require;
-}
-[top-buttons-width] == [top-buttons-right] - [top-buttons-left] !require;
-[top-buttons-center-x] ==  [top-buttons-left] + [top-buttons-width] / 2 !require;
-/* center the buttons */
-[top-buttons-center-x] == #top-home-section[center-x];
-
-@horizontal [#top-button1]-[#top-button2] 
-  gap([baseline])
-  chain-top;
-
-[top-image-gap] == [baseline];
-[top-image-gap] >= 0 !require;
-#top-home-image {
-  width: <= 656 !require;
-  height: == ::[width] * 754/656 !require;
-  center-x: == ::parent[center-x] !require;
-  center-y: == ::parent[center-y] !medium;
-  @horizontal |~-~[::]~-~| in(::parent) gap([top-image-gap]) !require;
-  @vertical   [::]-[#top-button1] gap([top-image-gap]) !require;
-  @vertical   |-[::] in(::parent) gap([top-image-gap]) !strong;
-}
-.top-section {      
-  height: >= 0;      
-}
-#top-home-section {
-  bottom: == ::window[bottom] - [baseline] !strong;
-  top: == 0 !require;
-  height: >= 500 !require;
-  height: <= 1000 !require;
-}
-
-/*
-.top-section {
-  top: == ::window[top];
-}
-*/
-</style>
 
 
 
 <section id="top-home-section" class="top-section color-a">
   
+  <style type="text/gss">
+
+  .top-button {
+    height: == ::[intrinsic-height] !require;
+    width: == ::[intrinsic-width] !require;
+    bottom: == ::parent[bottom] - [bottom-margin] !require;
+  }
+
+  /* center the buttons */  
+  #top-button1[right] == ::window[center-x] - [baseline] / 2 !require;
+
+  @horizontal [#top-button1]-[#top-button2] 
+    gap([baseline])
+    chain-top;
+
+  [top-image-gap] == [baseline];
+  [top-image-gap] >= 0 !require;
+  
+  #top-home-image {
+    width: <= 656 !require;
+    height: == ::[width] * 754/656 !require;
+    height: >= 400 !require;
+    center-x: == ::parent[center-x] !require;
+    center-y: == ::parent[center-y] !medium;
+    @horizontal |~-~[::]~-~| in(::parent) gap([top-image-gap]) !require;    
+    @vertical   |-[::] in(::parent) gap([top-image-gap]) !strong;
+  }
+  .top-section {      
+    height: >= 0;      
+  }
+  #top-home-section {
+    bottom: == ::window[bottom] - [baseline] !strong;
+    top: == 0 !require;
+    height: >= 500 !require;
+    /*height: <= 1000 !require;*/
+  }
+  
+  @vertical [#top-home-image]-[#top-title] gap([top-image-gap]) !require;
+  
+  @vertical [#top-title]-[#top-subtitle]-[#top-button1] gap([baseline]) !require;
+  
+  #top-title {
+    height: == ::[intrinsic-height] !require;
+    @horizontal |-[::]-| in(::parent) gap([col-size]);
+    padding-bottom: == [baseline];
+    font-size: == [title-font-size] * 1.3;
+  }
+  
+  #top-subtitle {
+    height: == ::[intrinsic-height] !require;
+    left: == [content-left] !require;
+    right: == [content-right] !require;
+    padding-bottom: == [baseline];
+    text-align: center;
+    font-style: italic;
+  }
+  
+  /*
+  .top-section {
+    top: == ::window[top];
+  }
+  */
+
+  </style>
+  
   <div id="top-home-image"></div>
+  
+  <h1 id="top-title">Grid Style Sheets</h1>
+  <h3 id="top-subtitle" class="large-font">GSS replaces CSS layout & the browser’s layout engine by harnessing the Cassowary Constraint Solver — the same algorithm Apple uses to compute native layout.</h3>
   
   <button class="top-button" id="top-button1"><a href="/usage">Install</a></button>
   <button class="top-button" id="top-button2"><a href="https://github.com/the-gss">Source</a></button>
   
 </section>
 
+<section id="features-section" class="section color-b">
+  
+  <style type="text/gss">
+    
+    #img-kid {
+      width: <= 556 !require;
+      height: ==  ::[width] * 469/556 !require;
+      bottom: == ::parent[bottom];      
+      
+      @if [Wwin] >= [breakpoint1] {        
+        center-x: == [content-right] + [baseline];
+        right: <= ::window[right] + 100;
+      }
+      @else {        
+        center-x: == ::window[right];
+      }            
+    }
+
+  </style>
+  
+  <img id="img-kid" src="assets/images/purple-yellow/kid.jpg" width="556" height="469" alt="Kid">
+  
+  <header>
+    <h1><a name="features">Features</a></h1>
+  </header>  
+
+  <div class="content"> 
+    <ul class="large-list cols-2">
+      <li><a href="/guides/ccss">Constraint CSS</a></li>
+      <li><a href="/guides/vfl">Grid-flavored VFL</a></li>
+      <li><a href="/#rel_pos_size">Relative positioning & sizing</a></li>
+      <li><a href="/guides/ifelse">@if @else Blocks</a></li>
+      <li><a href="/guides/ifelse">Per-Element Responsiveness</a></li>
+      <li><a href="/guides/ccss">Custom Constraint Variables</a></li>
+      <li><a>Accelerated 3D transforms <span class="super">*</span></a></li>
+      <li><a href="/guides/ccss">New Pseudo Selectors</a></li>
+      <li><a href="/guides/ccss">Nested Rules</a></li>
+      <li><a>Respects Text Re-Flows</a></li>
+      <li><a href="/guides/ccss">(In)Equality Constraints</a></li>
+      <li><a href="/guides/ccss">Constraint Strengths</a></li>
+      <li><a>Mutli-threaded Web Workers <span class="super">*</span></a></li>
+      <li><a>True Source Order Independence</a></li>
+      <li><a>Works with Normal CSS</a></li>
+    </ul>
+    
+    <p style="text-align:center;"><span class="super">*</span> <small>Maintains compatibility with browsers that don't support this feature</small></p>
+  </div>
+</section>
+
 {% for post in site.categories.home %}
   <section class="section color-{{post.color}}" id="{{ post.uid }}">
     {% if post.title %}
     <header>
-      <h1>{{ post.title }}</h1>
+      <h1><a name="{{ post.uid }}">{{ post.title }}</a></h1>
       <h2 class="subtitle">{{ post.subtitle }}</h2>
     </header>
     {% endif %}

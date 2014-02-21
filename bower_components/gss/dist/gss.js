@@ -15080,6 +15080,8 @@ GSS = window.GSS = function(o) {
 GSS.config = {
   defaultStrength: 'weak',
   defaultWeight: 0,
+  verticalScroll: true,
+  horizontalScroll: false,
   resizeDebounce: 32,
   defaultMatrixType: 'mat4',
   observe: true,
@@ -16162,6 +16164,8 @@ setupObserver = function() {
 };
 
 document.addEventListener("DOMContentLoaded", function(e) {
+  GSS.body = document.body || GSS.getElementsByTagName('body')[0];
+  GSS.html = GSS.body.parentNode;
   document.dispatchEvent(new CustomEvent('GSS', {
     detail: GSS,
     bubbles: false,
@@ -16349,6 +16353,37 @@ StyleSheet = (function() {
       return true;
     }
     return false;
+  };
+
+  StyleSheet.prototype.needsDumpCSS = false;
+
+  StyleSheet.prototype.setNeedsDumpCSS = function(bool) {
+    if (bool) {
+      this.engine.setNeedsDumpCSS(true);
+      return this.needsDumpCSS = true;
+    } else {
+      return this.needsDumpCSS = false;
+    }
+  };
+
+  StyleSheet.prototype.dumpCSSIfNeeded = function() {
+    if (this.needsDumpCSS) {
+      return this.dumpCSS();
+    }
+  };
+
+  StyleSheet.prototype.dumpCSS = function() {
+    var css, rule, ruleCSS, _i, _len, _ref;
+    css = "";
+    _ref = this.rules;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      rule = _ref[_i];
+      ruleCSS = rule.dumpCSS();
+      if (ruleCSS) {
+        css = css + ruleCSS;
+      }
+    }
+    return css;
   };
 
   return StyleSheet;
@@ -16546,24 +16581,26 @@ Rule = (function() {
     rule = this;
     while (rule.parent) {
       parent = rule.parent;
-      if ((parent != null ? (_ref = parent.selectors) != null ? _ref.length : void 0 : void 0) > 0) {
-        if (selectorContext.length === 0) {
-          _ref1 = parent.selectors;
-          for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-            $ = _ref1[_i];
-            selectorContext.push($);
-          }
-        } else {
-          _context = [];
-          _ref2 = parent.selectors;
-          for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
-            $ = _ref2[_j];
-            for (_k = 0, _len2 = selectorContext.length; _k < _len2; _k++) {
-              $$ = selectorContext[_k];
-              _context.push($ + " " + $$);
+      if (!parent.isConditional) {
+        if ((parent != null ? (_ref = parent.selectors) != null ? _ref.length : void 0 : void 0) > 0) {
+          if (selectorContext.length === 0) {
+            _ref1 = parent.selectors;
+            for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+              $ = _ref1[_i];
+              selectorContext.push($);
             }
+          } else {
+            _context = [];
+            _ref2 = parent.selectors;
+            for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
+              $ = _ref2[_j];
+              for (_k = 0, _len2 = selectorContext.length; _k < _len2; _k++) {
+                $$ = selectorContext[_k];
+                _context.push($ + " " + $$);
+              }
+            }
+            selectorContext = _context;
           }
-          selectorContext = _context;
         }
       }
       rule = parent;
@@ -16611,20 +16648,47 @@ Rule = (function() {
   };
 
   Rule.prototype.getClauseTracker = function() {
-    return "cond:" + this.cid;
+    return "gss-cond-" + this.cid;
   };
 
   Rule.prototype.injectChildrenCondtionals = function(conditional) {
-    var rule, _i, _len, _ref, _results;
+    var command, rule, _i, _j, _len, _len1, _ref, _ref1, _results;
     _ref = this.rules;
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       rule = _ref[_i];
       rule.boundConditionals.push(conditional);
+      if (rule.commands) {
+        _ref1 = rule.commands;
+        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+          command = _ref1[_j];
+          command.push(["where", conditional.getClauseTracker()]);
+        }
+      }
       rule.isCondtionalBound = true;
       _results.push(rule.injectChildrenCondtionals(conditional));
     }
     return _results;
+  };
+
+  Rule.prototype.setNeedsDumpCSS = function(bool) {
+    if (bool) {
+      return this.styleSheet.setNeedsDumpCSS(true);
+    }
+  };
+
+  Rule.prototype.dumpCSS = function() {
+    var css, rule, ruleCSS, _i, _len, _ref, _ref1;
+    css = (_ref = this.Type.dumpCSS) != null ? _ref.call(this) : void 0;
+    _ref1 = this.rules;
+    for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+      rule = _ref1[_i];
+      ruleCSS = rule.dumpCSS();
+      if (ruleCSS) {
+        css = css + ruleCSS;
+      }
+    }
+    return css;
   };
 
   return Rule;
@@ -16652,10 +16716,34 @@ Rule.types = {
     }
   },
   style: {
-    install: function() {}
+    install: function() {
+      return this.setNeedsDumpCSS(true);
+    },
+    dumpCSS: function() {}
   },
   ruleset: {
-    install: function() {}
+    install: function() {},
+    dumpCSS: function() {
+      var css, effectiveSelector, foundStyle, rule, _i, _len, _ref;
+      foundStyle = false;
+      css = "";
+      effectiveSelector = null;
+      _ref = this.rules;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        rule = _ref[_i];
+        if (rule.type === "style") {
+          if (!foundStyle) {
+            effectiveSelector = rule.getSelectorContext().join(", ");
+            foundStyle = true;
+          }
+          css = css + rule.key + ":" + rule.val + ";";
+        }
+      }
+      if (foundStyle) {
+        css = effectiveSelector + "{" + css + "}";
+      }
+      return css;
+    }
   }
 };
 
@@ -16713,6 +16801,7 @@ Engine = (function(_super) {
     if (!this.vars) {
       this.vars = {};
     }
+    this.clauses = null;
     if (!GSS.config.useWorker) {
       this.useWorker = false;
     } else {
@@ -16815,11 +16904,7 @@ Engine = (function(_super) {
   };
 
   Engine.prototype._run = function(ast) {
-    this.commander.execute(ast);
-    if (ast.css) {
-      this.cssToDump = ast.css;
-      return this.dumpCSSIfNeeded();
-    }
+    return this.commander.execute(ast);
   };
 
   Engine.prototype._StyleSheets_setup = function() {
@@ -16892,22 +16977,44 @@ Engine = (function(_super) {
     }
   };
 
+  Engine.prototype.needsDumpCSS = false;
+
+  Engine.prototype.setNeedsDumpCSS = function(bool) {
+    if (bool) {
+      this.setNeedsLayout(true);
+      return this.needsDumpCSS = true;
+    } else {
+      return this.needsDumpCSS = false;
+    }
+  };
+
   Engine.prototype.dumpCSSIfNeeded = function() {
-    if (this.cssToDump) {
+    var css, sheet, sheetCSS, _i, _len, _ref;
+    if (this.needsDumpCSS) {
+      this.needsDumpCSS = false;
       this.setupCSSDumpIfNeeded();
-      this.cssDump.insertAdjacentHTML("beforeend", this.cssToDump);
-      return this.cssToDump = null;
+      css = "";
+      _ref = this.styleSheets;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        sheet = _ref[_i];
+        sheetCSS = sheet.dumpCSSIfNeeded();
+        if (sheetCSS) {
+          css = css + sheetCSS;
+        }
+      }
+      if (css.length > 0) {
+        return this.cssDump.innerHTML = css;
+      }
     }
   };
 
   Engine.prototype._CSSDumper_clean = function() {
     var _ref;
-    this.cssToDump = null;
     return (_ref = this.cssDump) != null ? _ref.innerHTML = "" : void 0;
   };
 
   Engine.prototype._CSSDumper_destroy = function() {
-    this.cssToDump = null;
+    this.needsDumpCSS = false;
     return this.cssDump = null;
   };
 
@@ -17013,11 +17120,12 @@ Engine = (function(_super) {
   */
 
 
-  Engine.prototype.display = function(vars, forceViewCacheById) {
-    var el, id, needsToDisplayViews, obj, varsById, _ref;
+  Engine.prototype.display = function(data, forceViewCacheById) {
+    var el, id, needsToDisplayViews, obj, vars, varsById, _ref;
     if (forceViewCacheById == null) {
       forceViewCacheById = false;
     }
+    vars = data.values;
     LOG(this.id, ".display()");
     this.hoistedTrigger("beforeDisplay", this);
     GSS.unobserve();
@@ -17038,6 +17146,7 @@ Engine = (function(_super) {
         }
       }
     }
+    this.dumpCSSIfNeeded();
     if (needsToDisplayViews) {
       if (this.scope) {
         GSS.get.view(this.scope).displayIfNeeded();
@@ -17059,6 +17168,33 @@ Engine = (function(_super) {
   };
 
   Engine.prototype.forceDisplay = function(vars) {};
+
+  Engine.prototype.updateClauses = function(clauses) {
+    var clause, html, nue, old, _i, _j, _k, _len, _len1, _len2;
+    html = GSS.html;
+    old = this.clauses;
+    nue = clauses;
+    if (old) {
+      for (_i = 0, _len = old.length; _i < _len; _i++) {
+        clause = old[_i];
+        if (nue.indexOf(clause) === -1) {
+          html.classList.remove(clause);
+        }
+      }
+      for (_j = 0, _len1 = nue.length; _j < _len1; _j++) {
+        clause = nue[_j];
+        if (old.indexOf(clause) === -1) {
+          html.classList.add(clause);
+        }
+      }
+    } else {
+      for (_k = 0, _len2 = nue.length; _k < _len2; _k++) {
+        clause = nue[_k];
+        html.classList.add(clause);
+      }
+    }
+    return this.clauses = nue;
+  };
 
   Engine.prototype.isMeasuring = false;
 
@@ -17139,9 +17275,7 @@ Engine = (function(_super) {
     _.defer(function() {
       if (_this.worker) {
         return _this.handleWorkerMessage({
-          data: {
-            values: _this.worker.getValues()
-          }
+          data: _this.worker.output()
         });
       }
     });
@@ -17152,7 +17286,7 @@ Engine = (function(_super) {
   Engine.prototype.handleWorkerMessage = function(message) {
     LOG(this.id, ".handleWorkerMessage()", this.workerCommands);
     this.vars = message.data.values;
-    return this.display(this.vars);
+    return this.display(message.data);
   };
 
   Engine.prototype.handleError = function(event) {
@@ -17365,6 +17499,7 @@ Engine = (function(_super) {
       _base.destroy();
     }
     this.vars = null;
+    this.clauses = null;
     this.ast = null;
     this.getter = null;
     this.scope = null;
@@ -17561,6 +17696,8 @@ Commander = (function() {
     this['eq'] = __bind(this['eq'], this);
     this['suggest'] = __bind(this['suggest'], this);
     this['strength'] = __bind(this['strength'], this);
+    this["||"] = __bind(this["||"], this);
+    this["&&"] = __bind(this["&&"], this);
     this["?<"] = __bind(this["?<"], this);
     this["?>"] = __bind(this["?>"], this);
     this["?!="] = __bind(this["?!="], this);
@@ -17655,7 +17792,10 @@ Commander = (function() {
 
   Commander.prototype.spawnForWindowWidth = function() {
     var w;
-    w = window.innerWidth - GSS.get.scrollBarWidth();
+    w = window.innerWidth;
+    if (GSS.config.verticalScroll) {
+      w = w - GSS.get.scrollbarWidth();
+    }
     if (this.engine.vars["::window[width]"] !== w) {
       return this.engine.registerCommand(['suggest', ['get', "::window[width]"], ['number', w], 'required']);
     }
@@ -17663,7 +17803,10 @@ Commander = (function() {
 
   Commander.prototype.spawnForWindowHeight = function() {
     var h;
-    h = window.innerHeight - GSS.get.scrollBarWidth();
+    h = window.innerHeight;
+    if (GSS.config.horizontalScroll) {
+      h = h - GSS.get.scrollbarWidth();
+    }
     if (this.engine.vars["::window[height]"] !== h) {
       return this.engine.registerCommand(['suggest', ['get', "::window[height]"], ['number', h], 'required']);
     }
@@ -17682,6 +17825,23 @@ Commander = (function() {
   };
 
   Commander.prototype.bindToWindow = function(prop) {
+    if (prop === "center-x") {
+      this.bindToWindow("width");
+      this.engine.registerCommand(['eq', ['get', '::window[center-x]'], ['divide', ['get', '::window[width]'], 2], 'required']);
+      return null;
+    } else if (prop === "right") {
+      this.bindToWindow("width");
+      this.engine.registerCommand(['eq', ['get', '::window[right]'], ['get', '::window[width]'], 'required']);
+      return null;
+    } else if (prop === "center-y") {
+      this.bindToWindow("height");
+      this.engine.registerCommand(['eq', ['get', '::window[center-y]'], ['divide', ['get', '::window[height]'], 2], 'required']);
+      return null;
+    } else if (prop === "bottom") {
+      this.bindToWindow("width");
+      this.engine.registerCommand(['eq', ['get', '::window[bottom]'], ['get', '::window[height]'], 'required']);
+      return null;
+    }
     if (this.boundWindowProps.indexOf(prop) === -1) {
       this.boundWindowProps.push(prop);
     }
@@ -17792,29 +17952,23 @@ Commander = (function() {
     return this;
   };
 
-  Commander.prototype.getWhereCommandIfNeeded = function(rule) {
-    var cond, whereCommand, _i, _len, _ref;
-    if (rule) {
-      if (rule.isCondtionalBound & !rule.isConditional) {
-        whereCommand = ["where"];
-        _ref = rule.boundConditionals;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          cond = _ref[_i];
-          whereCommand.push(cond.getClauseTracker());
-        }
-        return whereCommand;
-      }
-    } else {
-      return null;
-    }
-  };
+  /*
+  getWhereCommandIfNeeded: (rule) ->    
+    
+    # Condtional Bound`
+    if rule
+      if rule.isCondtionalBound & !rule.isConditional
+        whereCommand = ["where"]
+        for cond in rule.boundConditionals
+          whereCommand.push cond.getClauseTracker()
+        return whereCommand
+    else 
+      return null
+  */
+
 
   Commander.prototype.registerSpawn = function(node) {
-    var newCommand, part, whereCommand, _i, _len;
-    whereCommand = this.getWhereCommandIfNeeded(node.parentRule);
-    if (whereCommand) {
-      node.push(whereCommand);
-    }
+    var newCommand, part, _i, _len;
     if (!node.isQueryBound) {
       newCommand = [];
       for (_i = 0, _len = node.length; _i < _len; _i++) {
@@ -17933,51 +18087,6 @@ Commander = (function() {
     };
   };
 
-  /*
-  installCommandFromBase: (command, contextId, tracker) ->
-    newCommand = []
-    commands = []
-    hasPlural = false
-    pluralPartLookup = {}
-    plural = null
-    pluralLength = 0
-    
-    # TOOD: must be recursive for things like ["plus"]    
-    
-    
-    buildNewCommand = (command) ->
-      for part, i in command
-        if part
-          if part.spawn?
-            newPart = part.spawn(  contextId  )
-            newCommand.push newPart
-            if part.isPlural
-              hasPlural = true
-              pluralPartLookup[i] = newPart
-              pluralLength = newPart.length
-          else
-            newCommand.push part        
-      
-      if tracker then newCommand.push tracker
-               
-      if hasPlural      
-        for j in [0...pluralLength]
-          pluralCommand = []
-          for part, i in newCommand
-            if pluralPartLookup[i]
-              pluralCommand.push pluralPartLookup[i][j]
-            else
-              pluralCommand.push part
-          commands.push pluralCommand
-        return commands        
-      else
-      
-        return [newCommand]
-    
-    @engine.registerCommands buildNewCommand(command)
-  */
-
-
   Commander.prototype['get'] = function(root, varId, tracker) {
     var command;
     command = ['get', varId];
@@ -18019,7 +18128,7 @@ Commander = (function() {
     }
     if (prop.indexOf("intrinsic-") === 0) {
       query.lastAddedIds.forEach(function(id) {
-        var elProp, gid, k, register;
+        var elProp, engine, gid, k, register;
         gid = "$" + id;
         if (!_this.intrinsicRegistersById[gid]) {
           _this.intrinsicRegistersById[gid] = {};
@@ -18027,13 +18136,14 @@ Commander = (function() {
         if (!_this.intrinsicRegistersById[gid][prop]) {
           elProp = prop.split("intrinsic-")[1];
           k = "" + gid + "[" + prop + "]";
+          engine = _this.engine;
           register = function() {
             var val;
-            val = this.engine.measureByGssId(id, elProp);
-            if (this.engine.vars[k] !== val) {
-              this.engine.registerCommand(['suggest', ['get$', prop, gid, selector], ['number', val], 'required']);
+            val = engine.measureByGssId(id, elProp);
+            if (engine.vars[k] !== val) {
+              engine.registerCommand(['suggest', ['get$', prop, gid, selector], ['number', val], 'required']);
             }
-            return this.engine.setNeedsMeasure(true);
+            return engine.setNeedsMeasure(true);
           };
           _this.intrinsicRegistersById[gid][prop] = register;
           return register.call(_this);
@@ -18099,12 +18209,48 @@ Commander = (function() {
     return this.registerSpawn(self);
   };
 
+  /*
+  "where": (root,name) =>
+    return ['where',name]
+  
+  "clause": (root,cond,label) =>
+    return @makeNonRootSpawnableIfNeeded ["clause",cond,label]
+  */
+
+
   Commander.prototype["where"] = function(root, name) {
-    return ['where', name];
+    var command;
+    if (root.isContextBound) {
+      command = [
+        "where", name, {
+          spawn: function(contextId) {
+            return "-context-" + contextId;
+          }
+        }
+      ];
+    } else {
+      command = ["where", name];
+    }
+    return this.makeNonRootSpawnableIfNeeded(command);
   };
 
-  Commander.prototype["clause"] = function(root, cond, label) {
-    return this.makeNonRootSpawnableIfNeeded(["clause", cond, label]);
+  Commander.prototype["clause"] = function(root, cond, name) {
+    var command;
+    if (root.isContextBound) {
+      command = [
+        "clause", cond, {
+          spawn: function(contextId) {
+            if (contextId) {
+              return name + "-context-" + contextId;
+            }
+            return name;
+          }
+        }
+      ];
+    } else {
+      command = ["clause", cond, name];
+    }
+    return this.makeNonRootSpawnableIfNeeded(command);
   };
 
   Commander.prototype["?>="] = function(root, e1, e2) {
@@ -18129,6 +18275,14 @@ Commander = (function() {
 
   Commander.prototype["?<"] = function(root, e1, e2) {
     return this.makeNonRootSpawnableIfNeeded(["?<", e1, e2]);
+  };
+
+  Commander.prototype["&&"] = function(root, e1, e2) {
+    return this.makeNonRootSpawnableIfNeeded(["&&", e1, e2]);
+  };
+
+  Commander.prototype["||"] = function(root, e1, e2) {
+    return this.makeNonRootSpawnableIfNeeded(["||", e1, e2]);
   };
 
   Commander.prototype['strength'] = function(root, s) {
@@ -18337,25 +18491,31 @@ Commander = (function() {
   };
 
   Commander.prototype['chain'] = function(root, queryObject, bridgessssss) {
-    var args, bridge, bridges, engine, more, query, whereCommand, _i, _len;
+    var args, bridge, bridges, engine, more, query, _i, _j, _len, _len1;
     query = queryObject.query;
     args = __slice.call(arguments);
     bridges = __slice.call(args.slice(2, args.length));
     engine = this.engine;
     more = null;
-    whereCommand = this.getWhereCommandIfNeeded(root.parentRule);
-    if (whereCommand) {
-      more = [whereCommand];
-    }
     for (_i = 0, _len = bridges.length; _i < _len; _i++) {
       bridge = bridges[_i];
+      if (typeof bridge !== "function") {
+        if (!more) {
+          more = [];
+        }
+        more.push(bridge);
+        bridges.splice(bridges.indexOf(bridge), 1);
+      }
+    }
+    for (_j = 0, _len1 = bridges.length; _j < _len1; _j++) {
+      bridge = bridges[_j];
       bridge.call(engine, query, engine, more);
     }
     return query.on('afterChange', function() {
-      var _j, _len1, _results;
+      var _k, _len2, _results;
       _results = [];
-      for (_j = 0, _len1 = bridges.length; _j < _len1; _j++) {
-        bridge = bridges[_j];
+      for (_k = 0, _len2 = bridges.length; _k < _len2; _k++) {
+        bridge = bridges[_k];
         _results.push(bridge.call(engine, query, engine, more));
       }
       return _results;
@@ -18517,6 +18677,7 @@ Thread = (function() {
     this.constraintsByTracker = {};
     this.varIdsByTracker = {};
     this.conditionals = [];
+    this.activeClauses = [];
     this.__editVarNames = [];
     return this;
   };
@@ -18533,8 +18694,16 @@ Thread = (function() {
     this.constraintsByTracker = null;
     this.varIdsByTracker = null;
     this.conditionals = null;
+    this.activeClauses = null;
     this.__editVarNames = null;
     return this;
+  };
+
+  Thread.prototype.output = function() {
+    return {
+      values: this.getValues(),
+      clauses: this.activeClauses
+    };
   };
 
   Thread.prototype.execute = function(message) {
@@ -18685,9 +18854,10 @@ Thread = (function() {
     }
   };
 
-  Thread.prototype['where'] = function(root, label) {
+  Thread.prototype['where'] = function(root, label, labelSuffix) {
     root._condition_bound = true;
     this._trackRootIfNeeded(root, label);
+    this._trackRootIfNeeded(root, label + labelSuffix);
     return "IGNORE";
   };
 
@@ -18719,13 +18889,16 @@ Thread = (function() {
         if (found) {
           if (oldLabel !== newLabel) {
             if (oldLabel != null) {
+              that.activeClauses.splice(that.activeClauses.indexOf(oldLabel), 1);
               that._removeConstraintByTracker(oldLabel, false);
             }
             that._addConstraintByTracker(newLabel);
+            that.activeClauses.push(newLabel);
             return this.activeLabel = newLabel;
           }
         } else {
           if (oldLabel != null) {
+            that.activeClauses.splice(that.activeClauses.indexOf(oldLabel), 1);
             return that._removeConstraintByTracker(oldLabel, false);
           }
         }
@@ -18737,6 +18910,9 @@ Thread = (function() {
     return {
       label: label,
       test: function() {
+        if (!label) {
+          return condition;
+        }
         if (!condition) {
           return label;
         }
@@ -19033,9 +19209,9 @@ if (typeof module !== "undefined" && module !== null ? module.exports : void 0) 
 
 });
 require.register("gss/lib/dom/Getter.js", function(exports, require, module){
-var Getter, getScrollBarWidth, scrollBarWidth;
+var Getter, getScrollbarWidth, scrollbarWidth;
 
-getScrollBarWidth = function() {
+getScrollbarWidth = function() {
   var inner, outer, w1, w2;
   inner = document.createElement("p");
   inner.style.width = "100%";
@@ -19061,7 +19237,7 @@ getScrollBarWidth = function() {
   return w1 - w2;
 };
 
-scrollBarWidth = null;
+scrollbarWidth = null;
 
 Getter = (function() {
   function Getter(scope) {
@@ -19079,11 +19255,11 @@ Getter = (function() {
     return this.styleNodes = null;
   };
 
-  Getter.prototype.scrollBarWidth = function() {
-    if (!scrollBarWidth) {
-      scrollBarWidth = getScrollBarWidth();
+  Getter.prototype.scrollbarWidth = function() {
+    if (!scrollbarWidth) {
+      scrollbarWidth = getScrollbarWidth();
     }
-    return scrollBarWidth;
+    return scrollbarWidth;
   };
 
   Getter.prototype.get = function(selector) {

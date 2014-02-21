@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" class="app-not-ready">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ page.title }} | {{ site.title }}</title>
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/style/pygments.css" type="text/css" media="screen" title="no title" charset="utf-8">
+    <link rel="stylesheet" href="/style/styles.css" type="text/css" media="screen" title="no title" charset="utf-8">
+        
+    <script type="text/javascript" src="//use.typekit.net/les8uug.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+    
+  </head>
+  <body class="style-a">
+    
+    {% include analytics.html %}
+    
+    <script>
+    GSS_CONFIG = {
+      worker: "/bower_components/gss/dist/worker.js",
+      defaultStrength: "weak",
+      fractionalPixels: false
+    }
+    </script>
+    <script src="/bower_components/gss/dist/gss.js"></script>        
+    <script src="/js/script.js"></script>
+    <script src="/js/vendor/classie.js"></script>    
+    
+    <style type="text/gss">
+
+    [Wwin] == ::window[width] == body[width] !require;
+    [Hwin] == ::window[height] == body[height] !require;
+
+
+    [breakpoint1] == 900 !require;
+    
+    [content-right] == ::window[center-x] + [max-p-width] / 2 !require;
+    [content-left] == ::window[center-x] - [max-p-width] / 2 !require;
+
+    @if [Wwin] >= [breakpoint1] {
+      [baseline] == 30 !require;
+      [top-margin] == [baseline] * 4 !require;
+      [bottom-margin] == [baseline] * 4 !require;
+      [col-size] == [Wwin] / 12 !strong;
+      [col-size] <= 72 !require;
+      [max-p-width] == 720 !require;      
+      [title-font-size] == 65 !require;
+      [subtitle-font-size] == 18 !require;
+      [content-font-size] == 20 !require;
+      [button-font-size] == 26 !require;
+      [large-content-font-size] == 24 !require;
+      [large-content-line-height] == 36 !require;
+      
+    } @else {
+      [baseline] == 24 !require;
+      [top-margin] == [baseline] * 3 !require;
+      [bottom-margin] == [baseline] * 2 !require;
+      [col-size] == [Wwin] / 6 !require;
+      [max-p-width] == [col-size] * 5 !require;
+      [title-font-size] == 35 !require;
+      [subtitle-font-size] == 14 !require;
+      [content-font-size] == 16 !require;
+      [button-font-size] == 20 !require;
+      [large-content-font-size] == 20 !require;
+      [large-content-line-height] == 30 !require;
+    }
+    
+    button {
+      font-size: == [button-font-size];
+    }
+    
+    @vertical section;
+
+    section {
+      overflow: hidden;
+      top: >= ::window[top];
+  
+      /*height: >= 500;*/
+      @horizontal |[::]| in(::window) !require;    
+  
+  
+      header {
+        
+        height: == ::[intrinsic-height] !require;
+        top: == ::parent[top] + [top-margin] !strong;        
+        @horizontal |-[::]-| in(::parent) gap([col-size]);    
+    
+        /* bridge vars b/c no floats */
+        bottom: == ::parent[title-bottom];
+    
+        h2 {
+          font-size: == [subtitle-font-size];          
+        }
+        h1 {
+          font-size: == [title-font-size];
+          margin-bottom: == [baseline] / 2;
+        }
+      }
+  
+      .content h2 {
+        font-size: == [subtitle-font-size] * 1.9;
+        padding: == [baseline];
+        margin-top: == [baseline] * 2;
+      }
+  
+      
+  
+      .content {
+        bottom: <= ::parent[bottom] - [bottom-margin] !medium;
+        
+        font-size: == [content-font-size];
+        line-height: == [baseline];
+        top: == ::parent[title-bottom] + [baseline];
+        height: == ::[intrinsic-height];
+        width: <= [max-p-width];
+        center-x: == ::parent[center-x] !medium;
+        x: == ::[content-left];
+      }
+  
+      p, blockquote, pre, h2, ul, ol {
+        margin-bottom: == [baseline];
+      }  
+  
+    }
+    
+    
+    .cols-2 {
+      -webkit-column-count: 2;
+         -moz-column-count: 2;
+              column-count: 2;
+      -webkit-column-gap: == [baseline];
+         -moz-column-gap: == [baseline];
+              column-gap: == [baseline];
+    }
+    
+    ul.large-list {                
+      li {        
+        margin-bottom: == [large-content-font-size];
+        text-align: left;                      
+      }
+    }
+    
+    .large-font, .large-list li {
+      font-family: "adelle", georgia, serif;
+      font-size: == [large-content-font-size];
+      line-height: == [large-content-line-height];
+    }
+      
+
+    /* */
+    </style>

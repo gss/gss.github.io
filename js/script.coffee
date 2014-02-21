@@ -28,17 +28,26 @@
   
   app.menu = menu = 
     
-    init: ->            
-      trigger = document.querySelector( '.app-menu-trigger' )     
+    init: ->
+      menu = document.getElementById "menu"
       eventtype = (if mobilecheck() then 'touchstart' else 'click')
-      return unless trigger
-      trigger.addEventListener eventtype, (e) =>
-        e.stopPropagation()
-        e.preventDefault()
+      html.addEventListener eventtype, (e) =>
+        if classie.has e.target, 'app-menu-trigger'
+          e.stopPropagation()
+          e.preventDefault()
+          if !classie.has html, "app-show-menu"
+            @show()
+            return null
         if classie.has html, "app-show-menu"
-          @hide()
-        else
-          @show()
+          if !menu.contains e.target
+            @hide()
+        
+            
+      html.addEventListener "mousemove", (e) =>
+        if e.clientX <= 60 or e.clientY <= 60
+          classie.add html, "scrolled-up"
+          classie.remove html, "scrolled-down"
+          
     
     show: ->
       classie.add html, "app-show-menu"
@@ -59,7 +68,8 @@
   checkWayPoints = (event) ->    
     scroll = window.scrollY
     # todo: check where we are 
-    scrollDiff = scroll - scrollPrev    
+    return null if scroll < 0
+    scrollDiff = scroll - scrollPrev
     if scrollDiff > 0
       scrollDirection = "down"
     else if scrollDiff < 0

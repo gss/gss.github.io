@@ -18,20 +18,29 @@
   };
   app.menu = menu = {
     init: function() {
-      var eventtype, trigger,
+      var eventtype,
         _this = this;
-      trigger = document.querySelector('.app-menu-trigger');
+      menu = document.getElementById("menu");
       eventtype = (mobilecheck() ? 'touchstart' : 'click');
-      if (!trigger) {
-        return;
-      }
-      return trigger.addEventListener(eventtype, function(e) {
-        e.stopPropagation();
-        e.preventDefault();
+      html.addEventListener(eventtype, function(e) {
+        if (classie.has(e.target, 'app-menu-trigger')) {
+          e.stopPropagation();
+          e.preventDefault();
+          if (!classie.has(html, "app-show-menu")) {
+            _this.show();
+            return null;
+          }
+        }
         if (classie.has(html, "app-show-menu")) {
-          return _this.hide();
-        } else {
-          return _this.show();
+          if (!menu.contains(e.target)) {
+            return _this.hide();
+          }
+        }
+      });
+      return html.addEventListener("mousemove", function(e) {
+        if (e.clientX <= 60 || e.clientY <= 60) {
+          classie.add(html, "scrolled-up");
+          return classie.remove(html, "scrolled-down");
         }
       });
     },
@@ -50,6 +59,9 @@
     var scroll, v,
       _this = this;
     scroll = window.scrollY;
+    if (scroll < 0) {
+      return null;
+    }
     scrollDiff = scroll - scrollPrev;
     if (scrollDiff > 0) {
       scrollDirection = "down";

@@ -1,47 +1,111 @@
 <!-- Top Nav -->
 
-<style type="text/gss">
-
-  [nav-hgap] == 15;
-
-  .badge-icon {
-    width: == 45.142;
-    height: == 48;
-    y: == [nav-hgap];
-  }
-    
-  @horizontal |-[#badge] 
-    gap([nav-hgap]) in(::window);
-    
-  @horizontal [#menu-icon]-|
-    gap([nav-hgap] * 2) in(::window);
-
-</style>
-<style>
-  #nav {
-    position: fixed !important;
-    z-index: 100;
-  }
-  .scrolled-down #nav {
-    -webkit-transform: translateY(-72px);
-    -moz-transform: translateY(-72px);
-    transform: translateY(-72px);
-  }
-  .scrolled-up #nav {
-    -webkit-transform: translateY(0px);
-    -moz-transform: translateY(0px);
-    transform: translateY(0px);
-  }
-  .app-show-menu #nav {
-    -webkit-transform: translateY(0px) !important;
-       -moz-transform: translateY(0px) !important;
-            transform: translateY(0px) !important;
-  }
-</style>
-
 <div id="nav" class="trans">
+  <style type="text/gss">
+        
+    .badge {
+      width: == 45.142;
+      height: == 48;
+    }
+    @if [Wwin] >= [breakpoint1] {
+      #nav {
+        .badge {
+         top: == 0 - 4; 
+         center-x: == ::window[center-x]; 
+        }
+      }
+    }
+    @else {
+      #nav {
+        .badge {
+         top: == 0 - 4; 
+         right: == [content-left] - 5; 
+        }
+      }
+    }
+    #sidenav-menu-button {
+      margin-top: -5px !important;
+      width: == ::[intrinsic-width];
+      height: == ::[intrinsic-height];
+      center-x: == 0 - ::window[center-y] - ::[width] / 2;    
+    }
+
+  </style>
+  <style>
+    #nav, #sidenav {
+      position: fixed !important;
+      backface-visibility: hidden;
+      z-index: 100;
+    }
+  
+    #sidenav-menu-button-wrap {
+      -webkit-transform: rotate(-90deg);
+        -moz-transform: rotate(-90deg);
+             transform: rotate(-90deg);
+    }  
+    .scrolled-down #nav {
+      -webkit-transform: translateY(-72px);
+      -moz-transform: translateY(-72px);
+      transform: translateY(-72px);
+    }
+    .scrolled-up #nav {
+      -webkit-transform: translateY(0px);
+      -moz-transform: translateY(0px);
+      transform: translateY(0px);
+    }
+    .app-show-menu #nav {
+      -webkit-transform: translateY(0px) !important;
+         -moz-transform: translateY(0px) !important;
+              transform: translateY(0px) !important;
+    }
+  
+    .scrolled-down #sidenav {
+      -webkit-transform: translateX(-72px);
+         -moz-transform: translateX(-72px);
+              transform: translateX(-72px);
+    }
+    .scrolled-up #sidenav {
+      -webkit-transform: translateX(0px);
+      -moz-transform: translateX(0px);
+      transform: translateX(0px);
+    }
+    .app-show-menu #sidenav {
+      -webkit-transform: translateX(-72px) !important;
+         -moz-transform: translateX(-72px) !important;
+              transform: translateX(-72px) !important;
+    }  
+    .app-show-menu #menu {
+      margin-left: 0 !important;
+    }
+    #menu {
+      margin-left: -100% !important;
+      -webkit-transition: margin .3s;
+         -moz-transition: margin .3s;
+              transition: margin .3s;
+            
+            
+    }
+    .app-show-menu #hide-menu-button {
+      margin-left: 0 !important;
+    }
+    #hide-menu-button {
+      margin-left: -100% !important;
+      margin-left: -100% !important;
+      -webkit-transition: margin 600ms cubic-bezier(0.080, 0.615, 0.355, 1); /* older webkit */
+      -webkit-transition: margin 600ms cubic-bezier(0.080, 0.615, 0.355, 1.100); 
+         -moz-transition: margin 600ms cubic-bezier(0.080, 0.615, 0.355, 1.100); 
+           -o-transition: margin 600ms cubic-bezier(0.080, 0.615, 0.355, 1.100); 
+              transition: margin 600ms cubic-bezier(0.080, 0.615, 0.355, 1.100); /* custom */
+
+      -webkit-transition-timing-function: cubic-bezier(0.080, 0.615, 0.355, 1); /* older webkit */
+      -webkit-transition-timing-function: cubic-bezier(0.080, 0.615, 0.355, 1.100); 
+         -moz-transition-timing-function: cubic-bezier(0.080, 0.615, 0.355, 1.100); 
+           -o-transition-timing-function: cubic-bezier(0.080, 0.615, 0.355, 1.100); 
+              transition-timing-function: cubic-bezier(0.080, 0.615, 0.355, 1.100); /* custom */
+    }
+  </style>
   <a href="/">
-    <svg id="badge" class="badge-icon trans" 
+    <svg class="badge badge-icon trans" 
     	 width="45.142px" height="48px" version="1.1" xmlns="http://www.w3.org/2000/svg" baseProfile="full">
     <g>
     	<path d="M11.991,34.812l10.595,2.902l10.453-2.874l1.185-13.159l-11.638-0.001v5.193h6.06l-0.425,3.959l-5.636,1.508l-5.777-1.536
@@ -50,121 +114,88 @@
     </g>
     </svg>
   </a>
-
-  <!--svg id="menu-icon" class="badge-icon app-menu-trigger trans" 
-  	 width="45.142px" height="48px" version="1.1" xmlns="http://www.w3.org/2000/svg" baseProfile="full">
-  <g>
-    <polygon points="3.071,26 3.574,31 41.568,31 42.071,26 "/>
-    <polygon points="41.071,36 4.071,36 4.572,41 40.57,41 "/>
-    <polygon points="2.571,16 3.064,21 42.078,21 42.571,16 "/>
-    <polygon points="1.571,7 2.066,12 43.076,12 43.571,7 "/>
-  </g>
-  </svg-->
-  
 </div>
 
-<!-- table of contents 
+<div id="sidenav" class="trans">  
+  <div id="sidenav-menu-button-wrap" class="trans">
+    <button id="sidenav-menu-button" class="app-menu-trigger transparent">Menu</button>
+  </div>  
+</div>
 
-<style type="text/gss">
-  
-
-  
-  #toc {
-    height: == [Hwin] !require;
-    width:  == [Wwin] !require;    
-    x: == 0 !require;
-    y: == 0 !require;
-  }
-  
-  
-  /* */
+<div id="menu" class="color-menu trans">
+  <style type="text/gss">
     
-  @vertical .toc-section 
-    gap([baseline]);
-  
-  .toc-section {
-    top: >= 0 !require;
-    height: == ::[intrinsic-height] !require;
-    center-x: == #toc[center-x] !strong;
-  }
-  
-  .toc-section-middle[center-y] == #toc[center-y];
-  
-  
-  
-  /* */
-  
-  @vertical [#toc-links][#toc-sections(>=0)];
-  
-  /* */
-
-</style>
-<style>
-
-  #toc-layer {
-    position: fixed !important;
-    z-index: 90;
-    top: 0;
-    bottom: 0;
-    left: 0;
-  }
-  #toc-layer {
-    -webkit-transform: translateY(-110%);
-       -moz-transform: translateY(-110%);
-            transform: translateY(-110%);
-    -webkit-transition: -webkit-transform 0.3s;
-       -moz-transition: -moz-transform 0.3s;
-            transition: transform 0.3s;
-  }
-  .app-show-menu #toc-layer {
-    -webkit-transform: translateY(0px);
-       -moz-transform: translateY(0px);
-            transform: translateY(0px);
-  }
-  #toc {
-    position: fixed !important;
-    z-index: 90;    
-    background-color: hsl(282, 99%, 31%);
-    -webkit-transition: background-color 0.3s;
-       -moz-transition: background-color 0.3s;
-            transition: background-color 0.3s;
-  }
-  .app-show-menu #toc {
-    background-color: hsl(160, 56%, 88%);
-  }
-  .toc-link {
-    text-align: center;    
-  }
-  .toc-section {
-    text-align: center;
-    color: hsl(282, 99%, 31%);
-  }
-
-</style>
-
-<div id="toc-layer">
-  <nav id="toc">
-    <ul id="toc-sections">
-      <li class="toc-section">
-        <h1><a href="https://github.com/the-gss/">Github</a></h1>
-      </li>
-      <li class="toc-section">
-        <h1><a href="/usage/">Usage</a></h1>
-      </li>
-      <li class="toc-section">
-        <h1><a href="/">About</a></h1>
-      </li>
-      <li class="toc-section toc-section-middle">
-        <h1><a href="/#c_101">CCSS</a></h1>
-      </li>
-      <li class="toc-section">
-        <h1><a href="/documentation/">VFL</a></h1>
-      </li>
-      <li class="toc-section">
-        <h1><a href="/documentation/">@if @else</a></h1>
-      </li>
-    </ul>
-  </nav>
+    /* structure */
+    #menu {
+      position: fixed !important;
+      backface-visibility: hidden;      
+      top: == 0 !require;
+      left: == 0 !require;
+      bottom: == ::window[bottom] !require;      
+      overflow-y: auto;
+      overflow-x: hidden;
+            
+      ul {
+        top: >=0 !require;
+        height: == ::[intrinsic-height];
+        center-y: == ::window[center-y];        
+        padding: == 2 * [baseline];
+        width: == ::[intrinsic-width];
+        left: == #hide-menu-button[right];
+        right: == ::parent[right] - #hide-menu-button[width];
+        
+        li {
+        text-align: center;
+        }
+      }
+    }
+    
+    #hide-menu-button {
+      position: fixed !important;
+      backface-visibility: hidden;      
+      width: == ::[intrinsic-width];
+      height: == ::[intrinsic-height];
+      center-y: == #menu[center-y];
+      left: == #menu[left];
+    }
+    
+            
+  </style>
+  <ul class="large-list">
+    <li>
+      <a href="/">
+        <svg class="badge badge-icon trans" 
+        	 width="45.142px" height="48px" version="1.1" xmlns="http://www.w3.org/2000/svg" baseProfile="full">
+        <g>
+        	<path d="M11.991,34.812l10.595,2.902l10.453-2.874l1.185-13.159l-11.638-0.001v5.193h6.06l-0.425,3.959l-5.636,1.508l-5.777-1.536
+        		l-1.454-17.127h7.242v0.002h7.356l-0.317,4.251h4.954l0.842-9.353H22.626V8.575H9.719L11.991,34.812z M0,0l4.279,42.998L21.951,48
+        		l18.912-5.002L45.142,0H0z M36.765,39.919l-14.814,3.634L8.036,39.235L4.44,3.992h36.263L36.765,39.919z"/>
+        </g>
+        </svg>
+      </a>
+    </li>
+    <li>
+      <a href="/usage/">Install</a>
+    </li>
+    <li>
+      <a href="https://github.com/the-gss/">Github</a>
+    </li>
+    <!--li>
+      <a href="/#features">Features</a>
+    </li>
+    <li>
+      <a href="/#about">About</a>
+    </li-->
+    <li>
+      <a href="/guides/ccss">CCSS</a>
+    </li>
+    <li>
+      <a href="/guides/vfl">VFL</a>
+    </li>
+    <li>
+      <a href="/guides/ifelse">@if @else</a>
+    </li>
+  </ul>
 </div>
 
--->
+<button id="hide-menu-button" class="app-menu-trigger">X</button>

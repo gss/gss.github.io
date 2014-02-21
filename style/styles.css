@@ -33,17 +33,17 @@ ul, menu, dir {
   margin: 0;
   padding: 0;
 }
-.content a, .link {
+p a, .link {
   position: relative;
 }
-.content a::after, .link::after {
+p a::after, .link::after {
 opacity: 0;
 -webkit-transition: top 0.3s, opacity 0.3s, -webkit-transform 0.3s;
    -moz-transition: top 0.3s, opacity 0.3s, -moz-transform 0.3s;
         transition: top 0.3s, opacity 0.3s, transform 0.3s;
 }
-.content a::before, .link::before,
-.content a::after, .link::after {
+p a::before, .link::before,
+p a::after, .link::after {
 position: absolute;
 top: 110%;
 left: 0;
@@ -59,10 +59,10 @@ content: '';
 -moz-transform: scale(0.95);
 transform: scale(0.95);
 }
-.content a:hover::before, .link:hover::before, 
-.content a:hover::after,  .link:hover::after, 
-.content a:focus::before, .link:focus::before, 
-.content a:focus::after,  .link:focus::after   {
+p a:hover::before, .link:hover::before, 
+p a:hover::after,  .link:hover::after, 
+p a:focus::before, .link:focus::before, 
+p a:focus::after,  .link:focus::after   {
 opacity: .3;
 -webkit-transform: scale(1.1);
 -moz-transform: scale(1.1);
@@ -104,12 +104,6 @@ h1 {
   letter-spacing: 0.1em;*/
 }
 
-.content ul {  
-  -webkit-column-count: 3;
-     -moz-column-count: 3;
-          column-count: 3;
-  text-align: center;  
-}
 
 div, p, blockquote, button {
   margin: 0;
@@ -143,8 +137,8 @@ button {
 
 .trans {
   -webkit-transition: -webkit-transform .3s;
-  -moz-transition: -moz-transform .3s;
-      transition:transform .3s;
+     -moz-transition:    -moz-transform .3s;
+          transition:         transform .3s;
 }
 
 
@@ -161,20 +155,45 @@ p a {
 /* Color Schemes
 ============================================================= */
 
+ul.large-list a {
+  border-bottom: 2px solid hsla(282, 99%, 41%,.1);        
+}
+.color-menu {
+  background-color: hsla(282, 99%, 31%, .96);
+}
+.color-menu .badge g {
+  fill: hsl(58, 100%, 84%);
+}
+.color-menu ul.large-list a {
+  border-bottom: 2px solid hsla(282, 80%, 76%, 0.5);
+  color: hsl(58, 100%, 84%);
+}
+
 button {
   color: hsl(282, 99%, 31%);
   background-color: hsl(58, 100%, 84%);
 }
-button:hover {
+button.transparent {
+  background-color: transparent;
+}
+button:hover, button.transparent:hover {
   border-color: hsl(282, 99%, 31%);
-  background-color: hsl(282, 99%, 31%);
+  background-color: hsl(282, 99%, 31%) !important;
   color: hsl(58, 100%, 84%);  
 }
 
-#badge g {
-  fill: #6f019e;
+button.inverse {
+  border-color: hsl(282, 99%, 31%);
+  background-color: hsl(282, 99%, 31%);
+  color: hsl(58, 100%, 84%); 
 }
-#menu-icon polygon {
+
+button.inverse:hover {
+  color: hsl(282, 99%, 31%);
+  background-color: hsl(58, 100%, 84%) !important; 
+}
+
+.badge g {
   fill: #6f019e;
 }
 
