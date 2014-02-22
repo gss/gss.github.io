@@ -15,6 +15,11 @@ body {
   font-weight: 300;
 }
 
+.fixed {
+  position: fixed !important;
+  -webkit-backface-visibility: hidden;  
+}
+
 .app-not-ready body {
   opacity: 0;
 }

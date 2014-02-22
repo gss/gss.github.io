@@ -1,6 +1,6 @@
 <!-- Top Nav -->
 
-<div id="nav" class="trans">
+<div id="nav" class="trans fixed">
   <style type="text/gss">
         
     .badge {
@@ -33,8 +33,6 @@
   </style>
   <style>
     #nav, #sidenav {
-      position: fixed !important;
-      backface-visibility: hidden;
       z-index: 100;
     }
   
@@ -116,19 +114,17 @@
   </a>
 </div>
 
-<div id="sidenav" class="trans">  
+<div id="sidenav" class="fixed trans">  
   <div id="sidenav-menu-button-wrap" class="trans">
     <button id="sidenav-menu-button" class="app-menu-trigger transparent">Menu</button>
   </div>  
 </div>
 
-<div id="menu" class="color-menu trans">
+<div id="menu" class="color-menu trans fixed">
   <style type="text/gss">
     
     /* structure */
     #menu {
-      position: fixed !important;
-      backface-visibility: hidden;      
       top: == 0 !require;
       left: == 0 !require;
       bottom: == ::window[bottom] !require;      
@@ -151,8 +147,6 @@
     }
     
     #hide-menu-button {
-      position: fixed !important;
-      backface-visibility: hidden;      
       width: == ::[intrinsic-width];
       height: == ::[intrinsic-height];
       center-y: == #menu[center-y];
@@ -198,4 +192,4 @@
   </ul>
 </div>
 
-<button id="hide-menu-button" class="app-menu-trigger">X</button>
+<button id="hide-menu-button" class="app-menu-trigger fixed">X</button>
