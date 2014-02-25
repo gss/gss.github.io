@@ -5,7 +5,7 @@ subtitle: lay it out like it's 1999
 color: b
 layout: post
 ---
-Soon after the W3C introduced Cascading Style Sheets, [Greg Badros](http://www.badros.com/greg/), the author of the Cassowary Constraint Solver & [recently retired Facebook VP](http://allthingsd.com/20130920/facebook-engineering-and-products-vp-greg-badros-to-leave-company/), proposed [Constraint CSS (CCSS)](http://www.cs.washington.edu/research/constraints/web/ccss-uwtr.pdf) as a general solution for CSS layout.  Back in '99 Badros demonstrated *responsive* layouts with CCSS that today's designers still can't reproduce without grinding out piles of JavaScript.  For more than a decade, no one seemed to take notice outside academia... Until Apple implemented Cassowary & Greg's pioneering concepts in it's new AutoLayout engine with the launch of OS X Lion. Despite the evolutionary leap for app developers, web designer's have had to settle with [float-based](http://www.sitepoint.com/give-floats-the-flick-in-css-layouts/) & table-based layouts that have remained unimproved to this day.  
+Soon after the W3C introduced Cascading Style Sheets, [Greg Badros](http://www.badros.com/greg/), the author of the Cassowary Constraint Solver & [recently retired Facebook VP](http://allthingsd.com/20130920/facebook-engineering-and-products-vp-greg-badros-to-leave-company/), proposed [Constraint CSS (CCSS)](http://www.cs.washington.edu/research/constraints/web/ccss-uwtr.pdf) as a general solution for CSS layout.  Back in '99 Badros demonstrated *responsive* layouts with CCSS that today's designers still can't reproduce without grinding out piles of JavaScript.  For more than a decade, no one seemed to take notice outside academia... Until Apple implemented Cassowary & Greg's pioneering concepts in its new AutoLayout engine with the launch of OS X Lion. Despite the evolutionary leap for app developers, web designer's have had to settle with [float-based](http://www.sitepoint.com/give-floats-the-flick-in-css-layouts/) & table-based layouts that have remained unimproved to this day.  
 
 > "We should contemplate how very, very far behind the web platform is in making it delightful to build the sorts of things that are work-a-day in native environments." <a href="http://infrequently.org/2012/02/misdirection/">Alex Russell</a>
 
@@ -127,7 +127,7 @@ You can create a custom variable for an element by, again, simply using it:
 
 {% endhighlight %}
 
-This will automatically create a `[col-size]` variable for each element with the class post, and constrains it to be the same as 3 times that post's line-height.  Don't forget this relationship is 2-way, so further constraining a post's [col-size] can effect it's line-height, which can be remedied using by taking advantage of the "Constraint Hierarchy" with [Strengths]() or [Stays](#stays).
+This will automatically create a `[col-size]` variable for each element with the class post, and constrains it to be the same as 3 times that post's line-height.  Don't forget this relationship is 2-way, so further constraining a post's [col-size] can affect its line-height, which can be remedied using by taking advantage of the "Constraint Hierarchy" with [Strengths]() or [Stays](#stays).
 
 ## Global Scope
 
@@ -203,10 +203,10 @@ The this and parent selectors can only be used in a nested ruleset, as with:
 
 ## Intrinsic Properties
 
-What if we want an paragraph's height to be the *intrinsic* height of it's text content?  We use an `intrinsic` property!
+What if we want an paragraph's height to be the *intrinsic* height of its text content?  We use an `intrinsic` property!
 
 {% highlight css %}
-/* all paragraphs will have a height equal to it's text-height */
+/* all paragraphs will have a height equal to its text-height */
 
 p {
   height: == ::[intrinsic-height];
@@ -266,7 +266,7 @@ Constraints of the same strength can be made relatively stronger or weaker with 
 
 {% endhighlight %}
 
-`#planet[weight]` will be 600.  The first constraint has an additional weight of `1000` used in calculating it's potential error, making not satisfying it more costly.
+`#planet[weight]` will be 600.  The first constraint has an additional weight of `1000` used in calculating its potential error, making not satisfying it more costly.
 
 
 ## Ambiguity
@@ -281,7 +281,7 @@ Constraints of the same strength can be made relatively stronger or weaker with 
 
 {% endhighlight %}
 
-Should the box move it's position to the right or stretch it's width to make it's right edge flush with the window?  A critical best practice is to *fully constrain* an element, in other words, you should adequately specify an element's position & size.  If an element is under-constrained you will have unpredictable results. 
+Should the box move its position to the right or stretch its width to make its right edge flush with the window?  A critical best practice is to *fully constrain* an element, in other words, you should adequately specify an element's position & size.  If an element is under-constrained you will have unpredictable results. 
 
 
 ## Stays
