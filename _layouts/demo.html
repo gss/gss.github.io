@@ -4,7 +4,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ page.title }} | {{ site.title }}</title>
-    <link rel="shortcut icon" href="/favicon.ico">        
+    <link rel="shortcut icon" href="/favicon.ico">
+    <style>
+    .app-not-ready body {
+      opacity: 0;
+    }
+    .app-ready body {
+      opacity: 1;
+    }
+    </style>
   </head>
   <body class="style-a">
     
@@ -13,11 +21,19 @@
     <script>
     GSS_CONFIG = {
       worker: "/bower_components/gss/dist/worker.js",
-      defaultStrength: "weak",
-      fractionalPixels: true
+      fractionalPixels: false
     }
     </script>
     <script src="/bower_components/gss/dist/gss.js"></script>
+    <script>
+    html = document.getElementsByTagName("html")[0];
+    GSS.once("display", function() {
+      classie.add(html, "app-ready");
+      classie.remove(html, "app-not-ready");
+    });
+    GSS.once()
+    </script>
+    <script src="/js/vendor/classie.js"></script>
     
     {{content}}
     

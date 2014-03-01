@@ -1,10 +1,17 @@
+.app-not-ready body {
+  opacity: 0;
+}
+
+.app-ready body {
+  opacity: 1;
+}
 
 html {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 body {
-  background: hsl(220,20%,99%) url("http://img.rituwall.com.s3.amazonaws.com/bg/et/body-bg14.png") 0 0 repeat;
+  background: hsl(220,20%,91%) url("http://img.rituwall.com.s3.amazonaws.com/bg/et/body-bg14.png") 0 0 repeat;
   color: hsl(220, 20%, 20%);
 }
 
@@ -32,8 +39,10 @@ h1, h2, p {
   border: solid 1px hsl(220,20%,95%);
   border-top: solid 1px white;
   box-shadow: 
-          0 1px 0px hsla(220,10%,50%,.6)
-  ,       0 0px 2px 1px hsla(220,10%,50%,.2)
+      0 1px 0px hsla(220,10%,50%,.6);
+  box-shadow: 
+      0 1px 0px hsla(220,10%,50%,.6)
+    , 0 0px 2px 1px hsla(220,10%,50%,.2)
     , inset 0 -30px 30px hsla(220,20%,88%,.3)
     , inset 0 30px 30px hsla(220,20%,99%,.5)
     ;
