@@ -27,11 +27,12 @@
     <script src="/bower_components/gss/dist/gss.js"></script>
     <script>
     html = document.getElementsByTagName("html")[0];
+    console.time("display");
     GSS.once("display", function() {
+      console.timeEnd("display");
       classie.add(html, "app-ready");
       classie.remove(html, "app-not-ready");
     });
-    GSS.once()
     </script>
     <script src="/js/vendor/classie.js"></script>
     
