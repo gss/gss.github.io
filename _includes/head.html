@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ page.title }} | {{ site.title }}</title>
-    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="shortcut icon" href="/favicon.ico">    
+    
     <link rel="stylesheet" href="/style/pygments.css" type="text/css" media="screen" title="no title" charset="utf-8">
-    <link rel="stylesheet" href="/style/styles.css" type="text/css" media="screen" title="no title" charset="utf-8">
-        
+    <link rel="stylesheet" href="/style/styles.css" type="text/css" media="screen" title="no title" charset="utf-8">        
     <script type="text/javascript" src="//use.typekit.net/les8uug.js"></script>
     <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
     
@@ -25,13 +25,12 @@
     </script>
     <script src="/bower_components/gss/dist/gss.js"></script>        
     <script src="/js/script.js"></script>
-    <script src="/js/vendor/classie.js"></script>    
+    <script src="/js/vendor/classie.js"></script>
     
     <style type="text/gss">
 
     [Wwin] == ::window[width] == body[width] !require;
     [Hwin] == ::window[height] == body[height] !require;
-
 
     [breakpoint1] == 900 !require;
     
@@ -88,6 +87,7 @@
     
         /* bridge vars b/c no floats */
         bottom: == ::parent[title-bottom];
+        /*bottom: <= ::parent[bottom] - [top-margin];*/
     
         h2 {
           font-size: == [subtitle-font-size];          
