@@ -32,8 +32,8 @@ h1, h2, p {
   border: solid 1px hsl(220,20%,95%);
   border-top: solid 1px white;
   box-shadow: 
-          0 1px 0px hsl(220,10%,50%)
-  ,       0 0px 2px 1px hsla(220,10%,50%,.6)
+          0 1px 0px hsl(220,10%,50%,.6)
+  ,       0 0px 2px 1px hsla(220,10%,50%,.2)
     , inset 0 -30px 30px hsla(220,20%,88%,.3)
     , inset 0 30px 30px hsla(220,20%,99%,.5)
     ;
