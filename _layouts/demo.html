@@ -21,8 +21,7 @@
     <script>
     GSS_CONFIG = {
       worker: "/bower_components/gss/dist/worker.js",
-      fractionalPixels: false,
-      debug: true
+      fractionalPixels: false
     }
     </script>
     <script src="/bower_components/gss/dist/gss.js"></script>
@@ -31,11 +30,10 @@
     console.time("display");
     GSS.once("display", function() {
       console.timeEnd("display");
-      classie.add(html, "app-ready");
-      classie.remove(html, "app-not-ready");
+      html.classList.add("app-ready");
+      html.classList.remove("app-not-ready");
     });
-    </script>
-    <script src="/js/vendor/classie.js"></script>
+    </script>    
     
     {{content}}
     
