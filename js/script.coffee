@@ -10,8 +10,6 @@
   console.time "display"
   
   GSS.once "display", ->
-    classie.add html, "app-ready"
-    classie.remove html, "app-not-ready"
     console.timeEnd "display"
     setupWayPoints()
     app.menu.init()

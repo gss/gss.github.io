@@ -20,11 +20,11 @@ body {
   -webkit-backface-visibility: hidden;  
 }
 
-.app-not-ready body {
+.gss-not-ready body {
   opacity: 0;
 }
 
-.app-ready body {
+.gss-ready body {
   opacity: 1;
 }
 

@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" class="app-not-ready">
+<html lang="en" class="gss-not-ready">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ page.title }} | {{ site.title }}</title>
     <link rel="shortcut icon" href="/favicon.ico">
     <style>
-    .app-not-ready body {
+    .gss-not-ready body {
       opacity: 0;
     }
-    .app-ready body {
+    .gss-ready body {
       opacity: 1;
     }
     </style>
@@ -25,15 +25,6 @@
     }
     </script>
     <script src="/bower_components/gss/dist/gss.js"></script>
-    <script>
-    html = document.getElementsByTagName("html")[0];
-    console.time("display");
-    GSS.once("display", function() {
-      console.timeEnd("display");
-      html.classList.add("app-ready");
-      html.classList.remove("app-not-ready");
-    });
-    </script>    
     
     {{content}}
     

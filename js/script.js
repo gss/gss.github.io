@@ -4,8 +4,6 @@
   html = document.getElementsByTagName("html")[0];
   console.time("display");
   GSS.once("display", function() {
-    classie.add(html, "app-ready");
-    classie.remove(html, "app-not-ready");
     console.timeEnd("display");
     setupWayPoints();
     return app.menu.init();
