@@ -6,7 +6,13 @@ layout: demo
 <link rel="stylesheet" href="/assets/grail_bootstrap/css/bootstrap.css" type="text/css">
 <link rel="stylesheet" href="/assets/grail_bootstrap/css/texture.css" type="text/css">
 
-<style type="text/gss">
+<div id="panel"></div>
+<div class="inner-panel" id="inner-panel"></div>
+<button id="b1" class="btn">Share...</button>
+<button id="b2" class="btn">Add</button>
+<button id="b4" class="btn">Remove</button>
+<button id="b3" class="btn btn-primary">Change Mode</button>
+<style id="rules" type="text/gss" contenteditable>
   
   /* vars */
     
@@ -44,15 +50,22 @@ layout: demo
   @horizontal |-[#b1]-[#b2]~-~[#b3]~-~[#b4]-|
     in(#panel)
     gap([gap])
-    chain-top !require;        
+    chain-top !require;  
+    
+  /* rules */
+  
+  #rules {
+    display:block;
+    white-space: pre;
+    overflow-y: scroll;
+    
+    @horizontal |-[::]|
+      in(#inner-panel)
+      gap([gap]);
+
+    @vertical |-[::]-|
+      in(#inner-panel)
+      gap(2);
+  }      
     
 </style>
-
-<div id="panel"></div>
-
-<div class="inner-panel" id="inner-panel"></div>
-    
-<button id="b1" class="btn">Share...</button>
-<button id="b2" class="btn">Add</button>
-<button id="b4" class="btn">Remove</button>
-<button id="b3" class="btn btn-primary">Change Mode</button>
