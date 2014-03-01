@@ -1,0 +1,62 @@
+---
+uid: apple-demo
+title: Apple-style panel and buttons
+layout: demo
+---
+
+<link rel="stylesheet" href="/assets/grail_bootstrap/css/texture.css" type="text/css">
+<link rel="stylesheet" href="/assets/grail_bootstrap/css/bootstrap.css" type="text/css">
+<style type="text/gss">
+  
+  /* vars */
+    
+  [gap] == 18 !require;
+  
+  /* panel */
+  
+  #panel {
+    width: == ::window[width] - 520;
+    width: <= 720;
+    height: == ::window[height] - 520;
+    height: <= 360 !require;
+    height: >= 300 !require;
+    center-x: == ::window[center-x];
+    center-y: == ::window[center-y];
+  }  
+    
+  @horizontal |-[#inner-panel]-|
+    in(#panel)
+    gap([gap]);
+
+  @vertical |-[#inner-panel]-[#b1]-|
+    in(#panel)
+    gap([gap]);
+  
+  /* buttons */
+  
+  button {
+    width: == ::[intrinsic-width] !require;
+    height: == ::[intrinsic-height] !require;
+  }
+  
+  #b3[center-x] == #panel[center-x];
+  
+  @horizontal |-[#b1]-[#b2]~-~[#b3]~-~[#b4]-|
+    in(#panel)
+    gap([gap])
+    chain-top !require;        
+  
+  body {
+    background: hsl(220, 10%, 90%) url("http://img.rituwall.com.s3.amazonaws.com/bg/et/body-bg14.png") 0 0 repeat;
+  }  
+    
+</style>
+
+<div id="panel"></div>
+
+<div class="inner-panel" id="inner-panel"></div>
+    
+<button id="b1" class="btn">Share...</button>
+<button id="b2" class="btn">Add</button>
+<button id="b4" class="btn">Remove</button>
+<button id="b3" class="btn btn-primary">Change Mode</button>

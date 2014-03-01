@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" class="app-not-ready">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ page.title }} | {{ site.title }}</title>
+    <link rel="shortcut icon" href="/favicon.ico">        
+  </head>
+  <body class="style-a">
+    
+    {% include analytics.html %}
+    
+    <script>
+    GSS_CONFIG = {
+      worker: "/bower_components/gss/dist/worker.js",
+      defaultStrength: "weak",
+      fractionalPixels: true
+    }
+    </script>
+    <script src="/bower_components/gss/dist/gss.js"></script>
+    
+    {{content}}
+    
+  </body>
+</html>

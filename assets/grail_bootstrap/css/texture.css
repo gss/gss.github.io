@@ -1,0 +1,56 @@
+
+html {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+body {
+  background: hsl(220,20%,99%) url("http://img.rituwall.com.s3.amazonaws.com/bg/et/body-bg14.png") 0 0 repeat;
+  color: hsl(220, 20%, 20%);
+}
+
+
+
+h1, h2, p {
+  text-shadow: 
+      0 1px white
+    , 0 -1px white
+    ;
+}
+
+#message h1 {
+  font-size: 6em;
+  line-height: 1em;
+  margin-left: 0px;
+  font-weight: 1000;
+  font-family: "HelveticaNeue-CondensedBold", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  text-shadow: 0 1px hsl(220, 10%, 60%) , 0 -2px white !important;
+  color:  hsl(220, 10%, 92%);
+}
+
+#panel {
+  height: 200px;
+  border: solid 1px hsl(220,20%,95%);
+  border-top: solid 1px white;
+  box-shadow: 
+          0 1px 0px hsl(220,10%,50%)
+  ,       0 0px 2px 1px hsla(220,10%,50%,.6)
+    , inset 0 -30px 30px hsla(220,20%,88%,.3)
+    , inset 0 30px 30px hsla(220,20%,99%,.5)
+    ;
+    
+  background-color:hsl(220, 10%, 94%);;
+  -webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;
+}
+
+.inner-panel {
+  background: 
+      hsl(220,10%,98%) url("http://img.rituwall.com.s3.amazonaws.com/bg/et/body-bg8.png") 
+    ;
+  box-shadow: 
+      inset 0 1px 1px hsla(220,20%,50%,.4)
+    , inset 0 0px 5px hsla(220,20%,50%,.2)
+    ;
+  border: solid 1px white;
+  -webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;
+  opacity: .9;
+}
