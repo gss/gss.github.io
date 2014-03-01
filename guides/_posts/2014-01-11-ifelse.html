@@ -15,13 +15,11 @@ As an example, if we wanted a set of CSS rules to kick when the screen is less t
 {% highlight css %}
 
 /* GSS: */
-
 @if ::window[width] < 960 {
   /* ... */
 }
 
 /* Old-school Media Queries: */
-
 @media screen and (max-width: 960px) {
   /* ... */
 }
@@ -31,6 +29,8 @@ As an example, if we wanted a set of CSS rules to kick when the screen is less t
 But, any property can be used within an `@if`, `@else` conditional.  So, if you want a layout to be responsive to a panel's width:
 
 {% highlight css %}
+
+/* GSS: */
 @if #panel[width] >= 800 {
   /* ... */
 }
@@ -43,6 +43,7 @@ But, any property can be used within an `@if`, `@else` conditional.  So, if you 
 
 /* Not possible with Media Queries */
 {% endhighlight %}
+
 
 
 {% highlight css %}
@@ -60,3 +61,38 @@ But, any property can be used within an `@if`, `@else` conditional.  So, if you 
   }
 }
 {% endhighlight %}
+
+
+
+{% highlight css %}
+#box1[width] == 9;
+#box2[width] == 19;
+
+/* with ::this pseudo selector */ 
+.box {
+  @if ::[width] < 10 {
+    height: == 10;
+  }
+  @else {
+    height: == 20;
+  }
+}
+{% endhighlight %}
+
+
+{% highlight css %}
+[calories] == 500;
+
+/* with custom constraint variable */ 
+@if [calories] >= 960 {
+  #boo[hunger] == 1;
+}
+@else {
+  #boo[hunger] == 1000; 
+}
+
+/* #boo[hunger] will be 1000 */ 
+{% endhighlight %}
+
+
+WIP, more coming soon...
