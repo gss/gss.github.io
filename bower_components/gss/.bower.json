@@ -35,11 +35,11 @@
     "index.html",
     ".travis.yml"
   ],
-  "_release": "c736fbd926",
+  "_release": "8bc8135b54",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "c736fbd926eacf0b09d2bea044944f4b4b0d6cd1"
+    "commit": "8bc8135b5443869e77ceaef982d830f369539d06"
   },
   "_source": "git://github.com/the-gss/engine.git",
   "_target": "*",
