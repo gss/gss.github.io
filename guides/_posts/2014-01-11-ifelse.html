@@ -6,9 +6,19 @@ color: b
 layout: post
 ---
 
-"Responsive" web design is all the rage & is made possible with [CSS Media Queries](https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Media_queries)... but [Media Queries are a hack](http://ianstormtaylor.com/media-queries-are-a-hack/).  Media Queries allow layouts to adapt to the size of the viewport, but if you want to adapt to anything else, tough luck.  The CSS standards body has received an [onslaught](http://www.xanthir.com/b4PR0) of requests for "Element Queries" - because web designers are desperate to achieve higher levels of adaptiveness with their layouts.  The idea with Element Queries is simple - individual elements can be responsive to their own size, which would allow for richer designs & more modular Style Sheets.  Instead of addressing the engineering challenges, the [W3C has decided to avoid it all together](http://www.xanthir.com/b4PR0).
+The age of "Responsive Web Design" is upon us and it's mandate for designs that elegantly adapt to the user's viewing context has made web dev "hard, really hard, actually" as Mr Jeff Croft [lamented](http://jeffcroft.com/blog/2012/mar/02/implementing-responsive-design/).  Conceptualizing Responsive layouts is difficult enough, but implementing such layouts with [CSS Media Queries](https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Media_queries) is an awkward affair because as Ian Taylor [illuminated](http://ianstormtaylor.com/media-queries-are-a-hack/), Media Queries are a hack.  
 
-Which brings us to `@if` and `@else` directives.  Think of them as a general replacement for Media Queries and the much desired Element Query.  
+## Element Queries
+
+Media Queries allow layouts to adapt to the size of the viewport, but if you want to adapt to anything else, tough luck.  W3C members have received an [onslaught](http://www.xanthir.com/b4PR0) of requests for "Element Queries" - because web designers are desperate to achieve higher levels of adaptiveness with their layouts.  The idea with Element Queries is simple - individual elements can be responsive to their own size, which would allow for richer designs & more modular Style Sheets.  While web developers ponder [work-arounds](http://filamentgroup.com/lab/element_query_workarounds/) for lack of Element Queries, [the W3C decided](http://www.xanthir.com/b4PR0) to avoid the issue all together.
+
+Yet, even with the hypothetical Element Query, elements could only be adaptive to their size.  Why not allow elements to be adaptive to any property like `col-count` or even to a custom variable?
+
+## Arbitrary Property Conditionals
+
+Which brings us to `@if` and `@else` directives.  Think of them as a more expressive replacement for Media Queries and the much desired Element Query, that allow CSS rules to be adaptive to any arbitrary property or custom constraint variable.
+
+Instead of continuing the tradition of the Query types; `min-width`, `max-width`, `min-height` & `max-height`; for every available CSS property, `@if` `@else` directives use the conditional operators; `<`, `<=`, `>`, `>=`, `!=`, `==`, `or`, and `and`.
 
 As an example, if we wanted a set of CSS rules to kick when the screen is less than 960px:
 
