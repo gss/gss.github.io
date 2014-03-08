@@ -38,8 +38,9 @@ ul, menu, dir {
   margin: 0;
   padding: 0;
 }
-p a, .link {
+p a, .link, ul a {
   position: relative;
+  font-weight: bold;
 }
 p a::after, .link::after {
 opacity: 0;
@@ -202,6 +203,10 @@ button.inverse:hover {
   fill: #6f019e;
 }
 
+hr {
+  color:hsl(58, 100%, 85%);
+  size: 3px;
+}
 .content h2 {
   border-bottom: solid 3px hsl(58, 100%, 85%);
 }
