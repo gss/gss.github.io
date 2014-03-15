@@ -130,7 +130,7 @@ small {
 }
 
 
-button {
+button, .button {
   outline: none;
   box-shadow: none;
   padding: .2em .6em;
@@ -182,7 +182,7 @@ button {
 button.transparent {
   background-color: transparent;
 }
-button:hover, button.transparent:hover {
+button:hover, button.transparent:hover, .button:hover {
   border-color: hsl(282, 99%, 31%);
   background-color: hsl(282, 99%, 31%) !important;
   color: hsl(58, 100%, 84%);  
