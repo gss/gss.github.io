@@ -2,9 +2,17 @@
   var app, checkWayPoints, html, menu, mobilecheck, scrollDiff, scrollDirection, scrollPrev, setupWayPoints;
   window.app = app = {};
   html = document.getElementsByTagName("html")[0];
-  console.time("display");
+  if (typeof console !== "undefined" && console !== null) {
+    if (typeof console.time === "function") {
+      console.time("display");
+    }
+  }
   GSS.once("display", function() {
-    console.timeEnd("display");
+    if (typeof console !== "undefined" && console !== null) {
+      if (typeof console.timeEnd === "function") {
+        console.timeEnd("display");
+      }
+    }
     setupWayPoints();
     return app.menu.init();
   });

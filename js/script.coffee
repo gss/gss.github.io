@@ -7,10 +7,10 @@
   # Setup when GSS ready... 
   # -------------------------------------------------
   
-  console.time "display"
+  console?.time? "display"
   
   GSS.once "display", ->
-    console.timeEnd "display"
+    console?.timeEnd? "display"
     setupWayPoints()
     app.menu.init()
 
