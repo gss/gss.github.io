@@ -28,6 +28,7 @@ html {
 }
 
 #background {
+  background-color: hsl(3, 18%, 43%);
   position: absolute;
   top: 0px;
   bottom: 0px;
