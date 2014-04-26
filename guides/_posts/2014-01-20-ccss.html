@@ -115,7 +115,7 @@ A custom constraint variable can be created by simply using it in a constraint.
 
 {% endhighlight %}
 
-This automatically defines the constraint variable `[col-size]` that can be be used in other constraints.  
+This automatically defines the constraint variable `[col-size]` that can be re-used in other constraints.  
 
 ## Custom Element Constraint Variables
 
@@ -127,7 +127,7 @@ You can create a custom variable for an element by, again, simply using it:
 
 {% endhighlight %}
 
-This will automatically create a `[col-size]` variable for each element with the class post, and constrains it to be the same as 3 times that post's line-height.  Don't forget this relationship is 2-way, so further constraining a post's [col-size] can effect it's line-height, which can be remedied using by taking advantage of the "Constraint Hierarchy" with [Strengths]() or [Stays](#stays).
+This will automatically create a `[col-size]` variable for each element with the class post, and constrain it to be the same as 3 times that post's line-height.  Don't forget this relationship is 2-way, so further constraining a post's [col-size] can effect its line-height, which can be remedied using by taking advantage of the "Constraint Hierarchy" with [Strengths]() or [Stays](#stays).
 
 ## Global Scope
 
@@ -235,7 +235,7 @@ Stronger constraints completely overcome weaker ones - this is the phenomena of 
 
 {% endhighlight %}
 
-There 4 levels of built-in strength:
+There are 4 levels of built-in strength:
 
 - `!weak`
 - `!medium`
