@@ -1,0 +1,90 @@
+html:not(.gss-ready) {
+  opacity:0;
+}
+
+/* easeInOutCubic */
+/*
+.gss-ready button, .gss-ready #name, .gss-ready #avatar {  
+  
+  transition-property: transform;
+  transition-duration: .5s;
+  
+  -webkit-transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1.000); 
+     -moz-transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1.000); 
+       -o-transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1.000); 
+          transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1.000); 
+}
+*/
+
+* {
+  -webkit-backface-visibility: hidden;
+  margin: 0px;
+  padding: 0px;
+  outline: none;
+}
+
+html {
+  background-color: hsl(3, 18%, 43%);
+}
+
+#background {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+  left: 0px;
+  background-image: url('assets/cover.jpg');
+  background-size: cover;
+  background-position: 50% 50%;
+  opacity: .7;
+  -webkit-filter: blur(5px) contrast(.7);
+}
+
+#cover {
+  background-image: url('assets/cover.jpg');
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+#avatar {
+  background-image: url('assets/avatar.jpg');
+  background-size: cover;
+  background-position: 50% 50%;
+  border: 10px solid hsl(39, 40%, 90%);
+  box-shadow: 0 1px 1px hsla(0,0%,0%,.5);
+}
+
+h1 {
+  color: white;
+  text-shadow: 0 1px 1px hsla(0,0%,0%,.5);
+  font-size: 40px;
+  line-height: 1.5em;
+  font-family: "adelle",georgia,serif;
+  font-style: normal;
+  font-weight: 400;
+}
+
+button {
+  color: hsl(3, 18%, 43%);
+  background-color: hsl(39, 40%, 90%);
+  text-shadow: 0 1px hsla(3, 18%, 100%, .5);
+  font-family: "proxima-nova-soft",helvetica,sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  border: none;  
+}
+
+button.primary {
+  background-color: #e38f71;
+  color: white;
+  text-shadow: 0 -1px hsla(3, 18%, 43%, .5);
+}
+
+.card {
+  background-color: hsl(39, 40%, 90%);
+  border: 1px solid hsla(0,0%,100%,.6);
+  box-shadow: 0 5px 8px hsla(0,0%,0%,.3);  
+}

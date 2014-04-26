@@ -1,0 +1,78 @@
+/* vars */
+[gap] == 20 !require;
+[flex-gap] >= [gap] * 2 !require;
+[radius] == [gap] / 2 !require;
+
+/* card */
+#profile-card {      
+  width: >= 360;
+  width: == ::window[width] - 480;            
+  height: >= 360;
+  height: == ::window[height] - 480;
+  center-x: == ::window[center-x];
+  center-y: == ::window[center-y];        
+  border-radius: == [radius];
+
+  #avatar {
+    height: == 160 !require;
+    width: == ::[height];
+    border-radius: == ::[height] / 2;        
+  }
+
+  #name {
+    height: == ::[intrinsic-height] !require;
+    width: == ::[intrinsic-width] !require;
+  }
+  
+  #cover {
+    border-radius: == [radius] / 2;
+  }
+  
+  button {
+    width: == ::[intrinsic-width] !require;
+    height: == ::[intrinsic-height] !require;        
+    padding: == [gap];
+    padding-top: == [gap] / 2;
+    padding-bottom: == [gap] / 2;
+    border-radius: == [radius] / 2;
+  }
+  
+  @h |~-~[#name]~-~| 
+    in(#cover)
+    outer-gap([gap] * 2) !strong;
+  
+  @if #profile-card[width] >= #profile-card[height] {
+    @v |-[#avatar]-[#name]-| 
+      in(#cover)
+      gap([gap]) 
+      outer-gap([flex-gap])
+      chain-center-x(::[center-x]);      
+
+    @h |-[#cover]-| in(::) gap(10);
+    @v |-[#cover]   in(::) gap(10);
+
+    @v [#cover]-[#follow]-| 
+      in(::) 
+      gap([gap]);
+
+    #follow[center-x] == ::[center-x];
+
+    @h |-[#message]~-~[#follow]~-~[#following]-[#followers]-| 
+      in(::) 
+      gap([gap]) 
+      chain-top
+      !strong;
+  }
+  @else {
+    @v |-[#avatar]-[#name]-[#follow]-[#message]-[#following]-[#followers]-| 
+      in(#cover)
+      gap([gap])
+      outer-gap([flex-gap])
+      chain-center-x(::[center-x]);      
+
+    @h |-[#cover]-| in(::) gap(10);
+    @v |-[#cover]-|   in(::) gap(10);
+  }
+  
+  
+}
