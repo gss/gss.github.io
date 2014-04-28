@@ -13,7 +13,6 @@
         console.timeEnd("display");
       }
     }
-    setupWayPoints();
     return app.menu.init();
   });
   app.mobilecheck = mobilecheck = function() {

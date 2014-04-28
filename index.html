@@ -17,11 +17,8 @@ layout: default
     bottom: == ::parent[bottom] - [bottom-margin] !require;
   }
 
-  /* center the buttons */  
-  #top-button1[right] == ::window[center-x] - [baseline] / 2;
-
-  @horizontal [#top-button1]-[#top-button2] 
-    gap([baseline])
+  @horizontal [#top-button1]-<::window[center-x]>-[#top-button2] 
+    gap([baseline] / 2)
     chain-top;
 
   [top-image-gap] == [baseline];
@@ -130,6 +127,49 @@ layout: default
     
     <p style="text-align:center;"><span class="super">*</span> <small>Maintains compatibility with browsers that don't support this feature</small></p>
   </div>
+</section>
+
+
+<section id="fluent-section" class="section color-a">
+  
+  <style type="text/gss">
+  
+  #fluent-section {
+    height: <= ::window[height] - [top-margin];
+    #fluent-img {
+      height: ==  ::[width] * 9 / 16 !require;
+    }
+    [top-margin] <= ::[h-gap] <= 2 * [top-margin] !strong;
+    [top-margin] * 1.5 <= ::[v-gap] <= 2 * [top-margin] !strong;
+    @h |-[#fluent-img(>= [max-p-width] !strong, >= 600 !require)]-| in(::) gap(::[h-gap]) !strong;
+    @v |-[#fluent-img]-| in(::) gap(::[v-gap]);    
+    
+    #fluent-play {
+      padding: 0 !important;
+      height: == 96;
+      width: == ::[height] * 1.6;      
+      center-x: == #fluent-section[center-x];
+      center-y: == #fluent-section[center-y];
+    }
+    
+    #fluent-play-tri {
+      width: == 51;
+      height: == 59;
+      center-x: == #fluent-section[center-x] + 5;
+      center-y: == #fluent-section[center-y] - 5;
+    }
+  }
+  </style>
+  
+  <a href="http://vimeo.com/91393694" target="_blank">    
+    <img id="fluent-img" src="assets/images/fluent-video-cover.jpg" alt="Kid">    
+    <button id="fluent-play" class="button-play">
+      <svg class="icon" id="fluent-play-tri" width="51px" height="59px" version="1.1" xmlns="http://www.w3.org/2000/svg" baseProfile="full" >
+        <path d="M51,29.5L0,59V0L51,29.5z"/>
+      </svg>
+    </button>
+  </a>
+  
 </section>
 
 {% for post in site.categories.home %}

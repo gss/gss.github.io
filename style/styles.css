@@ -182,7 +182,10 @@ button {
 button.transparent {
   background-color: transparent;
 }
-button:hover, button.transparent:hover, .button:hover {
+button:hover, a:hover button, 
+.button:hover, a:hover .button,
+button.transparent:hover
+ {
   border-color: hsl(282, 99%, 31%);
   background-color: hsl(282, 99%, 31%) !important;
   color: hsl(58, 100%, 84%);  
@@ -198,6 +201,24 @@ button.inverse:hover {
   color: hsl(282, 99%, 31%);
   background-color: hsl(58, 100%, 84%) !important; 
 }
+
+.button-play {
+  opacity: .7;
+  background-color: transparent;
+}
+.button-play .icon {
+  fill: hsl(282, 99%, 31%);
+}
+.button-play:hover .icon {
+  opacity: 1;
+  fill: hsl(58, 100%, 84%);
+}
+
+a:hover .button-play .icon {
+  opacity: 1;
+  fill: hsl(58, 100%, 84%);
+}
+
 
 .badge g {
   fill: #6f019e;
@@ -246,9 +267,12 @@ hr {
 .color-c {
   background-color: #d692f3;
   color: black;
-} .color-c 
+} .color-c blockquote {
+  color: white;
+}
 
-blockquote {
+.color-d {
+  background-color: hsl(282, 99%, 31%);
   color: white;
 }
 

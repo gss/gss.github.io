@@ -11,7 +11,7 @@
   
   GSS.once "display", ->
     console?.timeEnd? "display"
-    setupWayPoints()
+    #setupWayPoints()
     app.menu.init()
 
   

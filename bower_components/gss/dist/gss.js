@@ -1,4 +1,4 @@
-/* gss-engine - version 1.0.1-beta (2014-04-07) - http://gridstylesheets.org */
+/* gss-engine - version 1.0.2-beta (2014-04-16) - http://gridstylesheets.org */
 ;(function(){
 
 /**
@@ -246,6 +246,7 @@ module.exports = (function(){
         "nestedStatement": parse_nestedStatement,
         "nestedStatements": parse_nestedStatements,
         "ccss": parse_ccss,
+        "ccssStartChar": parse_ccssStartChar,
         "ccssOp": parse_ccssOp,
         "ContextualCCSSLine": parse_ContextualCCSSLine,
         "cssLine": parse_cssLine,
@@ -263,7 +264,6 @@ module.exports = (function(){
         "_": parse__,
         "__": parse___,
         "space": parse_space,
-        "char": parse_char,
         "anychar": parse_anychar,
         "multitoend": parse_multitoend,
         "anytoend": parse_anytoend,
@@ -488,12 +488,12 @@ module.exports = (function(){
         pos1 = pos;
         result0 = parse__();
         if (result0 !== null) {
-          result2 = parse_char();
+          result2 = parse_ccssStartChar();
           if (result2 !== null) {
             result1 = [];
             while (result2 !== null) {
               result1.push(result2);
-              result2 = parse_char();
+              result2 = parse_ccssStartChar();
             }
           } else {
             result1 = null;
@@ -846,6 +846,32 @@ module.exports = (function(){
         return result0;
       }
       
+      function parse_ccssStartChar() {
+        var result0;
+        
+        if (/^[a-zA-Z0-9_#.[\]\-""' *+\/$^~%\\()~]/.test(input.charAt(pos))) {
+          result0 = input.charAt(pos);
+          pos++;
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("[a-zA-Z0-9_#.[\\]\\-\"\"' *+\\/$^~%\\\\()~]");
+          }
+        }
+        if (result0 === null) {
+          if (input.substr(pos, 2) === "::") {
+            result0 = "::";
+            pos += 2;
+          } else {
+            result0 = null;
+            if (reportFailures === 0) {
+              matchFailed("\"::\"");
+            }
+          }
+        }
+        return result0;
+      }
+      
       function parse_ccssOp() {
         var result0;
         
@@ -906,7 +932,7 @@ module.exports = (function(){
       }
       
       function parse_ContextualCCSSLine() {
-        var result0, result1, result2, result3, result4, result5;
+        var result0, result1, result2, result3, result4, result5, result6;
         var pos0, pos1;
         
         reportFailures++;
@@ -941,23 +967,29 @@ module.exports = (function(){
             result1 = null;
           }
           if (result1 !== null) {
-            if (input.charCodeAt(pos) === 58) {
-              result2 = ":";
-              pos++;
-            } else {
-              result2 = null;
-              if (reportFailures === 0) {
-                matchFailed("\":\"");
-              }
-            }
+            result2 = parse__();
             if (result2 !== null) {
-              result3 = parse__();
+              if (input.charCodeAt(pos) === 58) {
+                result3 = ":";
+                pos++;
+              } else {
+                result3 = null;
+                if (reportFailures === 0) {
+                  matchFailed("\":\"");
+                }
+              }
               if (result3 !== null) {
-                result4 = parse_ccssOp();
+                result4 = parse__();
                 if (result4 !== null) {
-                  result5 = parse_anytoend();
+                  result5 = parse_ccssOp();
                   if (result5 !== null) {
-                    result0 = [result0, result1, result2, result3, result4, result5];
+                    result6 = parse_anytoend();
+                    if (result6 !== null) {
+                      result0 = [result0, result1, result2, result3, result4, result5, result6];
+                    } else {
+                      result0 = null;
+                      pos = pos1;
+                    }
                   } else {
                     result0 = null;
                     pos = pos1;
@@ -985,7 +1017,7 @@ module.exports = (function(){
         if (result0 !== null) {
           result0 = (function(offset, prop, op, tail) {
               return {type:'constraint', cssText: "::["+p.trim(prop)+"]"+" "+op+" "+p.stringify(tail)};
-            })(pos0, result0[1], result0[4], result0[5]);
+            })(pos0, result0[1], result0[5], result0[6]);
         }
         if (result0 === null) {
           pos = pos0;
@@ -1267,8 +1299,8 @@ module.exports = (function(){
           pos = pos1;
         }
         if (result0 !== null) {
-          result0 = (function(offset, $, s) {
-            return {type:'ruleset',selectors:$,rules:s};
+          result0 = (function(offset, sel, s) {
+            return {type:'ruleset',selectors:sel,rules:s};
           })(pos0, result0[1], result0[2]);
         }
         if (result0 === null) {
@@ -1561,7 +1593,7 @@ module.exports = (function(){
           pos = pos1;
         }
         if (result0 !== null) {
-          result0 = (function(offset, $, $s) {return [$].concat($s)})(pos0, result0[0], result0[1]);
+          result0 = (function(offset, sel, sels) {return [sel].concat(sels)})(pos0, result0[0], result0[1]);
         }
         if (result0 === null) {
           pos = pos0;
@@ -1607,7 +1639,7 @@ module.exports = (function(){
           pos = pos1;
         }
         if (result0 !== null) {
-          result0 = (function(offset, $) {return $})(pos0, result0[2]);
+          result0 = (function(offset, sel) {return sel})(pos0, result0[2]);
         }
         if (result0 === null) {
           pos = pos0;
@@ -1667,7 +1699,7 @@ module.exports = (function(){
           pos = pos1;
         }
         if (result0 !== null) {
-          result0 = (function(offset, $) {return $.join("").trim()})(pos0, result0[1]);
+          result0 = (function(offset, sel) {return sel.join("").trim()})(pos0, result0[1]);
         }
         if (result0 === null) {
           pos = pos0;
@@ -2032,26 +2064,6 @@ module.exports = (function(){
         reportFailures--;
         if (reportFailures === 0 && result0 === null) {
           matchFailed("Space");
-        }
-        return result0;
-      }
-      
-      function parse_char() {
-        var result0;
-        
-        reportFailures++;
-        if (/^[a-zA-Z0-9_#.[\]\-""']/.test(input.charAt(pos))) {
-          result0 = input.charAt(pos);
-          pos++;
-        } else {
-          result0 = null;
-          if (reportFailures === 0) {
-            matchFailed("[a-zA-Z0-9_#.[\\]\\-\"\"']");
-          }
-        }
-        reportFailures--;
-        if (reportFailures === 0 && result0 === null) {
-          matchFailed("char");
         }
         return result0;
       }
@@ -3601,7 +3613,7 @@ module.exports = (function(){
               if (result0 !== null) {
                 result1 = parse___();
                 if (result1 !== null) {
-                  result2 = parse_LinearExpression();
+                  result2 = parse_AdditiveExpression();
                   if (result2 !== null) {
                     result3 = parse___();
                     if (result3 !== null) {
@@ -11929,7 +11941,6 @@ module.exports = (function(){
                                           result0 = null;
                                         }
                                         if (result0 === null) {
-                                          pos1 = pos;
                                           if (input.charCodeAt(pos) === 105) {
                                             result1 = "i";
                                             pos++;
@@ -11956,64 +11967,27 @@ module.exports = (function(){
                                           } else {
                                             result0 = null;
                                           }
-                                          if (result0 !== null) {
+                                          if (result0 === null) {
                                             if (input.charCodeAt(pos) === 106) {
-                                              result2 = "j";
+                                              result1 = "j";
                                               pos++;
                                             } else {
-                                              result2 = null;
+                                              result1 = null;
                                               if (reportFailures === 0) {
                                                 matchFailed("\"j\"");
-                                              }
-                                            }
-                                            if (result2 !== null) {
-                                              result1 = [];
-                                              while (result2 !== null) {
-                                                result1.push(result2);
-                                                if (input.charCodeAt(pos) === 106) {
-                                                  result2 = "j";
-                                                  pos++;
-                                                } else {
-                                                  result2 = null;
-                                                  if (reportFailures === 0) {
-                                                    matchFailed("\"j\"");
-                                                  }
-                                                }
-                                              }
-                                            } else {
-                                              result1 = null;
-                                            }
-                                            if (result1 !== null) {
-                                              result0 = [result0, result1];
-                                            } else {
-                                              result0 = null;
-                                              pos = pos1;
-                                            }
-                                          } else {
-                                            result0 = null;
-                                            pos = pos1;
-                                          }
-                                          if (result0 === null) {
-                                            if (input.charCodeAt(pos) === 107) {
-                                              result1 = "k";
-                                              pos++;
-                                            } else {
-                                              result1 = null;
-                                              if (reportFailures === 0) {
-                                                matchFailed("\"k\"");
                                               }
                                             }
                                             if (result1 !== null) {
                                               result0 = [];
                                               while (result1 !== null) {
                                                 result0.push(result1);
-                                                if (input.charCodeAt(pos) === 107) {
-                                                  result1 = "k";
+                                                if (input.charCodeAt(pos) === 106) {
+                                                  result1 = "j";
                                                   pos++;
                                                 } else {
                                                   result1 = null;
                                                   if (reportFailures === 0) {
-                                                    matchFailed("\"k\"");
+                                                    matchFailed("\"j\"");
                                                   }
                                                 }
                                               }
@@ -12021,84 +11995,87 @@ module.exports = (function(){
                                               result0 = null;
                                             }
                                             if (result0 === null) {
-                                              pos1 = pos;
-                                              if (input.charCodeAt(pos) === 108) {
-                                                result1 = "l";
+                                              if (input.charCodeAt(pos) === 107) {
+                                                result1 = "k";
                                                 pos++;
                                               } else {
                                                 result1 = null;
                                                 if (reportFailures === 0) {
-                                                  matchFailed("\"l\"");
+                                                  matchFailed("\"k\"");
                                                 }
                                               }
                                               if (result1 !== null) {
                                                 result0 = [];
                                                 while (result1 !== null) {
                                                   result0.push(result1);
-                                                  if (input.charCodeAt(pos) === 108) {
-                                                    result1 = "l";
+                                                  if (input.charCodeAt(pos) === 107) {
+                                                    result1 = "k";
                                                     pos++;
                                                   } else {
                                                     result1 = null;
                                                     if (reportFailures === 0) {
-                                                      matchFailed("\"l\"");
+                                                      matchFailed("\"k\"");
                                                     }
                                                   }
                                                 }
                                               } else {
                                                 result0 = null;
-                                              }
-                                              if (result0 !== null) {
-                                                if (input.charCodeAt(pos) === 109) {
-                                                  result2 = "m";
-                                                  pos++;
-                                                } else {
-                                                  result2 = null;
-                                                  if (reportFailures === 0) {
-                                                    matchFailed("\"m\"");
-                                                  }
-                                                }
-                                                if (result2 !== null) {
-                                                  result1 = [];
-                                                  while (result2 !== null) {
-                                                    result1.push(result2);
-                                                    if (input.charCodeAt(pos) === 109) {
-                                                      result2 = "m";
-                                                      pos++;
-                                                    } else {
-                                                      result2 = null;
-                                                      if (reportFailures === 0) {
-                                                        matchFailed("\"m\"");
-                                                      }
-                                                    }
-                                                  }
-                                                } else {
-                                                  result1 = null;
-                                                }
-                                                if (result1 !== null) {
-                                                  result0 = [result0, result1];
-                                                } else {
-                                                  result0 = null;
-                                                  pos = pos1;
-                                                }
-                                              } else {
-                                                result0 = null;
-                                                pos = pos1;
                                               }
                                               if (result0 === null) {
-                                                if (input.charCodeAt(pos) === 110) {
-                                                  result1 = "n";
+                                                if (input.charCodeAt(pos) === 108) {
+                                                  result1 = "l";
                                                   pos++;
                                                 } else {
                                                   result1 = null;
                                                   if (reportFailures === 0) {
-                                                    matchFailed("\"n\"");
+                                                    matchFailed("\"l\"");
                                                   }
                                                 }
                                                 if (result1 !== null) {
                                                   result0 = [];
                                                   while (result1 !== null) {
                                                     result0.push(result1);
+                                                    if (input.charCodeAt(pos) === 108) {
+                                                      result1 = "l";
+                                                      pos++;
+                                                    } else {
+                                                      result1 = null;
+                                                      if (reportFailures === 0) {
+                                                        matchFailed("\"l\"");
+                                                      }
+                                                    }
+                                                  }
+                                                } else {
+                                                  result0 = null;
+                                                }
+                                                if (result0 === null) {
+                                                  if (input.charCodeAt(pos) === 109) {
+                                                    result1 = "m";
+                                                    pos++;
+                                                  } else {
+                                                    result1 = null;
+                                                    if (reportFailures === 0) {
+                                                      matchFailed("\"m\"");
+                                                    }
+                                                  }
+                                                  if (result1 !== null) {
+                                                    result0 = [];
+                                                    while (result1 !== null) {
+                                                      result0.push(result1);
+                                                      if (input.charCodeAt(pos) === 109) {
+                                                        result1 = "m";
+                                                        pos++;
+                                                      } else {
+                                                        result1 = null;
+                                                        if (reportFailures === 0) {
+                                                          matchFailed("\"m\"");
+                                                        }
+                                                      }
+                                                    }
+                                                  } else {
+                                                    result0 = null;
+                                                  }
+                                                  if (result0 === null) {
                                                     if (input.charCodeAt(pos) === 110) {
                                                       result1 = "n";
                                                       pos++;
@@ -12108,25 +12085,24 @@ module.exports = (function(){
                                                         matchFailed("\"n\"");
                                                       }
                                                     }
-                                                  }
-                                                } else {
-                                                  result0 = null;
-                                                }
-                                                if (result0 === null) {
-                                                  pos1 = pos;
-                                                  if (input.charCodeAt(pos) === 111) {
-                                                    result1 = "o";
-                                                    pos++;
-                                                  } else {
-                                                    result1 = null;
-                                                    if (reportFailures === 0) {
-                                                      matchFailed("\"o\"");
+                                                    if (result1 !== null) {
+                                                      result0 = [];
+                                                      while (result1 !== null) {
+                                                        result0.push(result1);
+                                                        if (input.charCodeAt(pos) === 110) {
+                                                          result1 = "n";
+                                                          pos++;
+                                                        } else {
+                                                          result1 = null;
+                                                          if (reportFailures === 0) {
+                                                            matchFailed("\"n\"");
+                                                          }
+                                                        }
+                                                      }
+                                                    } else {
+                                                      result0 = null;
                                                     }
-                                                  }
-                                                  if (result1 !== null) {
-                                                    result0 = [];
-                                                    while (result1 !== null) {
-                                                      result0.push(result1);
+                                                    if (result0 === null) {
                                                       if (input.charCodeAt(pos) === 111) {
                                                         result1 = "o";
                                                         pos++;
@@ -12136,160 +12112,44 @@ module.exports = (function(){
                                                           matchFailed("\"o\"");
                                                         }
                                                       }
-                                                    }
-                                                  } else {
-                                                    result0 = null;
-                                                  }
-                                                  if (result0 !== null) {
-                                                    if (input.charCodeAt(pos) === 112) {
-                                                      result2 = "p";
-                                                      pos++;
-                                                    } else {
-                                                      result2 = null;
-                                                      if (reportFailures === 0) {
-                                                        matchFailed("\"p\"");
-                                                      }
-                                                    }
-                                                    if (result2 !== null) {
-                                                      result1 = [];
-                                                      while (result2 !== null) {
-                                                        result1.push(result2);
-                                                        if (input.charCodeAt(pos) === 112) {
-                                                          result2 = "p";
-                                                          pos++;
-                                                        } else {
-                                                          result2 = null;
-                                                          if (reportFailures === 0) {
-                                                            matchFailed("\"p\"");
-                                                          }
-                                                        }
-                                                      }
-                                                    } else {
-                                                      result1 = null;
-                                                    }
-                                                    if (result1 !== null) {
-                                                      result0 = [result0, result1];
-                                                    } else {
-                                                      result0 = null;
-                                                      pos = pos1;
-                                                    }
-                                                  } else {
-                                                    result0 = null;
-                                                    pos = pos1;
-                                                  }
-                                                  if (result0 === null) {
-                                                    if (input.charCodeAt(pos) === 113) {
-                                                      result1 = "q";
-                                                      pos++;
-                                                    } else {
-                                                      result1 = null;
-                                                      if (reportFailures === 0) {
-                                                        matchFailed("\"q\"");
-                                                      }
-                                                    }
-                                                    if (result1 !== null) {
-                                                      result0 = [];
-                                                      while (result1 !== null) {
-                                                        result0.push(result1);
-                                                        if (input.charCodeAt(pos) === 113) {
-                                                          result1 = "q";
-                                                          pos++;
-                                                        } else {
-                                                          result1 = null;
-                                                          if (reportFailures === 0) {
-                                                            matchFailed("\"q\"");
-                                                          }
-                                                        }
-                                                      }
-                                                    } else {
-                                                      result0 = null;
-                                                    }
-                                                    if (result0 === null) {
-                                                      pos1 = pos;
-                                                      if (input.charCodeAt(pos) === 114) {
-                                                        result1 = "r";
-                                                        pos++;
-                                                      } else {
-                                                        result1 = null;
-                                                        if (reportFailures === 0) {
-                                                          matchFailed("\"r\"");
-                                                        }
-                                                      }
                                                       if (result1 !== null) {
                                                         result0 = [];
                                                         while (result1 !== null) {
                                                           result0.push(result1);
-                                                          if (input.charCodeAt(pos) === 114) {
-                                                            result1 = "r";
+                                                          if (input.charCodeAt(pos) === 111) {
+                                                            result1 = "o";
                                                             pos++;
                                                           } else {
                                                             result1 = null;
                                                             if (reportFailures === 0) {
-                                                              matchFailed("\"r\"");
+                                                              matchFailed("\"o\"");
                                                             }
                                                           }
                                                         }
                                                       } else {
                                                         result0 = null;
-                                                      }
-                                                      if (result0 !== null) {
-                                                        if (input.charCodeAt(pos) === 115) {
-                                                          result2 = "s";
-                                                          pos++;
-                                                        } else {
-                                                          result2 = null;
-                                                          if (reportFailures === 0) {
-                                                            matchFailed("\"s\"");
-                                                          }
-                                                        }
-                                                        if (result2 !== null) {
-                                                          result1 = [];
-                                                          while (result2 !== null) {
-                                                            result1.push(result2);
-                                                            if (input.charCodeAt(pos) === 115) {
-                                                              result2 = "s";
-                                                              pos++;
-                                                            } else {
-                                                              result2 = null;
-                                                              if (reportFailures === 0) {
-                                                                matchFailed("\"s\"");
-                                                              }
-                                                            }
-                                                          }
-                                                        } else {
-                                                          result1 = null;
-                                                        }
-                                                        if (result1 !== null) {
-                                                          result0 = [result0, result1];
-                                                        } else {
-                                                          result0 = null;
-                                                          pos = pos1;
-                                                        }
-                                                      } else {
-                                                        result0 = null;
-                                                        pos = pos1;
                                                       }
                                                       if (result0 === null) {
-                                                        if (input.charCodeAt(pos) === 116) {
-                                                          result1 = "t";
+                                                        if (input.charCodeAt(pos) === 112) {
+                                                          result1 = "p";
                                                           pos++;
                                                         } else {
                                                           result1 = null;
                                                           if (reportFailures === 0) {
-                                                            matchFailed("\"t\"");
+                                                            matchFailed("\"p\"");
                                                           }
                                                         }
                                                         if (result1 !== null) {
                                                           result0 = [];
                                                           while (result1 !== null) {
                                                             result0.push(result1);
-                                                            if (input.charCodeAt(pos) === 116) {
-                                                              result1 = "t";
+                                                            if (input.charCodeAt(pos) === 112) {
+                                                              result1 = "p";
                                                               pos++;
                                                             } else {
                                                               result1 = null;
                                                               if (reportFailures === 0) {
-                                                                matchFailed("\"t\"");
+                                                                matchFailed("\"p\"");
                                                               }
                                                             }
                                                           }
@@ -12297,91 +12157,53 @@ module.exports = (function(){
                                                           result0 = null;
                                                         }
                                                         if (result0 === null) {
-                                                          pos1 = pos;
-                                                          if (input.charCodeAt(pos) === 117) {
-                                                            result1 = "u";
+                                                          if (input.charCodeAt(pos) === 113) {
+                                                            result1 = "q";
                                                             pos++;
                                                           } else {
                                                             result1 = null;
                                                             if (reportFailures === 0) {
-                                                              matchFailed("\"u\"");
+                                                              matchFailed("\"q\"");
                                                             }
                                                           }
                                                           if (result1 !== null) {
                                                             result0 = [];
                                                             while (result1 !== null) {
                                                               result0.push(result1);
-                                                              if (input.charCodeAt(pos) === 117) {
-                                                                result1 = "u";
+                                                              if (input.charCodeAt(pos) === 113) {
+                                                                result1 = "q";
                                                                 pos++;
                                                               } else {
                                                                 result1 = null;
                                                                 if (reportFailures === 0) {
-                                                                  matchFailed("\"u\"");
+                                                                  matchFailed("\"q\"");
                                                                 }
                                                               }
                                                             }
                                                           } else {
                                                             result0 = null;
-                                                          }
-                                                          if (result0 !== null) {
-                                                            if (input.charCodeAt(pos) === 118) {
-                                                              result2 = "v";
-                                                              pos++;
-                                                            } else {
-                                                              result2 = null;
-                                                              if (reportFailures === 0) {
-                                                                matchFailed("\"v\"");
-                                                              }
-                                                            }
-                                                            if (result2 !== null) {
-                                                              result1 = [];
-                                                              while (result2 !== null) {
-                                                                result1.push(result2);
-                                                                if (input.charCodeAt(pos) === 118) {
-                                                                  result2 = "v";
-                                                                  pos++;
-                                                                } else {
-                                                                  result2 = null;
-                                                                  if (reportFailures === 0) {
-                                                                    matchFailed("\"v\"");
-                                                                  }
-                                                                }
-                                                              }
-                                                            } else {
-                                                              result1 = null;
-                                                            }
-                                                            if (result1 !== null) {
-                                                              result0 = [result0, result1];
-                                                            } else {
-                                                              result0 = null;
-                                                              pos = pos1;
-                                                            }
-                                                          } else {
-                                                            result0 = null;
-                                                            pos = pos1;
                                                           }
                                                           if (result0 === null) {
-                                                            if (input.charCodeAt(pos) === 119) {
-                                                              result1 = "w";
+                                                            if (input.charCodeAt(pos) === 114) {
+                                                              result1 = "r";
                                                               pos++;
                                                             } else {
                                                               result1 = null;
                                                               if (reportFailures === 0) {
-                                                                matchFailed("\"w\"");
+                                                                matchFailed("\"r\"");
                                                               }
                                                             }
                                                             if (result1 !== null) {
                                                               result0 = [];
                                                               while (result1 !== null) {
                                                                 result0.push(result1);
-                                                                if (input.charCodeAt(pos) === 119) {
-                                                                  result1 = "w";
+                                                                if (input.charCodeAt(pos) === 114) {
+                                                                  result1 = "r";
                                                                   pos++;
                                                                 } else {
                                                                   result1 = null;
                                                                   if (reportFailures === 0) {
-                                                                    matchFailed("\"w\"");
+                                                                    matchFailed("\"r\"");
                                                                   }
                                                                 }
                                                               }
@@ -12389,91 +12211,53 @@ module.exports = (function(){
                                                               result0 = null;
                                                             }
                                                             if (result0 === null) {
-                                                              pos1 = pos;
-                                                              if (input.charCodeAt(pos) === 120) {
-                                                                result1 = "x";
+                                                              if (input.charCodeAt(pos) === 115) {
+                                                                result1 = "s";
                                                                 pos++;
                                                               } else {
                                                                 result1 = null;
                                                                 if (reportFailures === 0) {
-                                                                  matchFailed("\"x\"");
+                                                                  matchFailed("\"s\"");
                                                                 }
                                                               }
                                                               if (result1 !== null) {
                                                                 result0 = [];
                                                                 while (result1 !== null) {
                                                                   result0.push(result1);
-                                                                  if (input.charCodeAt(pos) === 120) {
-                                                                    result1 = "x";
+                                                                  if (input.charCodeAt(pos) === 115) {
+                                                                    result1 = "s";
                                                                     pos++;
                                                                   } else {
                                                                     result1 = null;
                                                                     if (reportFailures === 0) {
-                                                                      matchFailed("\"x\"");
+                                                                      matchFailed("\"s\"");
                                                                     }
                                                                   }
                                                                 }
                                                               } else {
                                                                 result0 = null;
-                                                              }
-                                                              if (result0 !== null) {
-                                                                if (input.charCodeAt(pos) === 121) {
-                                                                  result2 = "y";
-                                                                  pos++;
-                                                                } else {
-                                                                  result2 = null;
-                                                                  if (reportFailures === 0) {
-                                                                    matchFailed("\"y\"");
-                                                                  }
-                                                                }
-                                                                if (result2 !== null) {
-                                                                  result1 = [];
-                                                                  while (result2 !== null) {
-                                                                    result1.push(result2);
-                                                                    if (input.charCodeAt(pos) === 121) {
-                                                                      result2 = "y";
-                                                                      pos++;
-                                                                    } else {
-                                                                      result2 = null;
-                                                                      if (reportFailures === 0) {
-                                                                        matchFailed("\"y\"");
-                                                                      }
-                                                                    }
-                                                                  }
-                                                                } else {
-                                                                  result1 = null;
-                                                                }
-                                                                if (result1 !== null) {
-                                                                  result0 = [result0, result1];
-                                                                } else {
-                                                                  result0 = null;
-                                                                  pos = pos1;
-                                                                }
-                                                              } else {
-                                                                result0 = null;
-                                                                pos = pos1;
                                                               }
                                                               if (result0 === null) {
-                                                                if (input.charCodeAt(pos) === 122) {
-                                                                  result1 = "z";
+                                                                if (input.charCodeAt(pos) === 116) {
+                                                                  result1 = "t";
                                                                   pos++;
                                                                 } else {
                                                                   result1 = null;
                                                                   if (reportFailures === 0) {
-                                                                    matchFailed("\"z\"");
+                                                                    matchFailed("\"t\"");
                                                                   }
                                                                 }
                                                                 if (result1 !== null) {
                                                                   result0 = [];
                                                                   while (result1 !== null) {
                                                                     result0.push(result1);
-                                                                    if (input.charCodeAt(pos) === 122) {
-                                                                      result1 = "z";
+                                                                    if (input.charCodeAt(pos) === 116) {
+                                                                      result1 = "t";
                                                                       pos++;
                                                                     } else {
                                                                       result1 = null;
                                                                       if (reportFailures === 0) {
-                                                                        matchFailed("\"z\"");
+                                                                        matchFailed("\"t\"");
                                                                       }
                                                                     }
                                                                   }
@@ -12481,26 +12265,26 @@ module.exports = (function(){
                                                                   result0 = null;
                                                                 }
                                                                 if (result0 === null) {
-                                                                  if (input.charCodeAt(pos) === 65) {
-                                                                    result1 = "A";
+                                                                  if (input.charCodeAt(pos) === 117) {
+                                                                    result1 = "u";
                                                                     pos++;
                                                                   } else {
                                                                     result1 = null;
                                                                     if (reportFailures === 0) {
-                                                                      matchFailed("\"A\"");
+                                                                      matchFailed("\"u\"");
                                                                     }
                                                                   }
                                                                   if (result1 !== null) {
                                                                     result0 = [];
                                                                     while (result1 !== null) {
                                                                       result0.push(result1);
-                                                                      if (input.charCodeAt(pos) === 65) {
-                                                                        result1 = "A";
+                                                                      if (input.charCodeAt(pos) === 117) {
+                                                                        result1 = "u";
                                                                         pos++;
                                                                       } else {
                                                                         result1 = null;
                                                                         if (reportFailures === 0) {
-                                                                          matchFailed("\"A\"");
+                                                                          matchFailed("\"u\"");
                                                                         }
                                                                       }
                                                                     }
@@ -12508,26 +12292,26 @@ module.exports = (function(){
                                                                     result0 = null;
                                                                   }
                                                                   if (result0 === null) {
-                                                                    if (input.charCodeAt(pos) === 66) {
-                                                                      result1 = "B";
+                                                                    if (input.charCodeAt(pos) === 118) {
+                                                                      result1 = "v";
                                                                       pos++;
                                                                     } else {
                                                                       result1 = null;
                                                                       if (reportFailures === 0) {
-                                                                        matchFailed("\"B\"");
+                                                                        matchFailed("\"v\"");
                                                                       }
                                                                     }
                                                                     if (result1 !== null) {
                                                                       result0 = [];
                                                                       while (result1 !== null) {
                                                                         result0.push(result1);
-                                                                        if (input.charCodeAt(pos) === 66) {
-                                                                          result1 = "B";
+                                                                        if (input.charCodeAt(pos) === 118) {
+                                                                          result1 = "v";
                                                                           pos++;
                                                                         } else {
                                                                           result1 = null;
                                                                           if (reportFailures === 0) {
-                                                                            matchFailed("\"B\"");
+                                                                            matchFailed("\"v\"");
                                                                           }
                                                                         }
                                                                       }
@@ -12535,91 +12319,53 @@ module.exports = (function(){
                                                                       result0 = null;
                                                                     }
                                                                     if (result0 === null) {
-                                                                      pos1 = pos;
-                                                                      if (input.charCodeAt(pos) === 67) {
-                                                                        result1 = "C";
+                                                                      if (input.charCodeAt(pos) === 119) {
+                                                                        result1 = "w";
                                                                         pos++;
                                                                       } else {
                                                                         result1 = null;
                                                                         if (reportFailures === 0) {
-                                                                          matchFailed("\"C\"");
+                                                                          matchFailed("\"w\"");
                                                                         }
                                                                       }
                                                                       if (result1 !== null) {
                                                                         result0 = [];
                                                                         while (result1 !== null) {
                                                                           result0.push(result1);
-                                                                          if (input.charCodeAt(pos) === 67) {
-                                                                            result1 = "C";
+                                                                          if (input.charCodeAt(pos) === 119) {
+                                                                            result1 = "w";
                                                                             pos++;
                                                                           } else {
                                                                             result1 = null;
                                                                             if (reportFailures === 0) {
-                                                                              matchFailed("\"C\"");
+                                                                              matchFailed("\"w\"");
                                                                             }
                                                                           }
                                                                         }
                                                                       } else {
                                                                         result0 = null;
-                                                                      }
-                                                                      if (result0 !== null) {
-                                                                        if (input.charCodeAt(pos) === 68) {
-                                                                          result2 = "D";
-                                                                          pos++;
-                                                                        } else {
-                                                                          result2 = null;
-                                                                          if (reportFailures === 0) {
-                                                                            matchFailed("\"D\"");
-                                                                          }
-                                                                        }
-                                                                        if (result2 !== null) {
-                                                                          result1 = [];
-                                                                          while (result2 !== null) {
-                                                                            result1.push(result2);
-                                                                            if (input.charCodeAt(pos) === 68) {
-                                                                              result2 = "D";
-                                                                              pos++;
-                                                                            } else {
-                                                                              result2 = null;
-                                                                              if (reportFailures === 0) {
-                                                                                matchFailed("\"D\"");
-                                                                              }
-                                                                            }
-                                                                          }
-                                                                        } else {
-                                                                          result1 = null;
-                                                                        }
-                                                                        if (result1 !== null) {
-                                                                          result0 = [result0, result1];
-                                                                        } else {
-                                                                          result0 = null;
-                                                                          pos = pos1;
-                                                                        }
-                                                                      } else {
-                                                                        result0 = null;
-                                                                        pos = pos1;
                                                                       }
                                                                       if (result0 === null) {
-                                                                        if (input.charCodeAt(pos) === 69) {
-                                                                          result1 = "E";
+                                                                        if (input.charCodeAt(pos) === 120) {
+                                                                          result1 = "x";
                                                                           pos++;
                                                                         } else {
                                                                           result1 = null;
                                                                           if (reportFailures === 0) {
-                                                                            matchFailed("\"E\"");
+                                                                            matchFailed("\"x\"");
                                                                           }
                                                                         }
                                                                         if (result1 !== null) {
                                                                           result0 = [];
                                                                           while (result1 !== null) {
                                                                             result0.push(result1);
-                                                                            if (input.charCodeAt(pos) === 69) {
-                                                                              result1 = "E";
+                                                                            if (input.charCodeAt(pos) === 120) {
+                                                                              result1 = "x";
                                                                               pos++;
                                                                             } else {
                                                                               result1 = null;
                                                                               if (reportFailures === 0) {
-                                                                                matchFailed("\"E\"");
+                                                                                matchFailed("\"x\"");
                                                                               }
                                                                             }
                                                                           }
@@ -12627,91 +12373,53 @@ module.exports = (function(){
                                                                           result0 = null;
                                                                         }
                                                                         if (result0 === null) {
-                                                                          pos1 = pos;
-                                                                          if (input.charCodeAt(pos) === 70) {
-                                                                            result1 = "F";
+                                                                          if (input.charCodeAt(pos) === 121) {
+                                                                            result1 = "y";
                                                                             pos++;
                                                                           } else {
                                                                             result1 = null;
                                                                             if (reportFailures === 0) {
-                                                                              matchFailed("\"F\"");
+                                                                              matchFailed("\"y\"");
                                                                             }
                                                                           }
                                                                           if (result1 !== null) {
                                                                             result0 = [];
                                                                             while (result1 !== null) {
                                                                               result0.push(result1);
-                                                                              if (input.charCodeAt(pos) === 70) {
-                                                                                result1 = "F";
+                                                                              if (input.charCodeAt(pos) === 121) {
+                                                                                result1 = "y";
                                                                                 pos++;
                                                                               } else {
                                                                                 result1 = null;
                                                                                 if (reportFailures === 0) {
-                                                                                  matchFailed("\"F\"");
+                                                                                  matchFailed("\"y\"");
                                                                                 }
                                                                               }
                                                                             }
                                                                           } else {
                                                                             result0 = null;
-                                                                          }
-                                                                          if (result0 !== null) {
-                                                                            if (input.charCodeAt(pos) === 71) {
-                                                                              result2 = "G";
-                                                                              pos++;
-                                                                            } else {
-                                                                              result2 = null;
-                                                                              if (reportFailures === 0) {
-                                                                                matchFailed("\"G\"");
-                                                                              }
-                                                                            }
-                                                                            if (result2 !== null) {
-                                                                              result1 = [];
-                                                                              while (result2 !== null) {
-                                                                                result1.push(result2);
-                                                                                if (input.charCodeAt(pos) === 71) {
-                                                                                  result2 = "G";
-                                                                                  pos++;
-                                                                                } else {
-                                                                                  result2 = null;
-                                                                                  if (reportFailures === 0) {
-                                                                                    matchFailed("\"G\"");
-                                                                                  }
-                                                                                }
-                                                                              }
-                                                                            } else {
-                                                                              result1 = null;
-                                                                            }
-                                                                            if (result1 !== null) {
-                                                                              result0 = [result0, result1];
-                                                                            } else {
-                                                                              result0 = null;
-                                                                              pos = pos1;
-                                                                            }
-                                                                          } else {
-                                                                            result0 = null;
-                                                                            pos = pos1;
                                                                           }
                                                                           if (result0 === null) {
-                                                                            if (input.charCodeAt(pos) === 72) {
-                                                                              result1 = "H";
+                                                                            if (input.charCodeAt(pos) === 122) {
+                                                                              result1 = "z";
                                                                               pos++;
                                                                             } else {
                                                                               result1 = null;
                                                                               if (reportFailures === 0) {
-                                                                                matchFailed("\"H\"");
+                                                                                matchFailed("\"z\"");
                                                                               }
                                                                             }
                                                                             if (result1 !== null) {
                                                                               result0 = [];
                                                                               while (result1 !== null) {
                                                                                 result0.push(result1);
-                                                                                if (input.charCodeAt(pos) === 72) {
-                                                                                  result1 = "H";
+                                                                                if (input.charCodeAt(pos) === 122) {
+                                                                                  result1 = "z";
                                                                                   pos++;
                                                                                 } else {
                                                                                   result1 = null;
                                                                                   if (reportFailures === 0) {
-                                                                                    matchFailed("\"H\"");
+                                                                                    matchFailed("\"z\"");
                                                                                   }
                                                                                 }
                                                                               }
@@ -12719,91 +12427,53 @@ module.exports = (function(){
                                                                               result0 = null;
                                                                             }
                                                                             if (result0 === null) {
-                                                                              pos1 = pos;
-                                                                              if (input.charCodeAt(pos) === 73) {
-                                                                                result1 = "I";
+                                                                              if (input.charCodeAt(pos) === 65) {
+                                                                                result1 = "A";
                                                                                 pos++;
                                                                               } else {
                                                                                 result1 = null;
                                                                                 if (reportFailures === 0) {
-                                                                                  matchFailed("\"I\"");
+                                                                                  matchFailed("\"A\"");
                                                                                 }
                                                                               }
                                                                               if (result1 !== null) {
                                                                                 result0 = [];
                                                                                 while (result1 !== null) {
                                                                                   result0.push(result1);
-                                                                                  if (input.charCodeAt(pos) === 73) {
-                                                                                    result1 = "I";
+                                                                                  if (input.charCodeAt(pos) === 65) {
+                                                                                    result1 = "A";
                                                                                     pos++;
                                                                                   } else {
                                                                                     result1 = null;
                                                                                     if (reportFailures === 0) {
-                                                                                      matchFailed("\"I\"");
+                                                                                      matchFailed("\"A\"");
                                                                                     }
                                                                                   }
                                                                                 }
                                                                               } else {
                                                                                 result0 = null;
-                                                                              }
-                                                                              if (result0 !== null) {
-                                                                                if (input.charCodeAt(pos) === 74) {
-                                                                                  result2 = "J";
-                                                                                  pos++;
-                                                                                } else {
-                                                                                  result2 = null;
-                                                                                  if (reportFailures === 0) {
-                                                                                    matchFailed("\"J\"");
-                                                                                  }
-                                                                                }
-                                                                                if (result2 !== null) {
-                                                                                  result1 = [];
-                                                                                  while (result2 !== null) {
-                                                                                    result1.push(result2);
-                                                                                    if (input.charCodeAt(pos) === 74) {
-                                                                                      result2 = "J";
-                                                                                      pos++;
-                                                                                    } else {
-                                                                                      result2 = null;
-                                                                                      if (reportFailures === 0) {
-                                                                                        matchFailed("\"J\"");
-                                                                                      }
-                                                                                    }
-                                                                                  }
-                                                                                } else {
-                                                                                  result1 = null;
-                                                                                }
-                                                                                if (result1 !== null) {
-                                                                                  result0 = [result0, result1];
-                                                                                } else {
-                                                                                  result0 = null;
-                                                                                  pos = pos1;
-                                                                                }
-                                                                              } else {
-                                                                                result0 = null;
-                                                                                pos = pos1;
                                                                               }
                                                                               if (result0 === null) {
-                                                                                if (input.charCodeAt(pos) === 75) {
-                                                                                  result1 = "K";
+                                                                                if (input.charCodeAt(pos) === 66) {
+                                                                                  result1 = "B";
                                                                                   pos++;
                                                                                 } else {
                                                                                   result1 = null;
                                                                                   if (reportFailures === 0) {
-                                                                                    matchFailed("\"K\"");
+                                                                                    matchFailed("\"B\"");
                                                                                   }
                                                                                 }
                                                                                 if (result1 !== null) {
                                                                                   result0 = [];
                                                                                   while (result1 !== null) {
                                                                                     result0.push(result1);
-                                                                                    if (input.charCodeAt(pos) === 75) {
-                                                                                      result1 = "K";
+                                                                                    if (input.charCodeAt(pos) === 66) {
+                                                                                      result1 = "B";
                                                                                       pos++;
                                                                                     } else {
                                                                                       result1 = null;
                                                                                       if (reportFailures === 0) {
-                                                                                        matchFailed("\"K\"");
+                                                                                        matchFailed("\"B\"");
                                                                                       }
                                                                                     }
                                                                                   }
@@ -12811,91 +12481,53 @@ module.exports = (function(){
                                                                                   result0 = null;
                                                                                 }
                                                                                 if (result0 === null) {
-                                                                                  pos1 = pos;
-                                                                                  if (input.charCodeAt(pos) === 76) {
-                                                                                    result1 = "L";
+                                                                                  if (input.charCodeAt(pos) === 67) {
+                                                                                    result1 = "C";
                                                                                     pos++;
                                                                                   } else {
                                                                                     result1 = null;
                                                                                     if (reportFailures === 0) {
-                                                                                      matchFailed("\"L\"");
+                                                                                      matchFailed("\"C\"");
                                                                                     }
                                                                                   }
                                                                                   if (result1 !== null) {
                                                                                     result0 = [];
                                                                                     while (result1 !== null) {
                                                                                       result0.push(result1);
-                                                                                      if (input.charCodeAt(pos) === 76) {
-                                                                                        result1 = "L";
+                                                                                      if (input.charCodeAt(pos) === 67) {
+                                                                                        result1 = "C";
                                                                                         pos++;
                                                                                       } else {
                                                                                         result1 = null;
                                                                                         if (reportFailures === 0) {
-                                                                                          matchFailed("\"L\"");
+                                                                                          matchFailed("\"C\"");
                                                                                         }
                                                                                       }
                                                                                     }
                                                                                   } else {
                                                                                     result0 = null;
-                                                                                  }
-                                                                                  if (result0 !== null) {
-                                                                                    if (input.charCodeAt(pos) === 77) {
-                                                                                      result2 = "M";
-                                                                                      pos++;
-                                                                                    } else {
-                                                                                      result2 = null;
-                                                                                      if (reportFailures === 0) {
-                                                                                        matchFailed("\"M\"");
-                                                                                      }
-                                                                                    }
-                                                                                    if (result2 !== null) {
-                                                                                      result1 = [];
-                                                                                      while (result2 !== null) {
-                                                                                        result1.push(result2);
-                                                                                        if (input.charCodeAt(pos) === 77) {
-                                                                                          result2 = "M";
-                                                                                          pos++;
-                                                                                        } else {
-                                                                                          result2 = null;
-                                                                                          if (reportFailures === 0) {
-                                                                                            matchFailed("\"M\"");
-                                                                                          }
-                                                                                        }
-                                                                                      }
-                                                                                    } else {
-                                                                                      result1 = null;
-                                                                                    }
-                                                                                    if (result1 !== null) {
-                                                                                      result0 = [result0, result1];
-                                                                                    } else {
-                                                                                      result0 = null;
-                                                                                      pos = pos1;
-                                                                                    }
-                                                                                  } else {
-                                                                                    result0 = null;
-                                                                                    pos = pos1;
                                                                                   }
                                                                                   if (result0 === null) {
-                                                                                    if (input.charCodeAt(pos) === 78) {
-                                                                                      result1 = "N";
+                                                                                    if (input.charCodeAt(pos) === 68) {
+                                                                                      result1 = "D";
                                                                                       pos++;
                                                                                     } else {
                                                                                       result1 = null;
                                                                                       if (reportFailures === 0) {
-                                                                                        matchFailed("\"N\"");
+                                                                                        matchFailed("\"D\"");
                                                                                       }
                                                                                     }
                                                                                     if (result1 !== null) {
                                                                                       result0 = [];
                                                                                       while (result1 !== null) {
                                                                                         result0.push(result1);
-                                                                                        if (input.charCodeAt(pos) === 78) {
-                                                                                          result1 = "N";
+                                                                                        if (input.charCodeAt(pos) === 68) {
+                                                                                          result1 = "D";
                                                                                           pos++;
                                                                                         } else {
                                                                                           result1 = null;
                                                                                           if (reportFailures === 0) {
-                                                                                            matchFailed("\"N\"");
+                                                                                            matchFailed("\"D\"");
                                                                                           }
                                                                                         }
                                                                                       }
@@ -12903,91 +12535,53 @@ module.exports = (function(){
                                                                                       result0 = null;
                                                                                     }
                                                                                     if (result0 === null) {
-                                                                                      pos1 = pos;
-                                                                                      if (input.charCodeAt(pos) === 79) {
-                                                                                        result1 = "O";
+                                                                                      if (input.charCodeAt(pos) === 69) {
+                                                                                        result1 = "E";
                                                                                         pos++;
                                                                                       } else {
                                                                                         result1 = null;
                                                                                         if (reportFailures === 0) {
-                                                                                          matchFailed("\"O\"");
+                                                                                          matchFailed("\"E\"");
                                                                                         }
                                                                                       }
                                                                                       if (result1 !== null) {
                                                                                         result0 = [];
                                                                                         while (result1 !== null) {
                                                                                           result0.push(result1);
-                                                                                          if (input.charCodeAt(pos) === 79) {
-                                                                                            result1 = "O";
+                                                                                          if (input.charCodeAt(pos) === 69) {
+                                                                                            result1 = "E";
                                                                                             pos++;
                                                                                           } else {
                                                                                             result1 = null;
                                                                                             if (reportFailures === 0) {
-                                                                                              matchFailed("\"O\"");
+                                                                                              matchFailed("\"E\"");
                                                                                             }
                                                                                           }
                                                                                         }
                                                                                       } else {
                                                                                         result0 = null;
-                                                                                      }
-                                                                                      if (result0 !== null) {
-                                                                                        if (input.charCodeAt(pos) === 80) {
-                                                                                          result2 = "P";
-                                                                                          pos++;
-                                                                                        } else {
-                                                                                          result2 = null;
-                                                                                          if (reportFailures === 0) {
-                                                                                            matchFailed("\"P\"");
-                                                                                          }
-                                                                                        }
-                                                                                        if (result2 !== null) {
-                                                                                          result1 = [];
-                                                                                          while (result2 !== null) {
-                                                                                            result1.push(result2);
-                                                                                            if (input.charCodeAt(pos) === 80) {
-                                                                                              result2 = "P";
-                                                                                              pos++;
-                                                                                            } else {
-                                                                                              result2 = null;
-                                                                                              if (reportFailures === 0) {
-                                                                                                matchFailed("\"P\"");
-                                                                                              }
-                                                                                            }
-                                                                                          }
-                                                                                        } else {
-                                                                                          result1 = null;
-                                                                                        }
-                                                                                        if (result1 !== null) {
-                                                                                          result0 = [result0, result1];
-                                                                                        } else {
-                                                                                          result0 = null;
-                                                                                          pos = pos1;
-                                                                                        }
-                                                                                      } else {
-                                                                                        result0 = null;
-                                                                                        pos = pos1;
                                                                                       }
                                                                                       if (result0 === null) {
-                                                                                        if (input.charCodeAt(pos) === 81) {
-                                                                                          result1 = "Q";
+                                                                                        if (input.charCodeAt(pos) === 70) {
+                                                                                          result1 = "F";
                                                                                           pos++;
                                                                                         } else {
                                                                                           result1 = null;
                                                                                           if (reportFailures === 0) {
-                                                                                            matchFailed("\"Q\"");
+                                                                                            matchFailed("\"F\"");
                                                                                           }
                                                                                         }
                                                                                         if (result1 !== null) {
                                                                                           result0 = [];
                                                                                           while (result1 !== null) {
                                                                                             result0.push(result1);
-                                                                                            if (input.charCodeAt(pos) === 81) {
-                                                                                              result1 = "Q";
+                                                                                            if (input.charCodeAt(pos) === 70) {
+                                                                                              result1 = "F";
                                                                                               pos++;
                                                                                             } else {
                                                                                               result1 = null;
                                                                                               if (reportFailures === 0) {
-                                                                                                matchFailed("\"Q\"");
+                                                                                                matchFailed("\"F\"");
                                                                                               }
                                                                                             }
                                                                                           }
@@ -12995,91 +12589,53 @@ module.exports = (function(){
                                                                                           result0 = null;
                                                                                         }
                                                                                         if (result0 === null) {
-                                                                                          pos1 = pos;
-                                                                                          if (input.charCodeAt(pos) === 82) {
-                                                                                            result1 = "R";
+                                                                                          if (input.charCodeAt(pos) === 71) {
+                                                                                            result1 = "G";
                                                                                             pos++;
                                                                                           } else {
                                                                                             result1 = null;
                                                                                             if (reportFailures === 0) {
-                                                                                              matchFailed("\"R\"");
+                                                                                              matchFailed("\"G\"");
                                                                                             }
                                                                                           }
                                                                                           if (result1 !== null) {
                                                                                             result0 = [];
                                                                                             while (result1 !== null) {
                                                                                               result0.push(result1);
-                                                                                              if (input.charCodeAt(pos) === 82) {
-                                                                                                result1 = "R";
+                                                                                              if (input.charCodeAt(pos) === 71) {
+                                                                                                result1 = "G";
                                                                                                 pos++;
                                                                                               } else {
                                                                                                 result1 = null;
                                                                                                 if (reportFailures === 0) {
-                                                                                                  matchFailed("\"R\"");
+                                                                                                  matchFailed("\"G\"");
                                                                                                 }
                                                                                               }
                                                                                             }
                                                                                           } else {
                                                                                             result0 = null;
-                                                                                          }
-                                                                                          if (result0 !== null) {
-                                                                                            if (input.charCodeAt(pos) === 83) {
-                                                                                              result2 = "S";
-                                                                                              pos++;
-                                                                                            } else {
-                                                                                              result2 = null;
-                                                                                              if (reportFailures === 0) {
-                                                                                                matchFailed("\"S\"");
-                                                                                              }
-                                                                                            }
-                                                                                            if (result2 !== null) {
-                                                                                              result1 = [];
-                                                                                              while (result2 !== null) {
-                                                                                                result1.push(result2);
-                                                                                                if (input.charCodeAt(pos) === 83) {
-                                                                                                  result2 = "S";
-                                                                                                  pos++;
-                                                                                                } else {
-                                                                                                  result2 = null;
-                                                                                                  if (reportFailures === 0) {
-                                                                                                    matchFailed("\"S\"");
-                                                                                                  }
-                                                                                                }
-                                                                                              }
-                                                                                            } else {
-                                                                                              result1 = null;
-                                                                                            }
-                                                                                            if (result1 !== null) {
-                                                                                              result0 = [result0, result1];
-                                                                                            } else {
-                                                                                              result0 = null;
-                                                                                              pos = pos1;
-                                                                                            }
-                                                                                          } else {
-                                                                                            result0 = null;
-                                                                                            pos = pos1;
                                                                                           }
                                                                                           if (result0 === null) {
-                                                                                            if (input.charCodeAt(pos) === 84) {
-                                                                                              result1 = "T";
+                                                                                            if (input.charCodeAt(pos) === 72) {
+                                                                                              result1 = "H";
                                                                                               pos++;
                                                                                             } else {
                                                                                               result1 = null;
                                                                                               if (reportFailures === 0) {
-                                                                                                matchFailed("\"T\"");
+                                                                                                matchFailed("\"H\"");
                                                                                               }
                                                                                             }
                                                                                             if (result1 !== null) {
                                                                                               result0 = [];
                                                                                               while (result1 !== null) {
                                                                                                 result0.push(result1);
-                                                                                                if (input.charCodeAt(pos) === 84) {
-                                                                                                  result1 = "T";
+                                                                                                if (input.charCodeAt(pos) === 72) {
+                                                                                                  result1 = "H";
                                                                                                   pos++;
                                                                                                 } else {
                                                                                                   result1 = null;
                                                                                                   if (reportFailures === 0) {
-                                                                                                    matchFailed("\"T\"");
+                                                                                                    matchFailed("\"H\"");
                                                                                                   }
                                                                                                 }
                                                                                               }
@@ -13087,91 +12643,53 @@ module.exports = (function(){
                                                                                               result0 = null;
                                                                                             }
                                                                                             if (result0 === null) {
-                                                                                              pos1 = pos;
-                                                                                              if (input.charCodeAt(pos) === 85) {
-                                                                                                result1 = "U";
+                                                                                              if (input.charCodeAt(pos) === 73) {
+                                                                                                result1 = "I";
                                                                                                 pos++;
                                                                                               } else {
                                                                                                 result1 = null;
                                                                                                 if (reportFailures === 0) {
-                                                                                                  matchFailed("\"U\"");
+                                                                                                  matchFailed("\"I\"");
                                                                                                 }
                                                                                               }
                                                                                               if (result1 !== null) {
                                                                                                 result0 = [];
                                                                                                 while (result1 !== null) {
                                                                                                   result0.push(result1);
-                                                                                                  if (input.charCodeAt(pos) === 85) {
-                                                                                                    result1 = "U";
+                                                                                                  if (input.charCodeAt(pos) === 73) {
+                                                                                                    result1 = "I";
                                                                                                     pos++;
                                                                                                   } else {
                                                                                                     result1 = null;
                                                                                                     if (reportFailures === 0) {
-                                                                                                      matchFailed("\"U\"");
+                                                                                                      matchFailed("\"I\"");
                                                                                                     }
                                                                                                   }
                                                                                                 }
                                                                                               } else {
                                                                                                 result0 = null;
-                                                                                              }
-                                                                                              if (result0 !== null) {
-                                                                                                if (input.charCodeAt(pos) === 86) {
-                                                                                                  result2 = "V";
-                                                                                                  pos++;
-                                                                                                } else {
-                                                                                                  result2 = null;
-                                                                                                  if (reportFailures === 0) {
-                                                                                                    matchFailed("\"V\"");
-                                                                                                  }
-                                                                                                }
-                                                                                                if (result2 !== null) {
-                                                                                                  result1 = [];
-                                                                                                  while (result2 !== null) {
-                                                                                                    result1.push(result2);
-                                                                                                    if (input.charCodeAt(pos) === 86) {
-                                                                                                      result2 = "V";
-                                                                                                      pos++;
-                                                                                                    } else {
-                                                                                                      result2 = null;
-                                                                                                      if (reportFailures === 0) {
-                                                                                                        matchFailed("\"V\"");
-                                                                                                      }
-                                                                                                    }
-                                                                                                  }
-                                                                                                } else {
-                                                                                                  result1 = null;
-                                                                                                }
-                                                                                                if (result1 !== null) {
-                                                                                                  result0 = [result0, result1];
-                                                                                                } else {
-                                                                                                  result0 = null;
-                                                                                                  pos = pos1;
-                                                                                                }
-                                                                                              } else {
-                                                                                                result0 = null;
-                                                                                                pos = pos1;
                                                                                               }
                                                                                               if (result0 === null) {
-                                                                                                if (input.charCodeAt(pos) === 87) {
-                                                                                                  result1 = "W";
+                                                                                                if (input.charCodeAt(pos) === 74) {
+                                                                                                  result1 = "J";
                                                                                                   pos++;
                                                                                                 } else {
                                                                                                   result1 = null;
                                                                                                   if (reportFailures === 0) {
-                                                                                                    matchFailed("\"W\"");
+                                                                                                    matchFailed("\"J\"");
                                                                                                   }
                                                                                                 }
                                                                                                 if (result1 !== null) {
                                                                                                   result0 = [];
                                                                                                   while (result1 !== null) {
                                                                                                     result0.push(result1);
-                                                                                                    if (input.charCodeAt(pos) === 87) {
-                                                                                                      result1 = "W";
+                                                                                                    if (input.charCodeAt(pos) === 74) {
+                                                                                                      result1 = "J";
                                                                                                       pos++;
                                                                                                     } else {
                                                                                                       result1 = null;
                                                                                                       if (reportFailures === 0) {
-                                                                                                        matchFailed("\"W\"");
+                                                                                                        matchFailed("\"J\"");
                                                                                                       }
                                                                                                     }
                                                                                                   }
@@ -13179,78 +12697,449 @@ module.exports = (function(){
                                                                                                   result0 = null;
                                                                                                 }
                                                                                                 if (result0 === null) {
-                                                                                                  pos1 = pos;
-                                                                                                  if (input.charCodeAt(pos) === 88) {
-                                                                                                    result1 = "X";
+                                                                                                  if (input.charCodeAt(pos) === 75) {
+                                                                                                    result1 = "K";
                                                                                                     pos++;
                                                                                                   } else {
                                                                                                     result1 = null;
                                                                                                     if (reportFailures === 0) {
-                                                                                                      matchFailed("\"X\"");
+                                                                                                      matchFailed("\"K\"");
                                                                                                     }
                                                                                                   }
                                                                                                   if (result1 !== null) {
                                                                                                     result0 = [];
                                                                                                     while (result1 !== null) {
                                                                                                       result0.push(result1);
-                                                                                                      if (input.charCodeAt(pos) === 88) {
-                                                                                                        result1 = "X";
+                                                                                                      if (input.charCodeAt(pos) === 75) {
+                                                                                                        result1 = "K";
                                                                                                         pos++;
                                                                                                       } else {
                                                                                                         result1 = null;
                                                                                                         if (reportFailures === 0) {
-                                                                                                          matchFailed("\"X\"");
+                                                                                                          matchFailed("\"K\"");
                                                                                                         }
                                                                                                       }
                                                                                                     }
                                                                                                   } else {
                                                                                                     result0 = null;
                                                                                                   }
-                                                                                                  if (result0 !== null) {
-                                                                                                    if (input.charCodeAt(pos) === 89) {
-                                                                                                      result2 = "Y";
+                                                                                                  if (result0 === null) {
+                                                                                                    if (input.charCodeAt(pos) === 76) {
+                                                                                                      result1 = "L";
                                                                                                       pos++;
                                                                                                     } else {
-                                                                                                      result2 = null;
+                                                                                                      result1 = null;
                                                                                                       if (reportFailures === 0) {
-                                                                                                        matchFailed("\"Y\"");
+                                                                                                        matchFailed("\"L\"");
                                                                                                       }
                                                                                                     }
-                                                                                                    if (result2 !== null) {
-                                                                                                      result1 = [];
-                                                                                                      while (result2 !== null) {
-                                                                                                        result1.push(result2);
-                                                                                                        if (input.charCodeAt(pos) === 89) {
-                                                                                                          result2 = "Y";
+                                                                                                    if (result1 !== null) {
+                                                                                                      result0 = [];
+                                                                                                      while (result1 !== null) {
+                                                                                                        result0.push(result1);
+                                                                                                        if (input.charCodeAt(pos) === 76) {
+                                                                                                          result1 = "L";
                                                                                                           pos++;
                                                                                                         } else {
-                                                                                                          result2 = null;
+                                                                                                          result1 = null;
                                                                                                           if (reportFailures === 0) {
-                                                                                                            matchFailed("\"Y\"");
+                                                                                                            matchFailed("\"L\"");
                                                                                                           }
                                                                                                         }
                                                                                                       }
                                                                                                     } else {
-                                                                                                      result1 = null;
-                                                                                                    }
-                                                                                                    if (result1 !== null) {
-                                                                                                      result0 = [result0, result1];
-                                                                                                    } else {
                                                                                                       result0 = null;
-                                                                                                      pos = pos1;
                                                                                                     }
-                                                                                                  } else {
-                                                                                                    result0 = null;
-                                                                                                    pos = pos1;
-                                                                                                  }
-                                                                                                  if (result0 === null) {
-                                                                                                    if (input.charCodeAt(pos) === 90) {
-                                                                                                      result0 = "Z";
-                                                                                                      pos++;
-                                                                                                    } else {
-                                                                                                      result0 = null;
-                                                                                                      if (reportFailures === 0) {
-                                                                                                        matchFailed("\"Z\"");
+                                                                                                    if (result0 === null) {
+                                                                                                      if (input.charCodeAt(pos) === 77) {
+                                                                                                        result1 = "M";
+                                                                                                        pos++;
+                                                                                                      } else {
+                                                                                                        result1 = null;
+                                                                                                        if (reportFailures === 0) {
+                                                                                                          matchFailed("\"M\"");
+                                                                                                        }
+                                                                                                      }
+                                                                                                      if (result1 !== null) {
+                                                                                                        result0 = [];
+                                                                                                        while (result1 !== null) {
+                                                                                                          result0.push(result1);
+                                                                                                          if (input.charCodeAt(pos) === 77) {
+                                                                                                            result1 = "M";
+                                                                                                            pos++;
+                                                                                                          } else {
+                                                                                                            result1 = null;
+                                                                                                            if (reportFailures === 0) {
+                                                                                                              matchFailed("\"M\"");
+                                                                                                            }
+                                                                                                          }
+                                                                                                        }
+                                                                                                      } else {
+                                                                                                        result0 = null;
+                                                                                                      }
+                                                                                                      if (result0 === null) {
+                                                                                                        if (input.charCodeAt(pos) === 78) {
+                                                                                                          result1 = "N";
+                                                                                                          pos++;
+                                                                                                        } else {
+                                                                                                          result1 = null;
+                                                                                                          if (reportFailures === 0) {
+                                                                                                            matchFailed("\"N\"");
+                                                                                                          }
+                                                                                                        }
+                                                                                                        if (result1 !== null) {
+                                                                                                          result0 = [];
+                                                                                                          while (result1 !== null) {
+                                                                                                            result0.push(result1);
+                                                                                                            if (input.charCodeAt(pos) === 78) {
+                                                                                                              result1 = "N";
+                                                                                                              pos++;
+                                                                                                            } else {
+                                                                                                              result1 = null;
+                                                                                                              if (reportFailures === 0) {
+                                                                                                                matchFailed("\"N\"");
+                                                                                                              }
+                                                                                                            }
+                                                                                                          }
+                                                                                                        } else {
+                                                                                                          result0 = null;
+                                                                                                        }
+                                                                                                        if (result0 === null) {
+                                                                                                          if (input.charCodeAt(pos) === 79) {
+                                                                                                            result1 = "O";
+                                                                                                            pos++;
+                                                                                                          } else {
+                                                                                                            result1 = null;
+                                                                                                            if (reportFailures === 0) {
+                                                                                                              matchFailed("\"O\"");
+                                                                                                            }
+                                                                                                          }
+                                                                                                          if (result1 !== null) {
+                                                                                                            result0 = [];
+                                                                                                            while (result1 !== null) {
+                                                                                                              result0.push(result1);
+                                                                                                              if (input.charCodeAt(pos) === 79) {
+                                                                                                                result1 = "O";
+                                                                                                                pos++;
+                                                                                                              } else {
+                                                                                                                result1 = null;
+                                                                                                                if (reportFailures === 0) {
+                                                                                                                  matchFailed("\"O\"");
+                                                                                                                }
+                                                                                                              }
+                                                                                                            }
+                                                                                                          } else {
+                                                                                                            result0 = null;
+                                                                                                          }
+                                                                                                          if (result0 === null) {
+                                                                                                            if (input.charCodeAt(pos) === 80) {
+                                                                                                              result1 = "P";
+                                                                                                              pos++;
+                                                                                                            } else {
+                                                                                                              result1 = null;
+                                                                                                              if (reportFailures === 0) {
+                                                                                                                matchFailed("\"P\"");
+                                                                                                              }
+                                                                                                            }
+                                                                                                            if (result1 !== null) {
+                                                                                                              result0 = [];
+                                                                                                              while (result1 !== null) {
+                                                                                                                result0.push(result1);
+                                                                                                                if (input.charCodeAt(pos) === 80) {
+                                                                                                                  result1 = "P";
+                                                                                                                  pos++;
+                                                                                                                } else {
+                                                                                                                  result1 = null;
+                                                                                                                  if (reportFailures === 0) {
+                                                                                                                    matchFailed("\"P\"");
+                                                                                                                  }
+                                                                                                                }
+                                                                                                              }
+                                                                                                            } else {
+                                                                                                              result0 = null;
+                                                                                                            }
+                                                                                                            if (result0 === null) {
+                                                                                                              if (input.charCodeAt(pos) === 81) {
+                                                                                                                result1 = "Q";
+                                                                                                                pos++;
+                                                                                                              } else {
+                                                                                                                result1 = null;
+                                                                                                                if (reportFailures === 0) {
+                                                                                                                  matchFailed("\"Q\"");
+                                                                                                                }
+                                                                                                              }
+                                                                                                              if (result1 !== null) {
+                                                                                                                result0 = [];
+                                                                                                                while (result1 !== null) {
+                                                                                                                  result0.push(result1);
+                                                                                                                  if (input.charCodeAt(pos) === 81) {
+                                                                                                                    result1 = "Q";
+                                                                                                                    pos++;
+                                                                                                                  } else {
+                                                                                                                    result1 = null;
+                                                                                                                    if (reportFailures === 0) {
+                                                                                                                      matchFailed("\"Q\"");
+                                                                                                                    }
+                                                                                                                  }
+                                                                                                                }
+                                                                                                              } else {
+                                                                                                                result0 = null;
+                                                                                                              }
+                                                                                                              if (result0 === null) {
+                                                                                                                if (input.charCodeAt(pos) === 82) {
+                                                                                                                  result1 = "R";
+                                                                                                                  pos++;
+                                                                                                                } else {
+                                                                                                                  result1 = null;
+                                                                                                                  if (reportFailures === 0) {
+                                                                                                                    matchFailed("\"R\"");
+                                                                                                                  }
+                                                                                                                }
+                                                                                                                if (result1 !== null) {
+                                                                                                                  result0 = [];
+                                                                                                                  while (result1 !== null) {
+                                                                                                                    result0.push(result1);
+                                                                                                                    if (input.charCodeAt(pos) === 82) {
+                                                                                                                      result1 = "R";
+                                                                                                                      pos++;
+                                                                                                                    } else {
+                                                                                                                      result1 = null;
+                                                                                                                      if (reportFailures === 0) {
+                                                                                                                        matchFailed("\"R\"");
+                                                                                                                      }
+                                                                                                                    }
+                                                                                                                  }
+                                                                                                                } else {
+                                                                                                                  result0 = null;
+                                                                                                                }
+                                                                                                                if (result0 === null) {
+                                                                                                                  if (input.charCodeAt(pos) === 83) {
+                                                                                                                    result1 = "S";
+                                                                                                                    pos++;
+                                                                                                                  } else {
+                                                                                                                    result1 = null;
+                                                                                                                    if (reportFailures === 0) {
+                                                                                                                      matchFailed("\"S\"");
+                                                                                                                    }
+                                                                                                                  }
+                                                                                                                  if (result1 !== null) {
+                                                                                                                    result0 = [];
+                                                                                                                    while (result1 !== null) {
+                                                                                                                      result0.push(result1);
+                                                                                                                      if (input.charCodeAt(pos) === 83) {
+                                                                                                                        result1 = "S";
+                                                                                                                        pos++;
+                                                                                                                      } else {
+                                                                                                                        result1 = null;
+                                                                                                                        if (reportFailures === 0) {
+                                                                                                                          matchFailed("\"S\"");
+                                                                                                                        }
+                                                                                                                      }
+                                                                                                                    }
+                                                                                                                  } else {
+                                                                                                                    result0 = null;
+                                                                                                                  }
+                                                                                                                  if (result0 === null) {
+                                                                                                                    if (input.charCodeAt(pos) === 84) {
+                                                                                                                      result1 = "T";
+                                                                                                                      pos++;
+                                                                                                                    } else {
+                                                                                                                      result1 = null;
+                                                                                                                      if (reportFailures === 0) {
+                                                                                                                        matchFailed("\"T\"");
+                                                                                                                      }
+                                                                                                                    }
+                                                                                                                    if (result1 !== null) {
+                                                                                                                      result0 = [];
+                                                                                                                      while (result1 !== null) {
+                                                                                                                        result0.push(result1);
+                                                                                                                        if (input.charCodeAt(pos) === 84) {
+                                                                                                                          result1 = "T";
+                                                                                                                          pos++;
+                                                                                                                        } else {
+                                                                                                                          result1 = null;
+                                                                                                                          if (reportFailures === 0) {
+                                                                                                                            matchFailed("\"T\"");
+                                                                                                                          }
+                                                                                                                        }
+                                                                                                                      }
+                                                                                                                    } else {
+                                                                                                                      result0 = null;
+                                                                                                                    }
+                                                                                                                    if (result0 === null) {
+                                                                                                                      if (input.charCodeAt(pos) === 85) {
+                                                                                                                        result1 = "U";
+                                                                                                                        pos++;
+                                                                                                                      } else {
+                                                                                                                        result1 = null;
+                                                                                                                        if (reportFailures === 0) {
+                                                                                                                          matchFailed("\"U\"");
+                                                                                                                        }
+                                                                                                                      }
+                                                                                                                      if (result1 !== null) {
+                                                                                                                        result0 = [];
+                                                                                                                        while (result1 !== null) {
+                                                                                                                          result0.push(result1);
+                                                                                                                          if (input.charCodeAt(pos) === 85) {
+                                                                                                                            result1 = "U";
+                                                                                                                            pos++;
+                                                                                                                          } else {
+                                                                                                                            result1 = null;
+                                                                                                                            if (reportFailures === 0) {
+                                                                                                                              matchFailed("\"U\"");
+                                                                                                                            }
+                                                                                                                          }
+                                                                                                                        }
+                                                                                                                      } else {
+                                                                                                                        result0 = null;
+                                                                                                                      }
+                                                                                                                      if (result0 === null) {
+                                                                                                                        if (input.charCodeAt(pos) === 86) {
+                                                                                                                          result1 = "V";
+                                                                                                                          pos++;
+                                                                                                                        } else {
+                                                                                                                          result1 = null;
+                                                                                                                          if (reportFailures === 0) {
+                                                                                                                            matchFailed("\"V\"");
+                                                                                                                          }
+                                                                                                                        }
+                                                                                                                        if (result1 !== null) {
+                                                                                                                          result0 = [];
+                                                                                                                          while (result1 !== null) {
+                                                                                                                            result0.push(result1);
+                                                                                                                            if (input.charCodeAt(pos) === 86) {
+                                                                                                                              result1 = "V";
+                                                                                                                              pos++;
+                                                                                                                            } else {
+                                                                                                                              result1 = null;
+                                                                                                                              if (reportFailures === 0) {
+                                                                                                                                matchFailed("\"V\"");
+                                                                                                                              }
+                                                                                                                            }
+                                                                                                                          }
+                                                                                                                        } else {
+                                                                                                                          result0 = null;
+                                                                                                                        }
+                                                                                                                        if (result0 === null) {
+                                                                                                                          if (input.charCodeAt(pos) === 87) {
+                                                                                                                            result1 = "W";
+                                                                                                                            pos++;
+                                                                                                                          } else {
+                                                                                                                            result1 = null;
+                                                                                                                            if (reportFailures === 0) {
+                                                                                                                              matchFailed("\"W\"");
+                                                                                                                            }
+                                                                                                                          }
+                                                                                                                          if (result1 !== null) {
+                                                                                                                            result0 = [];
+                                                                                                                            while (result1 !== null) {
+                                                                                                                              result0.push(result1);
+                                                                                                                              if (input.charCodeAt(pos) === 87) {
+                                                                                                                                result1 = "W";
+                                                                                                                                pos++;
+                                                                                                                              } else {
+                                                                                                                                result1 = null;
+                                                                                                                                if (reportFailures === 0) {
+                                                                                                                                  matchFailed("\"W\"");
+                                                                                                                                }
+                                                                                                                              }
+                                                                                                                            }
+                                                                                                                          } else {
+                                                                                                                            result0 = null;
+                                                                                                                          }
+                                                                                                                          if (result0 === null) {
+                                                                                                                            if (input.charCodeAt(pos) === 88) {
+                                                                                                                              result1 = "X";
+                                                                                                                              pos++;
+                                                                                                                            } else {
+                                                                                                                              result1 = null;
+                                                                                                                              if (reportFailures === 0) {
+                                                                                                                                matchFailed("\"X\"");
+                                                                                                                              }
+                                                                                                                            }
+                                                                                                                            if (result1 !== null) {
+                                                                                                                              result0 = [];
+                                                                                                                              while (result1 !== null) {
+                                                                                                                                result0.push(result1);
+                                                                                                                                if (input.charCodeAt(pos) === 88) {
+                                                                                                                                  result1 = "X";
+                                                                                                                                  pos++;
+                                                                                                                                } else {
+                                                                                                                                  result1 = null;
+                                                                                                                                  if (reportFailures === 0) {
+                                                                                                                                    matchFailed("\"X\"");
+                                                                                                                                  }
+                                                                                                                                }
+                                                                                                                              }
+                                                                                                                            } else {
+                                                                                                                              result0 = null;
+                                                                                                                            }
+                                                                                                                            if (result0 === null) {
+                                                                                                                              if (input.charCodeAt(pos) === 89) {
+                                                                                                                                result1 = "Y";
+                                                                                                                                pos++;
+                                                                                                                              } else {
+                                                                                                                                result1 = null;
+                                                                                                                                if (reportFailures === 0) {
+                                                                                                                                  matchFailed("\"Y\"");
+                                                                                                                                }
+                                                                                                                              }
+                                                                                                                              if (result1 !== null) {
+                                                                                                                                result0 = [];
+                                                                                                                                while (result1 !== null) {
+                                                                                                                                  result0.push(result1);
+                                                                                                                                  if (input.charCodeAt(pos) === 89) {
+                                                                                                                                    result1 = "Y";
+                                                                                                                                    pos++;
+                                                                                                                                  } else {
+                                                                                                                                    result1 = null;
+                                                                                                                                    if (reportFailures === 0) {
+                                                                                                                                      matchFailed("\"Y\"");
+                                                                                                                                    }
+                                                                                                                                  }
+                                                                                                                                }
+                                                                                                                              } else {
+                                                                                                                                result0 = null;
+                                                                                                                              }
+                                                                                                                              if (result0 === null) {
+                                                                                                                                if (input.charCodeAt(pos) === 90) {
+                                                                                                                                  result1 = "Z";
+                                                                                                                                  pos++;
+                                                                                                                                } else {
+                                                                                                                                  result1 = null;
+                                                                                                                                  if (reportFailures === 0) {
+                                                                                                                                    matchFailed("\"Z\"");
+                                                                                                                                  }
+                                                                                                                                }
+                                                                                                                                if (result1 !== null) {
+                                                                                                                                  result0 = [];
+                                                                                                                                  while (result1 !== null) {
+                                                                                                                                    result0.push(result1);
+                                                                                                                                    if (input.charCodeAt(pos) === 90) {
+                                                                                                                                      result1 = "Z";
+                                                                                                                                      pos++;
+                                                                                                                                    } else {
+                                                                                                                                      result1 = null;
+                                                                                                                                      if (reportFailures === 0) {
+                                                                                                                                        matchFailed("\"Z\"");
+                                                                                                                                      }
+                                                                                                                                    }
+                                                                                                                                  }
+                                                                                                                                } else {
+                                                                                                                                  result0 = null;
+                                                                                                                                }
+                                                                                                                              }
+                                                                                                                            }
+                                                                                                                          }
+                                                                                                                        }
+                                                                                                                      }
+                                                                                                                    }
+                                                                                                                  }
+                                                                                                                }
+                                                                                                              }
+                                                                                                            }
+                                                                                                          }
+                                                                                                        }
                                                                                                       }
                                                                                                     }
                                                                                                   }
@@ -13306,6 +13195,27 @@ module.exports = (function(){
         }
         if (result0 === null) {
           pos = pos0;
+        }
+        if (result0 === null) {
+          pos0 = pos;
+          if (input.charCodeAt(pos) === 46) {
+            result0 = ".";
+            pos++;
+          } else {
+            result0 = null;
+            if (reportFailures === 0) {
+              matchFailed("\".\"");
+            }
+          }
+          if (result0 !== null) {
+            result0 = (function(offset) {
+              var name = p.getBlankName();
+              return {xspan:1,name:name,x:[name]};
+            })(pos0);
+          }
+          if (result0 === null) {
+            pos = pos0;
+          }
         }
         reportFailures--;
         if (reportFailures === 0 && result0 === null) {
@@ -14652,9 +14562,16 @@ module.exports = (function(){
       }
       
       
-        var p, parser, vfls, virtuals, ccss, asts; 
+        var p, parser, vfls, virtuals, ccss, asts, blankCount; 
       
         p = parser = this;
+        
+        blankCount = 0;
+        
+        p.getBlankName = function () {
+          blankCount++;
+          return "blank-" + blankCount;
+        };
         
         p.size = ['width','height'];
         p.pos = ['x','y'];
@@ -14701,70 +14618,188 @@ module.exports = (function(){
         }
       
       
-         p.addTemplate = function (lines,name,options) {
-          var ast, prefix;
+        p.addTemplate = function (lines,name,options) {
+          var ast, prefix, container;
+          
           prefix = name+'-';
           ast = p.processHLines(lines);
           ast.name = name;
-             
-      
-          var md, mdOp, outergap;
           
-          if (options.gap || options['outer-gap']) {
-            if (options['outer-gap']) {
-              outergap = options['outer-gap'];
-            } else {
-              outergap = options.gap;
-            }
+          if (options.in) {
+            container = options.in;
+          }
+          else {
+            container = "::";
+          }
+      
+          var md, mdOp, outergap, gaps, g, hasGap;
+          
+          gaps = {};
+          hasGap = false;
+          
+          g = options.gap;
+          if (g) { 
+            hasGap = true;
+            gaps.top = g;
+            gaps.right = g;
+            gaps.bottom = g;
+            gaps.left = g;
+            gaps.h = g;
+            gaps.v = g;
+          }    
+          g = options['h-gap'];
+          if (g) { 
+            hasGap = true;
+            gaps.right = g;
+            gaps.left = g;
+            gaps.h = g;
+          }
+          g = options['v-gap'];
+          if (g) { 
+            hasGap = true;
+            gaps.top = g;
+            gaps.bottom = g;
+            gaps.v = g;
+          }
+          g = options['outer-gap'];
+          if (g) { 
+            hasGap = true;
+            gaps.top = g;
+            gaps.right = g;
+            gaps.bottom = g;
+            gaps.left = g;
+          }
+          g = options['top-gap'];
+          if (g) { 
+            hasGap = true;
+            gaps.top = g;
+          }
+          g = options['right-gap']; 
+          if (g) { 
+            hasGap = true;
+            gaps.right = g;
+          }
+          g = options['bottom-gap']; 
+          if (g) { 
+            hasGap = true;
+            gaps.bottom = g;
+          }
+          g = options['left-gap']; 
+          if (g) { 
+            hasGap = true;
+            gaps.left = g;
+          }
+          
+          
+          if (hasGap) {
             mdOp = "<=";
           } else {
             mdOp = "==";
           }
-           
-          md = '::['+name+'-md-width] '+mdOp+' ::[width]';
-          if (ast.yspan > 1){md += ' / '+ast.yspan;}
+          
+          
+          // md-width     
+          // -------------------------------------------------
+          // == (this[width] - gap.left - gap.right - gap * (span - 1)) / span
+          
+          md = '::['+name+'-md-width] ' + mdOp + ' ';
+          if (gaps.right || gaps.left || gaps.h) {
+            md += '(' + container + '[width]';
+            if (gaps.right) {md += ' - ' + gaps.right;}
+            if (gaps.left ) {md += ' - ' + gaps.left;}      
+            if (gaps.h && ast.yspan > 1){
+              md += ' - ' + gaps.h;
+              if (ast.yspan > 2) {md += ' * ' + (ast.yspan - 1);}
+            }
+            md += ')';
+          } else {
+            md += container + '[width]';
+          }
+          if (ast.yspan > 1){md += ' / ' + ast.yspan;}
           md += " !require";
           p.addCCSS(md);
+          
+          
+          // md-height
+          // -------------------------------------------------
         
-          md = '::['+name+'-md-height] '+mdOp+' ::[height]';
-          if (ast.xspan > 1){md += ' / '+ast.xspan;}
+          md = '::['+name+'-md-height] ' + mdOp + ' ';
+          if (gaps.top || gaps.bottom || gaps.v) {
+            md += '(' + container + '[height]';
+            if (gaps.top) {md += ' - ' + gaps.top;}
+            if (gaps.bottom ) {md += ' - ' + gaps.bottom;}
+            if (gaps.v && ast.xspan > 1){
+              md += ' - ' + gaps.v;
+              if (ast.xspan > 2) {md += ' * ' + (ast.xspan - 1);}
+            }
+            md += ')';
+          } else {
+            md += container + '[height]';
+          }    
+          if (ast.xspan > 1){md += ' / ' + ast.xspan;}
           md += " !require";
           p.addCCSS(md);
-            
+          
+          
+          // virtual widths
+          // -------------------------------------------------
+          // == md-width * span - gap * (span - 1)
+          
           var xspan, wccss;
           for (var el in ast.widths) {
-             p.addVirtual(prefix+el);
-             xspan = ast.widths[el];
-             wccss = '"'+prefix+el+'"[width] == ';
-             wccss +='::['+ast.name+'-md-width]';
-             if (xspan > 1) {wccss += ' * '+xspan;}
-             p.addCCSS(wccss)
+            p.addVirtual(prefix+el);
+            xspan = ast.widths[el];
+            wccss = '"'+prefix+el+'"[width] == ';
+            wccss +='::['+ast.name+'-md-width]';
+            if (xspan > 1) {
+              wccss += ' * ' + xspan;
+              if (gaps.h) {
+                wccss += ' + ' + gaps.h;
+                if (xspan > 2) {
+                  wccss += ' * ' + (xspan - 1);
+                }
+              }
+            }
+            p.addCCSS(wccss)
           }
+          
+          
+          // virtual heights
+          // -------------------------------------------------
+          
           var yspan, hccss;
           for (var el in ast.heights) {
-             yspan = ast.heights[el];
-             hccss = '"'+prefix+el+'"[height] == ';
-             hccss +='::['+ast.name+'-md-height]';
-             if (yspan > 1) {hccss += ' * '+yspan;}
-             p.addCCSS(hccss);
+            yspan = ast.heights[el];
+            hccss = '"'+prefix+el+'"[height] == ';
+            hccss +='::['+ast.name+'-md-height]';
+            if (yspan > 1) {
+              hccss += ' * ' + yspan;
+              if (gaps.v) {
+                hccss += ' + ' + gaps.v;
+                if (yspan > 2) {
+                  hccss += ' * ' + (yspan - 1);
+                }
+              }
+            }
+            p.addCCSS(hccss);
           }
       
           var vfl, vflFooter;
           ast.v.forEach(function(brij){
             brij = brij.split("%-v-%");
             vfl = '@v ["'+prefix+brij[0]+'"]';
-            if (options.gap) {vfl += '-';}
+            if (gaps.v) {vfl += '-';}
             vfl += '["'+prefix+brij[1]+'"]';
-            if (options.gap) {vfl += ' gap('+options.gap+')';}
+            if (gaps.v) {vfl += ' gap('+gaps.v+')';}
             p.addVFL(vfl);
           });
          
           ast.h.forEach(function(brij){
             brij = brij.split("%-h-%");
             vfl = '@h ["'+prefix+brij[0]+'"]';
-            if (options.gap) {vfl += '-';}
+            if (gaps.h) {vfl += '-';}
             vfl += '["'+prefix+brij[1]+'"]';
-            if (options.gap) {vfl += ' gap('+options.gap+')';}
+            if (gaps.h) {vfl += ' gap('+gaps.h+')';}
             p.addVFL(vfl);
           });
           
@@ -14775,9 +14810,9 @@ module.exports = (function(){
             if (edgeEls.indexOf(el) > -1) {return null;}
             edgeEls.push(el);
             vfl = '@h |';
-            if (outergap) {vfl += '-';}
-            vfl += '["'+prefix+el+'"]'+' in(::)';   
-            if (outergap) {vfl += ' gap('+outergap+')';}
+            if (gaps.left) {vfl += '-';}
+            vfl += '["'+prefix+el+'"]'+' in('+container+')';   
+            if (gaps.left) {vfl += ' gap('+gaps.left+')';}
             p.addVFL(vfl);
           });
       
@@ -14786,9 +14821,9 @@ module.exports = (function(){
             if (edgeEls.indexOf(el) > -1) {return null;}
             edgeEls.push(el);
             vfl = '@v |';
-            if (outergap) {vfl += '-';}
-            vfl += '["'+prefix+el+'"]'+' in(::)';
-            if (outergap) {vfl += ' gap('+outergap+')';}
+            if (gaps.top) {vfl += '-';}
+            vfl += '["'+prefix+el+'"]'+' in('+container+')';
+            if (gaps.top) {vfl += ' gap('+gaps.top+')';}
             p.addVFL(vfl);
           });
       
@@ -14797,9 +14832,9 @@ module.exports = (function(){
             if (edgeEls.indexOf(el) > -1) {return null;}
             edgeEls.push(el);
             vfl = '@h ["'+prefix+el+'"]';
-            if (outergap) {vfl += '-';}
-            vfl +='|'+' in(::)';
-            if (outergap) {vfl += ' gap('+outergap+')';}
+            if (gaps.right) {vfl += '-';}
+            vfl +='|'+' in('+container+')';
+            if (gaps.right) {vfl += ' gap('+gaps.right+')';}
             p.addVFL(vfl);
           });
       
@@ -14808,9 +14843,9 @@ module.exports = (function(){
             if (edgeEls.indexOf(el) > -1) {return null;}
             edgeEls.push(el);
             vfl = '@v ["'+prefix+el+'"]';
-            if (outergap) {vfl += '-';}
-            vfl += '|'+' in(::)';
-            if (outergap) {vfl += ' gap('+outergap+')';}
+            if (gaps.bottom) {vfl += '-';}
+            vfl += '|'+' in('+container+')';
+            if (gaps.bottom) {vfl += ' gap('+gaps.bottom+')';}
             p.addVFL(vfl);
           });
       
@@ -14823,13 +14858,23 @@ module.exports = (function(){
         }
       
         p.processHZones = function (zones) {
-          var xspan, curr, prev, h, x, widths;
+          var xspan, curr, prev, h, x, widths,
+            dotCounter, isDot;
           xspan = 0;
           h = [];
           widths = {};
           x = [];
+          dotCounter = 0;    
           zones.forEach(function(zone){
+            isDot = false;
             curr = zone.name;
+            
+            // "." are each treated as an empty zone
+            if (curr === "-DOT-") {
+              isDot = false;
+              dotCounter++;
+              curr += dotCounter;
+            }
             x = x.concat(zone.x);
             delete zone.x;
             if (prev && prev !== curr) {   
