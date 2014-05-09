@@ -2,29 +2,15 @@ html:not(.gss-ready) {
   opacity:0;
 }
 
-/* easeInOutCubic */
-/*
-.gss-ready button, .gss-ready #name, .gss-ready #avatar {  
-  
-  transition-property: transform;
-  transition-duration: .5s;
-  
-  -webkit-transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1.000); 
-     -moz-transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1.000); 
-       -o-transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1.000); 
-          transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1.000); 
+html {
+  background-color: hsl(3, 18%, 43%);
 }
-*/
 
 * {
   -webkit-backface-visibility: hidden;
   margin: 0px;
   padding: 0px;
   outline: none;
-}
-
-html {
-  background-color: hsl(3, 18%, 43%);
 }
 
 #background {
@@ -84,8 +70,22 @@ button.primary {
   text-shadow: 0 -1px hsla(3, 18%, 43%, .5);
 }
 
-.card {
+#profile-card, .card {
   background-color: hsl(39, 40%, 90%);
   border: 1px solid hsla(0,0%,100%,.6);
   box-shadow: 0 5px 8px hsla(0,0%,0%,.3);  
 }
+
+/* easeInOutCubic */
+/*
+.gss-ready button, .gss-ready #name, .gss-ready #avatar {  
+  
+  transition-property: transform;
+  transition-duration: .5s;
+  
+  -webkit-transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1.000); 
+     -moz-transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1.000); 
+       -o-transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1.000); 
+          transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1.000); 
+}
+*/
