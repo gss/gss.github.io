@@ -26,7 +26,17 @@
           gap([astro-gap0]);
       }
       @vertical [#grid-section-content][#astro-greg]-[#astro-d4]-[#astro-alex]-[#astro-bergie]-[#astro-tom]
-        gap([baseline] * 3);
+        in(#grid-section)
+        gap([baseline] * 3)
+        outer-gap([baseline] * 5);
+        
+    }
+    @v [#pp-link]-| in(#grid-section) gap([baseline]);
+    #pp-link {
+      text-align: center;
+      size: == ::[intrinsic-size] !require;
+      center-x: == ::window[center-x];
+      opacity: .3;
     }
   </style>
   <style>
@@ -85,5 +95,7 @@
       <p>Thomas Aylott</p>
     </a>    
   </div>
+  
+  <a id="pp-link" href="/legal/privacy-policy/">privacy policy</a>
   
 </section>
