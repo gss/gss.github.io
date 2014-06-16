@@ -31,7 +31,18 @@
         outer-gap([baseline] * 5);
         
     }
-    @v [#pp-link]-| in(#grid-section) gap([baseline]);
+
+    @v [#astro-tom]-[#prefinery_iframe_inline]
+      gap(200);
+
+    @v [#prefinery_iframe_inline]-[#pp-link]-|
+      in(#grid-section)
+      gap([baseline]);
+
+    #prefinery_iframe_inline {
+      height: == ::[intrinsic-height];
+    }
+
     #pp-link {
       text-align: center;
       size: == ::[intrinsic-size] !require;
@@ -95,6 +106,8 @@
       <p>Thomas Aylott</p>
     </a>    
   </div>
+
+  <iframe id='prefinery_iframe_inline' allowTransparency='true' width='100%' height='240' scrolling='no' frameborder='0' src="https://thegrid.prefinery.com/betas/4620/testers/new?display=inline&version=2"></iframe>
   
   <a id="pp-link" href="/legal/privacy-policy/">privacy policy</a>
   
