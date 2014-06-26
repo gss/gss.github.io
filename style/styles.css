@@ -139,6 +139,7 @@ button, .button {
   font-family: "adelle", georgia, serif;
   text-transform: uppercase;
   letter-spacing: 0.1em;
+  cursor: pointer;
 }
 
 .trans {
@@ -175,7 +176,7 @@ ul.large-list a {
   color: hsl(58, 100%, 84%);
 }
 
-button {
+button, .button {
   color: hsl(282, 99%, 31%);
   background-color: hsl(58, 100%, 84%);
 }
@@ -277,3 +278,51 @@ hr {
 }
 
 
+.alert {
+  border-radius: 0;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+
+  border-width: 0;
+  color: hsl(0, 0%, 100%);
+  font-family: "museo-sans", sans-serif;
+  font-size: 17px;
+  padding: 23px;
+  text-align: center;
+}
+
+@media (min-width: 720px) {
+  .alert {
+    text-align: left;
+  }
+}
+
+.alert.error {
+  background: hsl(332, 54%, 47%);
+}
+
+.alert.success {
+  background: hsl(178, 100%, 37%);
+}
+
+
+input[type=email] {
+  background: none;
+  border-color: hsl(282, 100%, 31%);
+  border-style: solid;
+  border-width: 5px;
+  color: hsl(0, 0%, 49%);
+  font-size: 17px;
+  font-family: "museo-sans", sans-serif;
+  height: 58px;
+  padding: 0 16px;
+  text-align: center;
+  text-transform: lowercase;
+}
+
+@media (min-width: 720px) {
+  input[type=email] {
+    font-size: 23px;
+    text-align: left;
+  }
+}

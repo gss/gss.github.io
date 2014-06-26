@@ -32,16 +32,57 @@
         
     }
 
-    @v [#astro-tom]-[#prefinery_iframe_inline]
-      gap(200);
+    #grid-section {
+      @virtual "form";
+      @h |~-~["form"]~-~| outer-gap(60) in(::);
+      @v [.astro-person]~200~["form"]-150-[#pp-link]-|
+        outer-gap([baseline])
+        in(::);
 
-    @v [#prefinery_iframe_inline]-[#pp-link]-|
-      in(#grid-section)
-      gap([baseline]);
 
-    #prefinery_iframe_inline {
-      height: == ::[intrinsic-height];
+      #email-error-message,
+      #email-success-message {
+        height: == ::[intrinsic-height];
+      }
+
+      @v |[.alert]-[#email-input]
+        gap(20)
+        in("form")
+        chain-left("form"[left])
+        chain-right("form"[right]);
+
+
+      #email-input[height] == #email-submit[height] == 60;
+
+
+      @if ::window[width] < 720 {
+        @v [#email-input]-[#email-submit]|
+          gap(20)
+          in("form")
+          chain-left("form"[left])
+          chain-right("form"[right]);
+      }
+      @else {
+        "form"[width] == #grid-section-content[width];
+        "form"[center-x] == ::[center-x];
+
+        @h |[#email-input]-[#email-submit]|
+          gap(20)
+          in("form")
+          chain-bottom("form"[bottom]);
+
+        #email-submit {
+          /*width: == ::[intrinsic-width];*/
+
+          /*
+            Intrinsic width is applied regardless
+            of how the conditional is evaluated
+          */
+          width: == 260;
+        }
+      }
     }
+
 
     #pp-link {
       text-align: center;
@@ -107,7 +148,10 @@
     </a>    
   </div>
 
-  <iframe id='prefinery_iframe_inline' allowTransparency='true' width='100%' height='240' scrolling='no' frameborder='0' src="https://thegrid.prefinery.com/betas/4620/testers/new?display=inline&version=2"></iframe>
+  <p id="email-error-message" class="alert error">Your request could not be fulfilled. Please try again.</p>
+  <p id="email-success-message" class="alert success">Thanks!</p>
+  <input id="email-input" type="email" placeholder="Email address" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false">
+  <input class="button" id="email-submit" type="submit" value="Count me in">
   
   <a id="pp-link" href="/legal/privacy-policy/">privacy policy</a>
   
