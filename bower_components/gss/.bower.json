@@ -43,7 +43,6 @@
     "commit": "4e1d9f5d824dd57800e1d2c1f87097c8417acf51"
   },
   "_source": "git://github.com/the-gss/engine.git",
-  "_target": "~1.0.4-beta",
-  "_originalSource": "gss",
-  "_direct": true
+  "_target": "*",
+  "_originalSource": "git://github.com/the-gss/engine.git"
 }

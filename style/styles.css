@@ -130,7 +130,8 @@ small {
 }
 
 
-button, .button {
+button,
+.button {
   outline: none;
   box-shadow: none;
   padding: .2em .6em;
@@ -176,9 +177,15 @@ ul.large-list a {
   color: hsl(58, 100%, 84%);
 }
 
-button, .button {
+[disabled] {
+  opacity: .5;
+}
+
+button, .button,
+button[disabled], .button[disabled],
+button[disabled]:hover, .button[disabled]:hover {
   color: hsl(282, 99%, 31%);
-  background-color: hsl(58, 100%, 84%);
+  background-color: hsl(58, 100%, 84%) !important;
 }
 button.transparent {
   background-color: transparent;
@@ -295,6 +302,10 @@ hr {
   .alert {
     text-align: left;
   }
+}
+
+.alert.hidden {
+  visibility: hidden;
 }
 
 .alert.error {

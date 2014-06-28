@@ -1,5 +1,16 @@
     {% include navigation.html %}
   
+    <script src="/bower_components/signup-form/index.js"></script>
+    <script>
+      var SignupForm = require('signup-form');
+
+      new SignupForm({
+        betaId: 4620,
+        parentSelector: '#grid-section-content',
+        buttonText: 'Count me in'
+      });
+    </script>
+
     <script type="text/javascript">
     adroll_adv_id = "MW5HZIP5UVFRZNJVKSPCR4";
     adroll_pix_id = "2DYOCKCHRVCTZGO3SGMR5U";

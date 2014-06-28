@@ -40,23 +40,23 @@
         in(::);
 
 
-      #email-error-message,
-      #email-success-message {
+      #signup-form-error-message,
+      #signup-form-success-message {
         height: == ::[intrinsic-height];
       }
 
-      @v |[.alert]-[#email-input]
+      @v |[.alert]-[#signup-form-input-field]
         gap(20)
         in("form")
         chain-left("form"[left])
         chain-right("form"[right]);
 
 
-      #email-input[height] == #email-submit[height] == 60;
+      #signup-form-input-field[height] == #signup-form-submit-button[height] == 60;
 
 
       @if ::window[width] < 720 {
-        @v [#email-input]-[#email-submit]|
+        @v [#signup-form-input-field]-[#signup-form-submit-button]|
           gap(20)
           in("form")
           chain-left("form"[left])
@@ -66,12 +66,12 @@
         "form"[width] == #grid-section-content[width];
         "form"[center-x] == ::[center-x];
 
-        @h |[#email-input]-[#email-submit]|
+        @h |[#signup-form-input-field]-[#signup-form-submit-button]|
           gap(20)
           in("form")
           chain-bottom("form"[bottom]);
 
-        #email-submit {
+        #signup-form-submit-button {
           /*width: == ::[intrinsic-width];*/
 
           /*
@@ -148,10 +148,12 @@
     </a>    
   </div>
 
-  <p id="email-error-message" class="alert error">Your request could not be fulfilled. Please try again.</p>
-  <p id="email-success-message" class="alert success">Thanks!</p>
-  <input id="email-input" type="email" placeholder="Email address" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false">
-  <input class="button" id="email-submit" type="submit" value="Count me in">
+  <form id="signup-form">
+    <p id="signup-form-error-message" class="alert error">Your request could not be fulfilled. Please try again.</p>
+    <p id="signup-form-success-message" class="alert success">Thanks!</p>
+    <input id="signup-form-input-field" type="email" placeholder="Email address" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false">
+    <input id="signup-form-submit-button" class="button" type="submit" value="Count me in">
+  </form>
   
   <a id="pp-link" href="/legal/privacy-policy/">privacy policy</a>
   

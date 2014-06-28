@@ -3,7 +3,8 @@
   "keywords": [],
   "description": "Site",
   "dependencies": {
-    "gss": "git://github.com/the-gss/engine.git"
+    "gss": "git://github.com/the-gss/engine.git",
+    "signup-form": "the-grid/signup-form"
   },
   "ignore": [
     "**/.*",
