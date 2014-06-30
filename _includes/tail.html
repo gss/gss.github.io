@@ -1,13 +1,50 @@
     {% include navigation.html %}
-  
-    <script src="/bower_components/signup-form/index.js"></script>
+
+    <script src="bower_components/analytics/analytics.min.js"></script>
+    <script>
+      analytics.init({
+        AdRoll: {
+          advId: 'MW5HZIP5UVFRZNJVKSPCR4',
+          pixId: '2DYOCKCHRVCTZGO3SGMR5U'
+        },
+        AdWords: {
+          conversionId: '994059725',
+          events: {
+            signup: 'D-nsCMvAgAkQzcuA2gM'
+          }
+        },
+        'Facebook Ads': {
+          events: {
+            signup: 6016570978404
+          }
+        },
+        'Twitter Ads': {
+          events: {
+            signup: 'l4ks1'
+          }
+        }
+      });
+
+      analytics.page();
+    </script>
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/rxjs/dist/rx.lite.min.js"></script>
+
+    <script src="bower_components/signup-form/index.js"></script>
     <script>
       var SignupForm = require('signup-form');
 
       new SignupForm({
         betaId: 4620,
-        parentSelector: '#grid-section-content',
-        buttonText: 'Count me in'
+        useTemplate: false, // use our own markup because of GSS
+        onSuccess: function(emailAddress) {
+          analytics.identify({
+            email: emailAddress
+          });
+
+          analytics.track('signup');
+        }
       });
     </script>
 
