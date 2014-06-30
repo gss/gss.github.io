@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>signup-form</title>
+    <!--<link rel="stylesheet" href="../node_modules/grunt-mocha-phantomjs/node_modules/mocha-phantomjs/node_modules/mocha/mocha.css">-->
+  </head>
+  <body>
+    <!--<div id="mocha"></div>-->
+    <div id="static">
+      <form id="static-signup-form">
+        <p id="static-signup-form-error-message" class="alert error hidden">Your request could not be fulfilled. Please try again.</p>
+        <p id="static-signup-form-success-message" class="alert success hidden">Thanks!</p>
+        <input id="static-signup-form-input-field" type="email" placeholder="Email address" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false">
+        <input id="static-signup-form-submit-button" type="submit" value="Sign up" disabled>
+      </form>
+    </div>
+    <div id="dynamic"></div>
+    <script src="../bower_components/jquery/dist/jquery.js"></script>
+    <script src="../bower_components/rxjs/dist/rx.lite.js"></script>
+    <script src="../index.js"></script>
+    <script src="../node_modules/chai/chai.js"></script>
+    <script src="../node_modules/grunt-mocha-phantomjs/node_modules/mocha-phantomjs/node_modules/mocha/mocha.js"></script>
+    <script>mocha.setup('bdd');</script>
+    <script src="../node_modules/sinon/pkg/sinon.js"></script>
+    <script src="./view.js"></script>
+    <script src="./view-model.js"></script>
+    <script src="./signup-form.js"></script>
+    <script>
+      if (window.mochaPhantomJS) {
+        mochaPhantomJS.run();
+      } else {
+        mocha.checkLeaks();
+        mocha.run();
+      }
+    </script>
+  </body>
+</html>

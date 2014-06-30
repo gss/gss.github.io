@@ -4,7 +4,7 @@
   "description": "Site",
   "dependencies": {
     "gss": "git://github.com/the-gss/engine.git",
-    "signup-form": "the-grid/signup-form"
+    "signup-form": "git@github.com:the-grid/signup-form.git"
   },
   "ignore": [
     "**/.*",

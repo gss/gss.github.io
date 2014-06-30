@@ -1,0 +1,33 @@
+{
+  "name": "signup-form",
+  "description": "A signup form for web properties.",
+  "main": "index.js",
+  "license": "MIT",
+  "keywords": [
+    "email",
+    "signup",
+    "form"
+  ],
+  "authors": {
+    "name": "Paul Young"
+  },
+  "homepage": "https://github.com/the-grid/signup-form",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/the-grid/signup-form.git"
+  },
+  "dependencies": {
+    "jquery": "~2.1.1",
+    "rxjs": "~2.2.27"
+  },
+  "private": true,
+  "_release": "2f8807db7a",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "2f8807db7a0337bda1ac3b0d06c3eb8bcae4f494"
+  },
+  "_source": "git@github.com:the-grid/signup-form.git",
+  "_target": "*",
+  "_originalSource": "git@github.com:the-grid/signup-form.git"
+}
