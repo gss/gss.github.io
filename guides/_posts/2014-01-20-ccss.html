@@ -127,7 +127,7 @@ You can create a custom variable for an element by, again, simply using it:
 
 {% endhighlight %}
 
-This will automatically create a `[col-size]` variable for each element with the class post, and constrain it to be the same as 3 times that post's line-height.  Don't forget this relationship is 2-way, so further constraining a post's [col-size] can affect its line-height, which can be remedied using by taking advantage of the "Constraint Hierarchy" with [Strengths]() or [Stays](#stays).
+This will automatically create a `[col-size]` variable for each element with the class post, and constrain it to be the same as 3 times that post's line-height.  Don't forget this relationship is 2-way, so further constraining a post's [col-size] can affect its line-height, which can be remedied using by taking advantage of the "Constraint Hierarchy" with [Strengths](#strengths) or [Stays](#stays).
 
 ## Global Scope
 
@@ -218,8 +218,7 @@ When you add `intrinsic-` before a property, GSS will try to measure that proper
 
 **PRO TIP:** minimize use of intrinsic properties.  For example, best to hardcode image width & height in equality constraints if can be known ahead of time.
 
-
-## Strengths
+## Strengths <a name="strengths"></a>
 
 Stronger constraints completely overcome weaker ones - this is the phenomena of the [Constraint Hierarchy](http://www.cs.washington.edu/research/constraints/theory/hierarchies-92.html).  Strengths are declared in the same fashion of CSS's `!important`:
 
@@ -284,7 +283,7 @@ Constraints of the same strength can be made relatively stronger or weaker with 
 Should the box move its position to the right or stretch its width to make its right edge flush with the window?  A critical best practice is to *fully constrain* an element, in other words, you should adequately specify an element's position & size.  If an element is under-constrained you will have unpredictable results. 
 
 
-## Stays
+## Stays <a name="stays"></a>
 
 Ambiguity can be largely overcome by declaring more constraints, but what about situations like:
 
