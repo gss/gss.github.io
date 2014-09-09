@@ -2,7 +2,7 @@
 
 <div id="nav" class="trans fixed">
   <style type="text/gss">
-    
+
     .badge {
       width: == 45.142;
       height: == 48;
@@ -10,16 +10,16 @@
     @if [Wwin] >= [breakpoint1] {
       #nav {
         .badge {
-         top: == 0 - 4; 
-         center-x: == ::window[center-x]; 
+         top: == 0 - 4;
+         center-x: == ::window[center-x];
         }
       }
     }
     @else {
       #nav {
         .badge {
-         top: == 0 - 4; 
-         right: == ::window[left]; 
+         top: == 0 - 4;
+         right: == ::window[left];
         }
       }
     }
@@ -27,7 +27,7 @@
       margin-top: -5px !important;
       width: == ::[intrinsic-width];
       height: == ::[intrinsic-height];
-      center-x: == 0 - ::window[center-y] - ::[width] / 2;    
+      center-x: == 0 - ::window[center-y] - ::[width] / 2;
     }
 
   </style>
@@ -38,12 +38,12 @@
     #nav, #sidenav {
       z-index: 100;
     }
-  
+
     #sidenav-menu-button-wrap {
       -webkit-transform: rotate(-90deg);
         -moz-transform: rotate(-90deg);
              transform: rotate(-90deg);
-    }  
+    }
     .scrolled-down #nav {
       -webkit-transform: translateY(-72px);
       -moz-transform: translateY(-72px);
@@ -59,7 +59,7 @@
          -moz-transform: translateY(0px) !important;
               transform: translateY(0px) !important;
     }
-  
+
     .scrolled-down #sidenav {
       -webkit-transform: translateX(-72px);
          -moz-transform: translateX(-72px);
@@ -74,7 +74,7 @@
       -webkit-transform: translateX(-72px) !important;
          -moz-transform: translateX(-72px) !important;
               transform: translateX(-72px) !important;
-    }  
+    }
     .app-show-menu #menu {
       margin-left: 0 !important;
     }
@@ -83,8 +83,8 @@
       -webkit-transition: margin .3s;
          -moz-transition: margin .3s;
               transition: margin .3s;
-            
-            
+
+
     }
     .app-show-menu #hide-menu-button {
       margin-left: 0 !important;
@@ -93,20 +93,20 @@
       margin-left: -100% !important;
       margin-left: -100% !important;
       -webkit-transition: margin 600ms cubic-bezier(0.080, 0.615, 0.355, 1); /* older webkit */
-      -webkit-transition: margin 600ms cubic-bezier(0.080, 0.615, 0.355, 1.100); 
-         -moz-transition: margin 600ms cubic-bezier(0.080, 0.615, 0.355, 1.100); 
-           -o-transition: margin 600ms cubic-bezier(0.080, 0.615, 0.355, 1.100); 
+      -webkit-transition: margin 600ms cubic-bezier(0.080, 0.615, 0.355, 1.100);
+         -moz-transition: margin 600ms cubic-bezier(0.080, 0.615, 0.355, 1.100);
+           -o-transition: margin 600ms cubic-bezier(0.080, 0.615, 0.355, 1.100);
               transition: margin 600ms cubic-bezier(0.080, 0.615, 0.355, 1.100); /* custom */
 
       -webkit-transition-timing-function: cubic-bezier(0.080, 0.615, 0.355, 1); /* older webkit */
-      -webkit-transition-timing-function: cubic-bezier(0.080, 0.615, 0.355, 1.100); 
-         -moz-transition-timing-function: cubic-bezier(0.080, 0.615, 0.355, 1.100); 
-           -o-transition-timing-function: cubic-bezier(0.080, 0.615, 0.355, 1.100); 
+      -webkit-transition-timing-function: cubic-bezier(0.080, 0.615, 0.355, 1.100);
+         -moz-transition-timing-function: cubic-bezier(0.080, 0.615, 0.355, 1.100);
+           -o-transition-timing-function: cubic-bezier(0.080, 0.615, 0.355, 1.100);
               transition-timing-function: cubic-bezier(0.080, 0.615, 0.355, 1.100); /* custom */
     }
   </style>
   <a id="top-badge" href="/">
-    <svg class="badge badge-icon trans" 
+    <svg class="badge badge-icon trans"
     	 width="45.142px" height="48px" version="1.1" xmlns="http://www.w3.org/2000/svg" baseProfile="full">
     <g>
     	<path d="M11.991,34.812l10.595,2.902l10.453-2.874l1.185-13.159l-11.638-0.001v5.193h6.06l-0.425,3.959l-5.636,1.508l-5.777-1.536
@@ -117,51 +117,51 @@
   </a>
 </div>
 
-<div id="sidenav" class="fixed trans">  
+<div id="sidenav" class="fixed trans">
   <div id="sidenav-menu-button-wrap" class="trans">
     <button id="sidenav-menu-button" class="app-menu-trigger transparent">Menu</button>
-  </div>  
+  </div>
 </div>
 
 <div id="menu" class="color-menu trans fixed">
   <style type="text/gss">
-    
+
     /* structure */
     #menu {
       top: == 0 !require;
       left: == 0 !require;
-      bottom: == ::window[bottom] !require;      
+      bottom: == ::window[bottom] !require;
       overflow-y: auto;
       overflow-x: hidden;
-            
+
       ul {
         top: >=0 !require;
         height: == ::[intrinsic-height];
-        center-y: == ::window[center-y];        
+        center-y: == ::window[center-y];
         padding: == 2 * [baseline];
         width: == ::[intrinsic-width];
         left: == #hide-menu-button[right];
         right: == ::parent[right] - #hide-menu-button[width];
-        
+
         li {
         text-align: center;
         }
       }
     }
-    
+
     #hide-menu-button {
       width: == ::[intrinsic-width];
       height: == ::[intrinsic-height];
       center-y: == #menu[center-y];
       left: == #menu[left];
     }
-    
-            
+
+
   </style>
   <ul class="large-list">
     <li>
       <a href="/">
-        <svg class="badge badge-icon trans" 
+        <svg class="badge badge-icon trans"
         	 width="45.142px" height="48px" version="1.1" xmlns="http://www.w3.org/2000/svg" baseProfile="full">
         <g>
         	<path d="M11.991,34.812l10.595,2.902l10.453-2.874l1.185-13.159l-11.638-0.001v5.193h6.06l-0.425,3.959l-5.636,1.508l-5.777-1.536
@@ -175,7 +175,7 @@
       <a href="/usage/">Install</a>
     </li>
     <li>
-      <a href="https://github.com/the-gss/engine">Github</a>
+      <a href="https://github.com/gss/engine">Github</a>
     </li>
     <!--li>
       <a href="/demos/">Demos</a>

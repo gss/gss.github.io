@@ -3,7 +3,7 @@
   "keywords": [],
   "description": "Site",
   "dependencies": {
-    "gss": "git://github.com/the-gss/engine.git"
+    "gss": "git://github.com/gss/engine.git"
   },
   "ignore": [
     "**/.*",
