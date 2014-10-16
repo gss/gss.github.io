@@ -8,6 +8,11 @@
     
     <link rel="stylesheet" href="/style/pygments.css" type="text/css" media="screen" title="no title" charset="utf-8">
     <link rel="stylesheet" href="/style/styles.css" type="text/css" media="screen" title="no title" charset="utf-8">        
+
+    <!-- The Grid promo -->
+    <link rel="stylesheet" type="text/css" href="//s3-us-west-2.amazonaws.com/cdn.thegrid.io/fonts/National/National-Book.css">
+    <link rel="stylesheet" type="text/css" href="//s3-us-west-2.amazonaws.com/cdn.thegrid.io/fonts/National/National-Thin.css">
+
     <script type="text/javascript" src="//use.typekit.net/les8uug.js"></script>
     <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
     
@@ -150,3 +155,158 @@
 
     /* */
     </style>
+
+    <style type="text/css">
+      #the-grid-promo {
+        background-image: url('//s3-us-west-2.amazonaws.com/cdn.thegrid.io/assets/images/responsive.jpg');
+        background-position: center;
+        background-size: cover;
+        position: relative;
+      }
+
+      #the-grid-promo:before {
+        background-color: hsla(0, 0%, 0%, .6);
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+      }
+
+      #the-grid-promo-title,
+      #the-grid-promo-subtitle {
+        color: hsl(0, 0%, 100%);
+        letter-spacing: .28em;
+        position: relative;
+        text-transform: uppercase;
+      }
+
+      #the-grid-promo-title {
+        color: hsl(270, 33%, 99%);
+        font-family: 'National Thin', sans-serif;
+      }
+
+      #the-grid-promo-subtitle {
+        color: hsl(46, 23%, 56%);
+        font-family: 'National Book', sans-serif;
+      }
+
+      #the-grid-promo-button {
+        background-color: transparent;
+        border: 2px solid hsl(43, 82%, 69%);
+        color: hsl(43, 82%, 69%);
+        cursor: pointer;
+        font-family: 'National Book', sans-serif;
+        letter-spacing: .1em;
+        padding: 16px 24px;
+        position: relative;
+        text-transform: uppercase;
+      }
+
+      #the-grid-promo-button:hover {
+        background-color: hsl(43, 82%, 69%) !important;
+        color: hsl(42, 84%, 8%);
+      }
+
+      @media (max-width: 899px) {
+        #the-grid-promo-title,
+        #the-grid-promo-subtitle {
+          text-align: center;
+        }
+      }
+
+      @media (min-width: 900px) {
+        #the-grid-promo-title,
+        #the-grid-promo-subtitle {
+          text-align: left;
+        }
+      }
+    </style>
+
+    <style type="text/gss">
+      #the-grid-promo {
+        top: == 0 !require;
+        width: == ::window[width] !strong;
+
+        @virtual "area";
+        @h |-["area"]-| in(::) gap(::[$area-h-gap]);
+        @v |-["area"]-| in(::) gap(48);
+        "area"[center-x] == ::[center-x];
+        "area"[width] <= 864;
+
+        @virtual "text";
+
+        @h |[#the-grid-promo-title]| in("text");
+        @h |[#the-grid-promo-subtitle]| in("text");
+        @v |[#the-grid-promo-subtitle]-[#the-grid-promo-title]| in("text") gap(::[$text-v-gap]);
+
+
+        @if ::window[width] < [breakpoint1] {
+          $area-h-gap: == 32 !require;
+          $text-v-gap: == 8 !require;
+
+          @h |["text"]| in("area");
+          @h |~-~[#the-grid-promo-button]~-~| in("area") gap(0);
+          @v |["text"]-[#the-grid-promo-button]| in("area") gap(32);
+
+          #the-grid-promo-button[center-x] == "area"[center-x];
+
+
+          #the-grid-promo-title {
+            font-size: == 32 !require;
+          }
+
+          #the-grid-promo-subtitle {
+            font-size: == 16 !require;
+          }
+
+          #the-grid-promo-button {
+            font-size: == 16 !require;
+          }
+        }
+        @else {
+          $area-h-gap: == 64 !require;
+          $text-v-gap: == 0 !require;
+
+          @h |["text"]~-~[#the-grid-promo-button]| in("area") gap(64);
+          @v |~-~["text"]~-~| in("area") gap(0);
+
+          @v |~-~[#the-grid-promo-button]~-~| in("area") gap(0);
+          #the-grid-promo-button[center-y] == "text"[center-y] == "area"[center-y];
+
+
+          #the-grid-promo-title {
+            font-size: == 40 !require;
+          }
+
+          #the-grid-promo-subtitle {
+            font-size: == 16 !require;
+          }
+
+          #the-grid-promo-button {
+            font-size: == 20 !require;
+          }
+        }
+      }
+
+      #the-grid-promo-title {
+        height: == ::[intrinsic-height];
+        margin: == 0 !require;
+      }
+
+      #the-grid-promo-subtitle {
+        height: == ::[intrinsic-height];
+        margin: == 0 !require;
+      }
+
+      #the-grid-promo-button {
+        size: == ::[intrinsic-size];
+      }
+    </style>
+
+    <section id="the-grid-promo">
+      <h2 id="the-grid-promo-subtitle">AI websites that design themselves</h2>
+      <h1 id="the-grid-promo-title">Join the evolution</h1>
+      <a id="the-grid-promo-button" href="https://thegrid.io" target="_blank">Pre-order now</a>
+    </section>
