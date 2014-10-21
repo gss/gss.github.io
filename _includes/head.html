@@ -209,14 +209,14 @@
         color: hsl(42, 84%, 8%);
       }
 
-      @media (max-width: 899px) {
+      @media (max-width: 1079px) {
         #the-grid-promo-title,
         #the-grid-promo-subtitle {
           text-align: center;
         }
       }
 
-      @media (min-width: 900px) {
+      @media (min-width: 1080px) {
         #the-grid-promo-title,
         #the-grid-promo-subtitle {
           text-align: left;
@@ -233,7 +233,7 @@
         @h |-["area"]-| in(::) gap(::[$area-h-gap]);
         @v |-["area"]-| in(::) gap(48);
         "area"[center-x] == ::[center-x];
-        "area"[width] <= 864 !strong;
+        "area"[width] <= 1080 !strong;
 
         @virtual "text";
 
@@ -242,7 +242,7 @@
         @v |[#the-grid-promo-subtitle]-[#the-grid-promo-title]| in("text") gap(::[$text-v-gap]);
 
 
-        @if ::window[width] < [breakpoint1] {
+        @if ::window[width] < 1080 {
           $area-h-gap: == 32 !require;
           $text-v-gap: == 8 !require;
 
@@ -285,7 +285,7 @@
           }
 
           #the-grid-promo-button {
-            font-size: == 20 !require;
+            font-size: == 18 !require;
           }
         }
       }
@@ -308,5 +308,5 @@
     <section id="the-grid-promo">
       <h2 id="the-grid-promo-subtitle">AI websites that design themselves</h2>
       <h1 id="the-grid-promo-title">Join the evolution</h1>
-      <a id="the-grid-promo-button" href="https://thegrid.io" target="_blank">Pre-order now</a>
+      <a id="the-grid-promo-button" href="https://thegrid.io" target="_blank">Become a founding member</a>
     </section>
