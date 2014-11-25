@@ -14,7 +14,7 @@ layout: default
   .top-button {
     height: == ::[intrinsic-height] !require;
     width: == ::[intrinsic-width] !require;
-    bottom: == ::parent[bottom] - [bottom-margin] !require;
+    bottom: == ::[$bottom];
   }
 
   @horizontal [#top-button1]-<::window[center-x]>-[#top-button2]
@@ -29,7 +29,6 @@ layout: default
     height: == ::[width] * 754/656 !require;
     height: >= 400 !require;
     center-x: == ::parent[center-x] !require;
-    center-y: == ::parent[center-y] !medium;
     @horizontal |~-~[::]~-~| in(::parent) gap([other-top-image-gap]) !require;
     @vertical   |-[::] in(::parent) gap([top-image-gap]) !strong;
   }
@@ -38,12 +37,16 @@ layout: default
   }
   #top-home-section {
     height: >= 500 !require;
-    height: == ::window[height] - [baseline] !strong;
+    height: >= ::window[height] - [baseline] !strong;
   }
 
   @vertical [#top-home-image]-[#top-title] gap([top-image-gap]) !require;
 
   @vertical [#top-title]-[#top-subtitle]-[#top-button1] gap([baseline]) !require;
+
+  @vertical [#top-button2]-[#top-text] gap([baseline]) !require;
+
+  @vertical [#top-text]-| in(#top-home-section) gap([bottom-margin]) !require;
 
   #top-title {
     height: == ::[intrinsic-height] !require;
@@ -67,6 +70,15 @@ layout: default
   }
   */
 
+  #top-text {
+    height: == ::[intrinsic-height] !require;
+    left: == [content-left] !require;
+    right: == [content-right] !require;
+    padding-top: == [baseline];
+    text-align: center;
+    font-style: italic;
+  }
+
   </style>
 
   <div id="top-home-image"></div>
@@ -76,6 +88,8 @@ layout: default
 
   <a href="/usage" class="top-button button" id="top-button1">Install</a>
   <a href="https://github.com/gss/engine" class="top-button button" id="top-button2">Source</a>
+
+  <p id="top-text">GSS is under heavy development. Updated documentation coming soon.</p>
 
 </section>
 
@@ -189,5 +203,3 @@ layout: default
 
 
 {% include made-with-love.html %}
-
-
