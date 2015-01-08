@@ -1,0 +1,129 @@
+---
+uid: constraints
+title: Constraints Style Sheets
+subtitle: Constraints, Selectors, Rules, Variables & Scope, Dimensions & Positions, Instrinsic Values and Virtuals.
+color: b
+layout: post
+---
+
+Constraints allows you to design great layout.
+
+## Constraints
+
+Constraints express relationships between variables that [may or may not hold](#mayofmaynothold). You can constrain any numerical style property of an element, not just its position & size.
+
+For example, if I want all paragraph tags to have line-height greater than 16px and less than 1/12th the size of the window:
+
+{% highlight css %}
+
+p[line-height] >= 16;
+p[line-height] <= ::window[height] / 12;
+
+{% endhighlight %}
+
+<a href="http://codepen.io/cbchouinard/pen/NPdgwm" target="_blank">Constraints Declaration Sample</a>
+
+
+<a name="mayofmaynothold"></a>
+### May or may not hold? 
+GSS will try to find the best solution that satisfies the constraints you've defined. By default, GSS use what we call soft constraints which means that it is preferred but not required that certain constraints be satisfied. 
+
+For example:
+
+{% highlight css %}
+
+div[size] == 10;
+
+{% endhighlight %}
+
+Once solved, the div might have a size other than 10 if that's the best size for div that GSS found in order to satisfy the most constraints you've define. You can guide GSS in your constraint intention using [Strenghts](http://codepen.io/cbchouinard/pen/NPdgwm).
+
+<a href="http://codepen.io/cbchouinard/pen/NPdgwm" target="_blank">todo - May or may not hold sample</a>
+
+### Equality and Inequality
+
+What's the impact of doing a ==, >= or <= on the layout?
+
+
+## Selectors
+
+GSS supports the following list of selectors: 
+
++ Selector One
++ Selector Two
++ Selector Three
+
+{% highlight css %}
+
+  .Selector[width]: == 100;
+
+{% endhighlight %}
+
+### Specificity
+
+Here's how GSS deals with specificity. 
+
+
+## Rules
+
+To define a rule: 
+
+{% highlight css %}
+
+  .Selector {
+    width: == 100;
+  }
+
+{% endhighlight %}
+
+## Variables and scope
+
+Variable and scope documentation here.
+
+{% highlight css %}
+
+  .Selector {
+    width: == 100;
+  }
+
+{% endhighlight %}
+
+
+
+## Dimensions and positions
+
+Dimensions and positions documentation here.
+
+{% highlight css %}
+
+.Selector {
+  width: == 100;
+}
+
+{% endhighlight %}
+
+
+
+## Intrinsic values
+
+Intrinsic values documentation here.
+
+{% highlight css %}
+
+  .Selector {
+    width: == 100;
+  }
+
+{% endhighlight %}
+
+## Virtuals
+
+Virtual documentation here.
+
+{% highlight css %}
+
+  .Selector {
+    width: == 100;
+  }
+
+{% endhighlight %}
