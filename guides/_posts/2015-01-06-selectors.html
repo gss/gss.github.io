@@ -1,0 +1,164 @@
+---
+uid: selectors
+title: GSS Selectors
+subtitle: Selectors, combinators, pseudo-classes.
+color: b
+layout: post
+---
+
+## Selectors
+
+GSS supports the following list of selectors: 
+
+#### Elements
+
+{% highlight css %}
+
+  div[width]: == 100;
+
+{% endhighlight %}
+
+#### Classes
+
+{% highlight css %}
+
+  .className[width]: == 100;
+
+{% endhighlight %}
+
+
+#### ID
+
+{% highlight css %}
+
+  #elementId[width]: == 100;
+
+{% endhighlight %}
+
+
+### Combinators
+
+The following combinators are supported in GSS. 
+
+#### All descendant elements
+
+{% highlight css %}
+
+  div .className {
+  	width: == 100;
+  }
+
+{% endhighlight %}
+
+
+#### All parent elements
+
+{% highlight css %}
+
+  div ! .className {
+  	width: == 100;
+  }
+
+{% endhighlight %}
+
+#### Direct parent elements
+
+{% highlight css %}
+
+  div !> .className {
+  	width: == 100;
+  }
+
+{% endhighlight %}
+
+#### All child elements
+
+{% highlight css %}
+
+  div > .className {
+  	width: == 100;
+  }
+
+{% endhighlight %}
+
+#### Next element
+
+{% highlight css %}
+
+  div + .className {
+  	width: == 100;
+  }
+
+{% endhighlight %}
+
+
+#### Previous element
+
+{% highlight css %}
+
+  div !+ .className {
+  	width: == 100;
+  }
+
+{% endhighlight %}
+
+#### All direct sibling elements
+
+{% highlight css %}
+
+  div ++ .className {
+  	width: == 100;
+  }
+
+{% endhighlight %}
+
+#### All succeeding sibling elements
+
+{% highlight css %}
+
+  div ~ .className {
+  	width: == 100;
+  }
+
+{% endhighlight %}
+
+#### All preceeding sibling elements
+
+{% highlight css %}
+
+  div !~ .className {
+  	width: == 100;
+  }
+
+{% endhighlight %}
+
+#### All sibling elements
+
+{% highlight css %}
+
+  div ~~ .className {
+  	width: == 100;
+  }
+
+{% endhighlight %}
+
+##### Combinators limitation
+
+Combinators requires a selector on both side of the combinator. For example the following is not currently supported: 
+
+#### All child elements
+
+{% highlight css %}
+
+  div > {
+  	width: == 100;
+  }
+
+{% endhighlight %}
+
+
+### Pseudo-classes
+
+The following pseudo-classes are supported in GSS:
+
+

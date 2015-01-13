@@ -10,7 +10,7 @@ Constraints allows you to design great layout.
 
 ## Constraints
 
-Constraints express relationships between variables that [may or may not hold](#mayofmaynothold). You can constrain any numerical style property of an element, not just its position & size.
+Constraints express [relationships between variables](#constraintsaretwoways) that [may or may not hold](#mayofmaynothold). You can constrain any numerical style property of an element, not just its position & size.
 
 For example, if I want all paragraph tags to have line-height greater than 16px and less than 1/12th the size of the window:
 
@@ -21,29 +21,103 @@ p[line-height] <= ::window[height] / 12;
 
 {% endhighlight %}
 
-<a href="http://codepen.io/cbchouinard/pen/NPdgwm" target="_blank">Constraints Declaration Sample</a>
+### Constraints declaration
+
+Let's go through the syntax for declaring a constraint: 
+
+`p[line-height] >= 16;`
+
++ `p` is the selector. This constraint will apply to every `p` tag in the page. 
++ `[]` is the style property selector. 
++ `line-height` is the style property for which a value will be calculated by GSS. 
++ `>=` defines an inequality constraint. With GSS you can define inequality and equality constraint.
++ `16` is the numerical value for the constraint in pixel unit. As for now, GSS support the pixel unit only. 
+
+<a href="http://codepen.io/cbchouinard/pen/NPdgwm" target="_blank">Here's an example to play with constraints declaration</a>
+
+<a name="constraintsaretwoways"></a>
+### Constraints are 2-ways
+Do not confuse an equality constraint with your everyday variable assignment. For example, in a vanilla programming paradigm:
+
+{% highlight javascript %}
+
+// vanilla programming
+
+x = y;
+y = 10
+x = 100;
+
+// x => 100, y => 10
+
+{% endhighlight %}
+
+x will be 100, and y will be 10.  With constraint programming, equality constraints are two-way, so:
+
+{% highlight javascript %}
+
+// constraint programming
+
+x == y;
+x == 100;
+y >= 10;
+
+// x => 100, y => 100
+
+{% endhighlight %}
+
+x and y have a constraint to be equal, so x and y will be 100.
+
+Constraints are incrementally added to a `solver`, then the solver computes a feasible & optimal solution to all the constraints.  With constraint programming you input the *what* you want to happen, not *how* it will happen. With procedural programming, you focus on the *how*.  This makes constraints a perfect fit for empowering declarative languages like CSS.
 
 
 <a name="mayofmaynothold"></a>
-### May or may not hold? 
-GSS will try to find the best solution that satisfies the constraints you've defined. By default, GSS use what we call soft constraints which means that it is preferred but not required that certain constraints be satisfied. 
+### Constraints May or may not hold
+GSS will find the best solution that satisfies the constraints you've defined. By default, GSS use what we call soft constraints which means that it is preferred but not required that certain constraints be satisfied.
 
 For example:
 
 {% highlight css %}
 
-div[size] == 10;
+Code a good example for this.
 
 {% endhighlight %}
 
-Once solved, the div might have a size other than 10 if that's the best size for div that GSS found in order to satisfy the most constraints you've define. You can guide GSS in your constraint intention using [Strenghts](http://codepen.io/cbchouinard/pen/NPdgwm).
-
 <a href="http://codepen.io/cbchouinard/pen/NPdgwm" target="_blank">todo - May or may not hold sample</a>
 
-### Equality and Inequality
+Once solved, the div might have a size other than 10 if that's the best size for div that GSS found in order to satisfy the most constraints you've define. You can guide GSS in your constraints intention using [Strenghts](http://codepen.io/cbchouinard/pen/NPdgwm).
 
-What's the impact of doing a ==, >= or <= on the layout?
+### Strenghts
+Strenghts allows you to guide GSS in your layout intention by giving the GSS constraints solver more details about what you want. 
 
+Stronger constraints completely overcome weaker ones - this is the phenomena of the [Constraint Hierarchy](http://www.cs.washington.edu/research/constraints/theory/hierarchies-92.html).  Strengths are declared in the same fashion of CSS's `!important`:
+
+{% highlight css %}
+
+/* Stronger constraints completely overcome weaker ones */
+
+#light[years] == 100 !weak;
+#light[years] == 200 !medium;
+#light[years] == 300 !strong;
+
+/* #light[years] will be 300 */
+
+{% endhighlight %}
+
+There are 4 levels of built-in strength:
+
+- `!weak`
+- `!medium`
+- `!strong`
+- `!require`
+
+All constraints have a strength.  `!medium` is the default for all constraints.
+
+`!require` is a special strength that guarantees the constraint will hold, otherwise everything breaks.
+
+**Pro Tip** Use `!require` carefully & sparingly.  `!require`'s quickly lead to systems where all required constraints cannot be satisfied.
+
+### Constraints order
+Generally speaking, later constraint statements are more powerful than earlier ones. There could be exception to this behavior as well see in the following sections.
 
 ## Selectors
 
