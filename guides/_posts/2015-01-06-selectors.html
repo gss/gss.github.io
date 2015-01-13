@@ -36,36 +36,27 @@ GSS supports the following list of selectors:
 {% endhighlight %}
 
 
-### Combinators
+## Combinators
 
 The following combinators are supported in GSS. 
+
+#### Selectors union
+
+{% highlight css %}
+
+  div, .className {
+  	width: == 100;
+  }
+
+{% endhighlight %}
+
+For all `div` elements and elements having the `.className` class define, the rule will be applied.
 
 #### All descendant elements
 
 {% highlight css %}
 
   div .className {
-  	width: == 100;
-  }
-
-{% endhighlight %}
-
-
-#### All parent elements
-
-{% highlight css %}
-
-  div ! .className {
-  	width: == 100;
-  }
-
-{% endhighlight %}
-
-#### Direct parent elements
-
-{% highlight css %}
-
-  div !> .className {
   	width: == 100;
   }
 
@@ -91,17 +82,6 @@ The following combinators are supported in GSS.
 
 {% endhighlight %}
 
-
-#### Previous element
-
-{% highlight css %}
-
-  div !+ .className {
-  	width: == 100;
-  }
-
-{% endhighlight %}
-
 #### All direct sibling elements
 
 {% highlight css %}
@@ -122,16 +102,6 @@ The following combinators are supported in GSS.
 
 {% endhighlight %}
 
-#### All preceeding sibling elements
-
-{% highlight css %}
-
-  div !~ .className {
-  	width: == 100;
-  }
-
-{% endhighlight %}
-
 #### All sibling elements
 
 {% highlight css %}
@@ -142,23 +112,112 @@ The following combinators are supported in GSS.
 
 {% endhighlight %}
 
-##### Combinators limitation
 
-Combinators requires a selector on both side of the combinator. For example the following is not currently supported: 
+### Reverse Combinators
 
-#### All child elements
+For parent-child selector, the reverse combinator `!` allows you to reverse the selector relationship to child-parent.
+
+For sibling selectors, the reverse combinator `!` allows you to go up in the DOM for the selection.
+
+#### All parent elements
 
 {% highlight css %}
 
-  div > {
+  div ! .className {
   	width: == 100;
   }
 
 {% endhighlight %}
 
+Select elements with the `.className` class that are parents of a `div` element.
 
-### Pseudo-classes
+#### Direct parent elements
 
-The following pseudo-classes are supported in GSS:
+{% highlight css %}
+
+  div !> .className {
+  	width: == 100;
+  }
+
+{% endhighlight %}
+
+Select elements with the `.className` class that are direct parents of a `div` element.
+
+#### Previous element
+
+{% highlight css %}
+
+  div !+ .className {
+  	width: == 100;
+  }
+
+{% endhighlight %}
+
+#### All preceeding sibling elements
+
+{% highlight css %}
+
+  div !~ .className {
+  	width: == 100;
+  }
+
+{% endhighlight %}
+
+##### Combinators limitation
+
+Combinators requires a selector on both side of the combinator. For example the following is not currently supported: 
+
+
+## Pseudo-classes
+
+The following pseudo-classes are supported in GSS. The selectors and combinator will create a collection of matching element. Pseudo-classes allows you to further select element within that collection.
+
+#### Next element in the collection
+
+{% highlight css %}
+
+  div {
+  	top: == &:next;
+  }
+
+{% endhighlight %}
+
+The `div` selector will create a collection of matching `div` elements. The pseudo-classes `:next` in this example will select the second `div` in the collection. 
+
+#### Previous element in the collection
+
+{% highlight css %}
+
+  todo - find a good example.
+
+{% endhighlight %}
+
+#### Last element in the collection
+
+{% highlight css %}
+
+  div:last[size] == 100;
+
+{% endhighlight %}
+
+We define a constraint on the size of the last div in the document.
+
+### Selectors and the DOM
+
+The collection of element built from selectors is built according to the DOM elements' order. The elements collection order needs to be understood when using pseudo-classes like in this example:
+
+{% highlight css %} 
+
+section, div {
+	top: == &:next[top];
+}
+
+{% endhighlight %}
+
+In this case, some `div` element can appear in the collection before some `section` element. So `&:next` can return either a `section` element or a `div` element depending on the DOM order.
+
+Depending on your intention, this can make total sense but keep in mind that these constraints will be applied base on the DOM order. 
+
+
 
 
