@@ -149,6 +149,8 @@ GSS allows you to declare constraint using ruleset as with CSS:
   }
 {% endhighlight %}
 
+Within a ruleset, constraints are defined on properties using the same syntax as CSS using the colon `:`.  
+
 Rulesets can be nested:
 
 {% highlight css %}
@@ -173,16 +175,62 @@ div {
 
 ## Variables and scope
 
-Variable and scope documentation here.
+Declaring a variable in GSS is as simple as using it:
 
 {% highlight css %}
+[var1] == 100;
+{% endhighlight %}
 
+This just define a variable name var1 and assign the value 100 pixels to it.
+
+### Scope
+
+GSS will scope variable base on the location they are first declared. A variable can be scoped globally, within a style element
+or within a ruleset. 
+
+{% highlight css %}
   .Selector {
     width: == 100;
   }
-
 {% endhighlight %}
 
+#### Style sheet
+When declaring a variable, by default the variable will be scope within the style element. In other words, if you have more than
+one stylesheet and both have a variable with the same name, these two variables will be in two different scope and therefore are independant of each other.
+
+#### Ruleset
+Variable define within rules and accessible to declaration within the rule set and not outside.
+
+
+#### Hoisting
+When using a variable GSS, before creating the variable GSS will look on parent scope to see if there's an existing variable with the same name. 
+
+For example:
+
+{% highlight css %}
+div {
+  [var3] == 40;
+    .someClass {
+      width: == [var3];
+
+      .someNestedClass {
+        [varX] == 45;
+        width: == [var3];
+        top: == [varX];
+      }
+
+      .someOtherNestedClass {
+        [varX] == 60;
+        height: == [varX];
+        width: == [var3];
+      }
+    }
+}
+{% endhighlight %}
+
+In this case, var3 used in the nested classes is hoisted from the div scope. Internally GSS will go up the scope three using the parent selector `^[var3]`, `^^[var3]` and so on until it finds a variable or until it reach the root scope in which case no variable exist so GSS will create a new on on the scope where it was declared.
+
+`[varX]` is been declare in sibling rules therefore it will be define in those two scope and these are two distinct and independent variables.
 
 
 ## Dimensions and positions
