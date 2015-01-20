@@ -121,11 +121,7 @@ Generally speaking, later constraint statements are more powerful than earlier o
 
 ## Selectors
 
-GSS supports the following list of selectors: 
-
-+ Selector One
-+ Selector Two
-+ Selector Three
+GSS supports the following selectors: [view all selectors](/guides/selectors)
 
 {% highlight css %}
 
@@ -135,20 +131,45 @@ GSS supports the following list of selectors:
 
 ### Specificity
 
-Here's how GSS deals with specificity. 
+TODO - How does GSS deals with selector specificities?
 
+### Two selectors per expression
+
+GSS limits to two the number of selector in a GSS expression.
+
+TODO - Test the behavior when defining more than 2.
 
 ## Rules
 
-To define a rule: 
+GSS allows you to declare constraint using ruleset as with CSS:
 
 {% highlight css %}
-
   .Selector {
     width: == 100;
   }
-
 {% endhighlight %}
+
+Rulesets can be nested:
+
+{% highlight css %}
+Section > article {
+   .someclass {
+       width: == 100;
+    }
+}
+{% endhighlight %}
+
+You can defined CSS alongside GSS in rules:
+
+{% highlight css %}
+div {
+   background-color: red;
+   width: <= 200;
+}
+{% endhighlight %}
+
+**Pro Tip** We recommand keeping your styling with CSS and layout with GSS in seperates style elements or files.
+
 
 ## Variables and scope
 
