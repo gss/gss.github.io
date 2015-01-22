@@ -18,6 +18,8 @@ GSS supports the following list of selectors:
 
 {% endhighlight %}
 
+GSS supports the `*` selector meaning all element of the page will be selected.
+
 #### Classes
 
 {% highlight css %}
@@ -55,21 +57,29 @@ For all `div` elements and elements having the `.className` class define, the ru
 #### All descendant elements
 
 {% highlight css %}
-
   div .className {
   	width: == 100;
   }
-
 {% endhighlight %}
+
+Select all element having the `className` class define that are descendant of a `div` element.
+
+#### Attribute selector 
+
+{% highlight css %}
+  div.className {
+    width: == 100;
+  }
+{% endhighlight %}
+
+Select all div element that have the `className` class.
 
 #### All child elements
 
 {% highlight css %}
-
   div > .className {
   	width: == 100;
   }
-
 {% endhighlight %}
 
 #### Next element
@@ -218,6 +228,29 @@ In this case, some `div` element can appear in the collection before some `secti
 
 Depending on your intention, this can make total sense but keep in mind that these constraints will be applied base on the DOM order. 
 
+### Inline syntax
+All selector combinator can be used inline like the following: 
 
+{% highlight css %}
+  (div > .className)[width] == 100;
+{% endhighlight %}
 
+In this case we're telling GSS to define a constraint on the width of all child element of div having the `.className` class. 
+
+### Specificity
+The current version of GSS doesn't support specificity on selector. 
+
+### Two selectors per expression
+GSS limits to two the number of selector in a GSS expression. As for now the following is not supported:
+
+{% highlight css %}
+    #div4[width] == #div1[width] + #div2[width] + #div3[width];
+{% endhighlight %}
+
+The support for more than 3 selectors in GSS expression will probably be added in a near future but in meantime you can do something like: 
+
+{% highlight css %}
+    [tempSum] = #div1[width] + #div2[width];
+    #div4[width] == [tempSum] + #div3[width];
+{% endhighlight %}
 

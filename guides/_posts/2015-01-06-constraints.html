@@ -30,10 +30,11 @@ Let's go through the syntax for declaring a constraint:
 + `p` is the selector. This constraint will apply to every `p` tag in the page. 
 + `[]` is the style property selector. 
 + `line-height` is the style property for which a value will be calculated by GSS. 
-+ `>=` defines an inequality constraint. With GSS you can define inequality and equality constraint.
-+ `16` is the numerical value for the constraint in pixel unit. As for now, GSS support the pixel unit only. 
++ `>=` defines an inequality constraint. You can declare inequality and equality constraint.
++ `16` is the numerical value for the constraint in pixel unit. The default unit in GSS are pixels.
 
-<a href="http://codepen.io/cbchouinard/pen/NPdgwm" target="_blank">Here's an example to play with constraints declaration</a>
+#### Constraints declaration example
+<a href="http://codepen.io/cbchouinard/pen/OPmdVL" target="_blank">Center a div in the page with a constraint width and height.</a>
 
 <a name="constraintsaretwoways"></a>
 ### Constraints are 2-ways
@@ -78,16 +79,27 @@ For example:
 
 {% highlight css %}
 
-Code a good example for this.
+  #gss {
+    width: == 200;
+  }
+  
+  #cassowary {
+    width: == 200;
+  }
+  
+  #gss[width] + #cassowary[width] == 350;
 
 {% endhighlight %}
 
-<a href="http://codepen.io/cbchouinard/pen/NPdgwm" target="_blank">todo - May or may not hold sample</a>
+In the previous example, we're asking GSS to give the `#GSS` and `#cassowary` elements a width of 200px and we later ask cassowary to constraint the sum of these two element to be equal to 350px. In this case, one the the two constraints will not hold. As we'll see later in the documentation you can influence the constraints solving by given more intent to GSS about what you want. 
 
-Once solved, the div might have a size other than 10 if that's the best size for div that GSS found in order to satisfy the most constraints you've define. You can guide GSS in your constraints intention using [Strenghts](http://codepen.io/cbchouinard/pen/NPdgwm).
+#### May or may not hold example
+In this example, GSS will give a width of 150px to the #gss element in order to satisfy the greatest number of constraints. 
+
+<a href="http://codepen.io/cbchouinard/pen/XJROdV" target="_blank">May or may not hold example</a>
 
 ### Strenghts
-Strenghts allows you to guide GSS in your layout intention by giving the GSS constraints solver more details about what you want. 
+Strenghts allows you to guide GSS in your layout intention by giving the GSS constraints solver more details about which constraints you prioritize.
 
 Stronger constraints completely overcome weaker ones - this is the phenomena of the [Constraint Hierarchy](http://www.cs.washington.edu/research/constraints/theory/hierarchies-92.html).  Strengths are declared in the same fashion of CSS's `!important`:
 
@@ -110,37 +122,58 @@ There are 4 levels of built-in strength:
 - `!strong`
 - `!require`
 
-All constraints have a strength.  `!medium` is the default for all constraints.
+`!medium` is the default for all constraints when no strenght is explicitly
 
+#### Strenghts example
+Using the [May or may not hold example](#mayofmaynothold) we saw previously, in this example will give more strenght to the  `#GSS` and `#cassowary` elements to make sure they overcome the sum constraints. 
+
+<a href="http://codepen.io/cbchouinard/pen/bNRbQg" target="_blank">Changing strenght example</a>
+
+
+#### !require strenght
 `!require` is a special strength that guarantees the constraint will hold, otherwise everything breaks.
 
 **Pro Tip** Use `!require` carefully & sparingly.  `!require`'s quickly lead to systems where all required constraints cannot be satisfied.
 
-### Constraints order
-Generally speaking, later constraint statements are more powerful than earlier ones. There could be exception to this behavior as well see in the following sections.
-
-## Selectors
-
-GSS supports the following selectors: [view all selectors](/guides/selectors)
+For example, the following GSS expressions will be unsolvable:
 
 {% highlight css %}
 
-  .Selector[width]: == 100;
+  #gss {
+    width: == 200 !require;
+  }
+  
+  #cassowary {
+    width: == 200 !require;
+  }
+  
+  #gss[width] + #cassowary[width] == 350 !require;
 
 {% endhighlight %}
+
+We're asking GSS to find a solution where the width of the #gss and #cassowary element must absolutely be 200px and their sum must absolutly be 350px which is impossible. 
+
+### Constraints order
+Generally speaking, later constraint statements are more powerful than earlier ones. There could be exception to this behavior as well see in the following sections when using conditions.
+
+Taking the [May or may not hold example](#mayofmaynothold) we saw previously, by changing the order you'll get a different result. 
+
+<a href="http://codepen.io/cbchouinard/pen/rawBRr" target="_blank">Constraints order example</a>
+
+## Selectors
+
+GSS Selectors guide: [view all selectors](/guides/selectors)
 
 ### Specificity
 
 TODO - How does GSS deals with selector specificities?
 
 ### Two selectors per expression
-
 GSS limits to two the number of selector in a GSS expression.
 
 TODO - Test the behavior when defining more than 2.
 
 ## Rules
-
 GSS allows you to declare constraint using ruleset as with CSS:
 
 {% highlight css %}
@@ -174,19 +207,28 @@ div {
 
 
 ## Variables and scope
-
 Declaring a variable in GSS is as simple as using it:
 
 {% highlight css %}
 [var1] == 100;
 {% endhighlight %}
 
+
+Square brackets are optional. The following GSS is equivalent to the previous one:
+{% highlight css %}
+var1 == 100;
+{% endhighlight %}
+
 This just define a variable name var1 and assign the value 100 pixels to it.
 
-### Scope
 
-GSS will scope variable base on the location they are first declared. A variable can be scoped globally, within a style element
-or within a ruleset. 
+### Global variable
+$[var1] == 100; will be gobally define.
+
+
+
+### Scope
+GSS will scope variables base on the location they are first declared. A variable can be scoped within a style element, within a ruleset or even globally for the entire document.
 
 {% highlight css %}
   .Selector {
@@ -195,12 +237,11 @@ or within a ruleset.
 {% endhighlight %}
 
 #### Style sheet
-When declaring a variable, by default the variable will be scope within the style element. In other words, if you have more than
+When declaring a variable, by default the variable will be scoped within the style element. In other words, if you have more than
 one stylesheet and both have a variable with the same name, these two variables will be in two different scope and therefore are independant of each other.
 
 #### Ruleset
 Variable define within rules and accessible to declaration within the rule set and not outside.
-
 
 #### Hoisting
 When using a variable GSS, before creating the variable GSS will look on parent scope to see if there's an existing variable with the same name. 
@@ -232,9 +273,23 @@ In this case, var3 used in the nested classes is hoisted from the div scope. Int
 
 `[varX]` is been declare in sibling rules therefore it will be define in those two scope and these are two distinct and independent variables.
 
+#### Override variable locally
+You can override a variable locally within the scope of a ruleset using the `&` operator.
+
+{% highlight css %}
+div {
+  [var1] == 50;
+
+  .className {
+    &[var1] == 60;
+  }  
+}
+{% endhighlight %}
+
+In this example, `&[var1]` will be scoped locally to the .className ruleset. The `[var1]` defined under the div selector.
+
 
 ## Dimensions and positions
-
 Dimensions and positions documentation here.
 
 {% highlight css %}
@@ -247,7 +302,6 @@ Dimensions and positions documentation here.
 
 
 ## Intrinsic values
-
 Intrinsic values documentation here.
 
 {% highlight css %}
@@ -259,7 +313,6 @@ Intrinsic values documentation here.
 {% endhighlight %}
 
 ## Virtuals
-
 Virtual documentation here.
 
 {% highlight css %}
