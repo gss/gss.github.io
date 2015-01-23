@@ -14,7 +14,7 @@ Constraints express [relationships between variables](#constraintsaretwoways) th
 
 For example, if I want all paragraph tags to have line-height greater than 16px and less than 1/12th the size of the window:
 
-{% highlight css %}
+  {% highlight css %}
 
 p[line-height] >= 16;
 p[line-height] <= ::window[height] / 12;
@@ -23,13 +23,13 @@ p[line-height] <= ::window[height] / 12;
 
 ### Constraints declaration
 
-Let's go through the syntax for declaring a constraint: 
+Let's go through the syntax for declaring a constraint:
 
 `p[line-height] >= 16;`
 
-+ `p` is the selector. This constraint will apply to every `p` tag in the page. 
-+ `[]` is the style property selector. 
-+ `line-height` is the style property for which a value will be calculated by GSS. 
++ `p` is the selector. This constraint will apply to every `p` tag in the page.
++ `[]` is the style property selector.
++ `line-height` is the style property for which a value will be calculated by GSS.
 + `>=` defines an inequality constraint. You can declare inequality and equality constraint.
 + `16` is the numerical value for the constraint in pixel unit. The default unit in GSS are pixels.
 
@@ -82,19 +82,19 @@ For example:
   #gss {
     width: == 200;
   }
-  
+
   #cassowary {
     width: == 200;
   }
-  
+
   #gss[width] + #cassowary[width] == 350;
 
 {% endhighlight %}
 
-In the previous example, we're asking GSS to give the `#GSS` and `#cassowary` elements a width of 200px and we later ask cassowary to constraint the sum of these two element to be equal to 350px. In this case, one the the two constraints will not hold. As we'll see later in the documentation you can influence the constraints solving by given more intent to GSS about what you want. 
+In the previous example, we're asking GSS to give the `#GSS` and `#cassowary` elements a width of 200px and we later ask cassowary to constraint the sum of these two element to be equal to 350px. In this case, one the the two constraints will not hold. As we'll see later in the documentation you can influence the constraints solving by given more intent to GSS about what you want.
 
 #### May or may not hold example
-In this example, GSS will give a width of 150px to the #gss element in order to satisfy the greatest number of constraints. 
+In this example, GSS will give a width of 150px to the #gss element in order to satisfy the greatest number of constraints.
 
 <a href="http://codepen.io/cbchouinard/pen/XJROdV" target="_blank">May or may not hold example</a>
 
@@ -125,7 +125,7 @@ There are 4 levels of built-in strength:
 `!medium` is the default for all constraints when no strenght is explicitly
 
 #### Strenghts example
-Using the [May or may not hold example](#mayofmaynothold) we saw previously, in this example will give more strenght to the  `#GSS` and `#cassowary` elements to make sure they overcome the sum constraints. 
+Using the [May or may not hold example](#mayofmaynothold) we saw previously, in this example will give more strenght to the  `#GSS` and `#cassowary` elements to make sure they overcome the sum constraints.
 
 <a href="http://codepen.io/cbchouinard/pen/bNRbQg" target="_blank">Changing strenght example</a>
 
@@ -142,36 +142,27 @@ For example, the following GSS expressions will be unsolvable:
   #gss {
     width: == 200 !require;
   }
-  
+
   #cassowary {
     width: == 200 !require;
   }
-  
+
   #gss[width] + #cassowary[width] == 350 !require;
 
 {% endhighlight %}
 
-We're asking GSS to find a solution where the width of the #gss and #cassowary element must absolutely be 200px and their sum must absolutly be 350px which is impossible. 
+We're asking GSS to find a solution where the width of the #gss and #cassowary element must absolutely be 200px and their sum must absolutly be 350px which is impossible.
 
 ### Constraints order
 Generally speaking, later constraint statements are more powerful than earlier ones. There could be exception to this behavior as well see in the following sections when using conditions.
 
-Taking the [May or may not hold example](#mayofmaynothold) we saw previously, by changing the order you'll get a different result. 
+Taking the [May or may not hold example](#mayofmaynothold) we saw previously, by changing the order you'll get a different result.
 
 <a href="http://codepen.io/cbchouinard/pen/rawBRr" target="_blank">Constraints order example</a>
 
 ## Selectors
 
 GSS Selectors guide: [view all selectors](/guides/selectors)
-
-### Specificity
-
-TODO - How does GSS deals with selector specificities?
-
-### Two selectors per expression
-GSS limits to two the number of selector in a GSS expression.
-
-TODO - Test the behavior when defining more than 2.
 
 ## Rules
 GSS allows you to declare constraint using ruleset as with CSS:
@@ -204,6 +195,23 @@ div {
 {% endhighlight %}
 
 **Pro Tip** We recommand keeping your styling with CSS and layout with GSS in seperates style elements or files.
+
+### Rulesets and selectors
+Rulesets define scope for variable but also for selectors. For example:
+
+{% highlight css %}
+div {
+  width: <= #elm[width];
+}
+{% endhighlight %}
+
+In this example, GSS will search for a descendant element of a div having an element with `id='elm'`. If you want to select from the entire DOM you need to do the following:
+
+{% highlight css %}
+div {
+  width: <= ($ #elm)[width];
+}
+{% endhighlight %}
 
 
 ## Variables and scope
@@ -244,7 +252,7 @@ one stylesheet and both have a variable with the same name, these two variables 
 Variable define within rules and accessible to declaration within the rule set and not outside.
 
 #### Hoisting
-When using a variable GSS, before creating the variable GSS will look on parent scope to see if there's an existing variable with the same name. 
+When using a variable GSS, before creating the variable GSS will look on parent scope to see if there's an existing variable with the same name.
 
 For example:
 
