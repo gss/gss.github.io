@@ -159,6 +159,14 @@ to this behavior as well see in the following sections when using conditions.
 Taking the [May or may not hold example](#mayofmaynothold) we saw previously, by changing the order you'll get a
 different result. <a href="http://codepen.io/cbchouinard/pen/rawBRr" target="_blank">Live example.</a>
 
+
+## Units of measurement
+Default unit in GSS are pixels. When omiting the unit, pixels will be use. GSS supports the following units:
+
++ px
++ em
++ %
+
 ## Selectors
 
 GSS Selectors guide: [view all selectors](/guides/selectors)
@@ -382,17 +390,122 @@ Note the use of the `&` in `width: == &varX;`, without it hoisting would still o
 equivalent of `^varX` which is constraint to be equal to 50.
 
 
-## Dimensions and positions
-Dimensions and positions documentation here.
+## Positions constraints
+GSS provide properties to quickly constraint the dimensions and positions of elements. The top-left corner
+of the page as the coordinate `x = left = 0, y = top = 0`. When constraining positions in GSS you will
+always constraints them base on the `0px, 0px` coordinate of the page.
+
+### Top
 
 {% highlight css %}
 
-.Selector {
-  width: == 100;
-}
+  #someElm[top] == 20;
 
 {% endhighlight %}
 
+Place the top of the element 20px from the top of the page.
+
+
+### Bottom
+
+{% highlight css %}
+
+#someElm[bottom] == 100;
+
+{% endhighlight %}
+
+Place the bottom of the element 100px from the top of the page. `bottom` is the equivalent of:
+
+
+{% highlight css %}
+
+#someElm[bottom] == #someElm[top] + #someElm[height];
+
+{% endhighlight %}
+
+
+### Left
+
+{% highlight css %}
+
+#someElm[left] == 20;
+
+{% endhighlight %}
+
+Place the left of the element 20px from the left of the page.
+
+
+### Right
+
+{% highlight css %}
+
+#someElm[right] == 100;
+
+{% endhighlight %}
+
+Place the right of the element 100px from the left of the page. `right` is the equivalent of:
+
+{% highlight css %}
+
+#someElm[rigth] == #someElm[left] + #someElm[width];
+
+{% endhighlight %}
+
+
+
+### Relatively positionned parents.
+
+GSS deals with relative parents in two distinct way. One being when the parent `position: relative` property
+is declared in a CSS ruleset, the other is when the `position: relative` is declare in the `style` attribute of
+the element.
+
+#### position: relative in ruleset
+Even if the elements your constraining are placed within an element having the CSS property `position: relative`,
+the constraints will calculate absolute position agains the top-left corner of the page.
+
+If you look at the calculated values, you'll see that they account for their relative parent position but are
+positionned according to the top-left of the page.
+
+
+#### position: relative in style attribute
+
+If you have within your site some pages with multiple sections, GSS will need calculate the constraints for
+all the section at once in order to find the best possible solution. In some case, that can lead to
+performance issue. If that's the case, you can position each section using regular CSS by declaring then as
+follow:
+
+{% highlight css %}
+
+<section class="relative-container" style="position: relative">
+  <div class="container"></div>
+</section>
+
+<section class="relative-container" id="section-two" style="position: relative">
+  <div class="container"></div>
+</section>
+
+<style type="text/gss">
+
+.relative-container {
+  x: == 0;
+  y: == 0;
+
+  .container {
+    @v |-(&)-| in(^) gap(10);
+    height: == 100;
+    width: == 100;
+  }
+}
+
+</style>
+
+{% endhighlight %}
+
+In this example, we are constraining `x` and `y` to be zero wich is the top-left corner of the section
+element. By doing so, all position constraints will be calculated relative to the section element.
+
+With the `position: relative` declare in the `style` attribute, GSS will solve independently each sections which
+will results in better performance. <a href="http://codepen.io/cbchouinard/pen/pvwaNN" target="_blank">Live example.</a>
 
 ## Intrinsic values
 Intrinsic values documentation here.
