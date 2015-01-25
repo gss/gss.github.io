@@ -403,7 +403,13 @@ always constraints them base on the `0px, 0px` coordinate of the page.
 
 {% endhighlight %}
 
-Place the top of the element 20px from the top of the page.
+Place the top of the element 20px from the top of the page. Top is the equivalent of the following:
+
+{% highlight css %}
+
+#someElm[y] == 20;
+
+{% endhighlight %}
 
 
 ### Bottom
@@ -415,7 +421,6 @@ Place the top of the element 20px from the top of the page.
 {% endhighlight %}
 
 Place the bottom of the element 100px from the top of the page. `bottom` is the equivalent of:
-
 
 {% highlight css %}
 
@@ -432,7 +437,13 @@ Place the bottom of the element 100px from the top of the page. `bottom` is the 
 
 {% endhighlight %}
 
-Place the left of the element 20px from the left of the page.
+Place the left of the element 20px from the left of the page. Left is the equivalent of:
+
+{% highlight css %}
+
+#someElm[x] == 20;
+
+{% endhighlight %}
 
 
 ### Right
@@ -451,7 +462,75 @@ Place the right of the element 100px from the left of the page. `right` is the e
 
 {% endhighlight %}
 
+### position
 
+{% highlight css %}
+#someElm[position] == 100;
+{% endhighlight %}
+
+Constraining the `position` is the equivalent of constraining:
+
+{% highlight css %}
+#someElm[top] == 100;
+#somElm[left] == 100;
+{% endhighlight %}
+
+### top-left, top-right
+
+{% highlight css %}
+#someElm[top-left] == 100;
+#otherElm[top-right] == 200;
+{% endhighlight %}
+
+Position the `#someElm` top-left corner to be at 100px from the top-left of the page.
+Same thing for `#otherElm` excepts its the top-right corner that's been position 200px
+from the top-left of the page.
+
+
+### bottom-left, bottom-right
+
+{% highlight css %}
+#someElm[bottom-left] == 100;
+#otherElm[bottom-right] == 200;
+{% endhighlight %}
+
+Position the `#someElm` bottom-left corner to be at 100px from the top-left of the page.
+Same thing for `#otherElm` excepts its the bottom-right corner that's been position 200px
+from the top-left of the page.
+
+### center-x, cx
+
+{% highlight css %}
+#someElm[center-x] == 100;
+
+// you can also use the condense syntax:
+#someElm[cx] == 100;
+
+{% endhighlight %}
+
+Place the horizontal center of the element 100px from the left of the page.
+
+### center-y, cy
+
+{% highlight css %}
+
+#someElm[center-y] == 100;
+
+// you can also use the condense syntax:
+#someElm[cy] == 100;
+
+{% endhighlight %}
+
+Place the vertical center of the element 100px from the top of the page.
+
+### Center
+
+{% highlight css %}
+#someElm[center] == 100;
+{% endhighlight %}
+
+`center` is a 2d property shortcut for doing that will constraint both
+`center-x` and `center-y` to be 100px from the top-left corner of the page.
 
 ### Relatively positionned parents.
 
@@ -469,7 +548,7 @@ positionned according to the top-left of the page.
 
 #### position: relative in style attribute
 
-If you have within your site some pages with multiple sections, GSS will need calculate the constraints for
+**Pro Tip** If you have within your site some pages with multiple sections, GSS will need calculate the constraints for
 all the section at once in order to find the best possible solution. In some case, that can lead to
 performance issue. If that's the case, you can position each section using regular CSS by declaring then as
 follow:

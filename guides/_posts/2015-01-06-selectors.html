@@ -177,12 +177,19 @@ Select elements with the `.className` class that are direct parents of a `div` e
 
 Combinators requires a selector on both side of the combinator. For example the following is not currently supported:
 
+{% highlight css %}
+
+div ~ {
+  top: == 100;
+}
+
+{% endhighlight %}
 
 ## Pseudo-classes
 
 The following pseudo-classes are supported in GSS. The selectors and combinator will create a collection of matching element. Pseudo-classes allows you to further select element within that collection.
 
-#### Next element in the collection
+#### :next element in the collection
 
 {% highlight css %}
 
@@ -194,13 +201,26 @@ The following pseudo-classes are supported in GSS. The selectors and combinator 
 
 The `div` selector will create a collection of matching `div` elements. The pseudo-classes `:next` in this example will select the second `div` in the collection.
 
-#### Previous element in the collection
+#### :previous element in the collection
 
 {% highlight css %}
 
-  todo - find a good example.
+div {
+  top: == &:previous;
+}
 
 {% endhighlight %}
+
+#### :get element in the collection
+
+{% highlight css %}
+
+div > .someClass:get('parentNode') {
+  TODO - not sure about this one. Need some testing.
+}
+
+{% endhighlight %}
+
 
 #### Last element in the collection
 
@@ -274,6 +294,15 @@ Alternative syntaxes:
 {% endhighlight %}
 
 In these example, the line-height of the selected element will by 10px more than the font-size of the element.
+
+### ::window selector
+
+{% highlight css %}
+
+.className {
+  width: == ::window[width] / 2;
+}
+
 
 
 ### Global scope selector
