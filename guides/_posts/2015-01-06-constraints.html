@@ -159,13 +159,59 @@ to this behavior as well see in the following sections when using conditions.
 Taking the [May or may not hold example](#mayofmaynothold) we saw previously, by changing the order you'll get a
 different result. <a href="http://codepen.io/cbchouinard/pen/rawBRr" target="_blank">Live example.</a>
 
+## Stays <a name="stays"></a>
+
+Ambiguity can be largely overcome by declaring more constraints, but what about situations like:
+
+{% highlight css %}
+
+#box[right] == ::window[right];
+#box[width] >= 100;
+#box[left]  >= 100;
+
+/* the #box's width will stretch */
+
+{% endhighlight %}
+
+Will the `#box` move or stretch to satisfy the last constraint?  Again, the later constraint statements are more powerful than later ones, so the box's width would stretch.  You can control this by either changing the order in which the constraints are declared or by using a `stay` like so:
+
+{% highlight css %}
+#box[left]  >= 100;
+#box[width] >= 100;
+@stay(#box[width]);
+#box[right] == ::window[right];
+
+/* the #box's position will move */
+{% endhighlight %}
+
+
+Many `stay`s can be declared at once with `@stay([var1],[var2],[var3])`.
+
+
+## Linear Arithmetic
+
+Cassowary only allows for "Linear Arithmetic" constraints, you can do simple math operations like `+`, `-`, `*` and `/`,
+but all expressions must be linear (of the form `y = mx + b`).  Basically, you can do most things except multiply or
+divide two constraint variables.
+
+{% highlight css %}
+
+/* this is not linear & will throw an error */
+
+#box1[width] / #box1[height] == #box2[width] / #2box[height];
+
+{% endhighlight %}
+
+I wish we could go non-linear, but we can't because math.
 
 ## Units of measurement
-Default unit in GSS are pixels. When omiting the unit, pixels will be use. GSS supports the following units:
+Default unit in GSS are pixels. When omiting the unit, pixels will be use. GSS also supports the following units:
 
-+ px
-+ em
-+ %
+{% highlight css %}
+#pixel[width] == 100px;
+#em[width] == 10em;
+#pourcentage[width] == 10%;
+{% endhighlight %}
 
 ## Selectors
 
@@ -586,26 +632,61 @@ element. By doing so, all position constraints will be calculated relative to th
 With the `position: relative` declare in the `style` attribute, GSS will solve independently each sections which
 will results in better performance. <a href="http://codepen.io/cbchouinard/pen/pvwaNN" target="_blank">Live example.</a>
 
-## Intrinsic values
-Intrinsic values documentation here.
+## Dimensions
+GSS provides property to constraints the dimension of an element. We've already saw the `width` and `height`. You can use the 2D dimension
+property to set them both the width and the height at the same time:
 
 {% highlight css %}
 
-  .Selector {
-    width: == 100;
+.SelectorA {
+  size: == 200;
+}
+
+{% endhighlight %}
+
+## Intrinsic values
+
+When you want to constraint the position of an element GSS needs to know the dimension of the element. For example how could
+GSS position an element using the bottom-right property without knowing the height and width of the element.
+
+One way to solve this, would be to constraint the dimension of the element. But what if it had text in it and what if that text was dynamic?
+
+GSS provides the `intrinsic-` properties to get the dimension of the element defined by the text occupying the element and/or the CSS styling the element.
+
+{% highlight css %}
+
+  .SelectorA {
+    width: == &[intrinsic-width];
+    height: == &[intrinsic-height];
+  }
+
+  .SelectorB {
+    size: == &[intrinsic-size];
   }
 
 {% endhighlight %}
 
 Once an intrinsic value is constrained on a property, GSS will not evaluate other constraints you define on the same property.
 
+For example if we add a `width` constraint on `.SelectorA` this constraint will be ignored by GSS since `intrinsic-` have total
+precendence over all other constraints.
+
 ## Virtuals
-Virtual documentation here.
+Virtuals are a very cool concept that allows you to constraints elements on virtual element that don't actually exists in the DOM.
+
 
 {% highlight css %}
 
-  .Selector {
-    width: == 100;
+  "virtual" {
+    size: == ::window[size] / 2;
+    center: == ::window[center];
   }
 
+  #elmA[top-left] == "virtual"[top-left];
+  #elmB[bottom-right] == "virtual"[top-right];
+
 {% endhighlight %}
+
+In this example we are constraining `#elmA` and `#elmB` against the virtual element. TODO - Live example
+
+Virtuals are very handy with [VFL](/guides/vfl-guide).
