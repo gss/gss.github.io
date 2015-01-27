@@ -91,7 +91,7 @@ For example:
 {% endhighlight %}
 
 In the previous example, we're asking GSS to give the `#GSS` and `#cassowary` elements a width of 200px and we
-later ask cassowary to constraint the sum of these two element to be equal to 350px. In this case, one the the
+later declare a constraint for the sum of these two elements to be equal to 350px. In this case, one of these
 two constraints will not hold. As we'll see later in the documentation you can influence the constraints solving
 by given more intent to GSS about what you want. <a href="http://codepen.io/cbchouinard/pen/XJROdV" target="_blank">Live example.</a>
 
@@ -119,12 +119,11 @@ There are 4 levels of built-in strength:
 - `!strong`
 - `!require`
 
-`!medium` is the default for all constraints when no strenght is explicitly
+`!medium` is the default for all constraints when no strenght is explicitly defined.
 
-#### Strenghts example
-Using the [May or may not hold example](#mayofmaynothold) we saw previously, in this example will give
-more strenght to the  `#GSS` and `#cassowary` elements to make sure they overcome the sum
-constraints. <a href="http://codepen.io/cbchouinard/pen/bNRbQg" target="_blank">Live example.</a>
+Using the [May or may not hold example](#mayofmaynothold) example we saw previously,
+we'll give in the following example more strenghts to the each individual `width` to
+make sure they overcome the sum constraints: <a href="http://codepen.io/cbchouinard/pen/bNRbQg" target="_blank">Live example.</a>
 
 
 #### !require strenght
@@ -154,7 +153,7 @@ and their sum must absolutly be 350px which is impossible.
 
 ### Constraints order
 Generally speaking, later constraint statements are more powerful than earlier ones. There could be exception
-to this behavior as well see in the following sections when using conditions.
+to this behavior as well see in the following sections.
 
 Taking the [May or may not hold example](#mayofmaynothold) we saw previously, by changing the order you'll get a
 different result. <a href="http://codepen.io/cbchouinard/pen/rawBRr" target="_blank">Live example.</a>
@@ -173,13 +172,16 @@ Ambiguity can be largely overcome by declaring more constraints, but what about 
 
 {% endhighlight %}
 
-Will the `#box` move or stretch to satisfy the last constraint?  Again, the later constraint statements are more powerful than later ones, so the box's width would stretch.  You can control this by either changing the order in which the constraints are declared or by using a `stay` like so:
+Will the `#box` move or stretch to satisfy the last constraint?  Again, the later constraint statements are more
+powerful than later ones, so the box's width would stretch.  You can control this by either changing the order in
+which the constraints are declared or by using a `stay` like so:
 
 {% highlight css %}
-#box[left]  >= 100;
-#box[width] >= 100;
-@stay(#box[width]);
+
 #box[right] == ::window[right];
+#box[width] >= 100;
+#box[left]  >= 100;
+@stay(#box[width]);
 
 /* the #box's position will move */
 {% endhighlight %}
@@ -205,10 +207,9 @@ divide two constraint variables.
 I wish we could go non-linear, but we can't because math.
 
 ## Units of measurement
-Default unit in GSS are pixels. When omiting the unit, pixels will be use. GSS also supports the following units:
+Default unit in GSS are pixels. GSS also supports the following units:
 
 {% highlight css %}
-#pixel[width] == 100px;
 #em[width] == 10em;
 #pourcentage[width] == 10%;
 {% endhighlight %}
@@ -647,11 +648,13 @@ property to set them both the width and the height at the same time:
 ## Intrinsic values
 
 When you want to constraint the position of an element GSS needs to know the dimension of the element. For example how could
-GSS position an element using the bottom-right property without knowing the height and width of the element.
+GSS position an element using the bottom-right property without knowing the height and width of that element.
 
-One way to solve this, would be to constraint the dimension of the element. But what if it had text in it and what if that text was dynamic?
+One way to solve this, would be to constraint the dimension of the element. But what if it had text in it? You'll then need to know the
+exact width and height require to display the text. What if that text is dynamic?
 
-GSS provides the `intrinsic-` properties to get the dimension of the element defined by the text occupying the element and/or the CSS styling the element.
+GSS provides the `intrinsic-` properties to get the dimension of the element defined by the text occupying the element and/or the
+CSS styling the element.
 
 {% highlight css %}
 
@@ -668,11 +671,11 @@ GSS provides the `intrinsic-` properties to get the dimension of the element def
 
 Once an intrinsic value is constrained on a property, GSS will not evaluate other constraints you define on the same property.
 
-For example if we add a `width` constraint on `.SelectorA` this constraint will be ignored by GSS since `intrinsic-` have total
+For example if we add a `width` constraint on `.SelectorA` this constraint will be ignored by GSS since `intrinsic-*` have total
 precendence over all other constraints.
 
 ## Virtuals
-Virtuals are a very cool concept that allows you to constraints elements on virtual element that don't actually exists in the DOM.
+Virtuals are a very interesting concept that allows you to constraints elements against `virtual` element that don't actually exists in the DOM.
 
 
 {% highlight css %}
@@ -687,6 +690,6 @@ Virtuals are a very cool concept that allows you to constraints elements on virt
 
 {% endhighlight %}
 
-In this example we are constraining `#elmA` and `#elmB` against the virtual element. TODO - Live example
+In this example we are constraining `#elmA` and `#elmB` against the virtual element. 
 
 Virtuals are very handy with [VFL](/guides/vfl-guide).
