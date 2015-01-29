@@ -5,16 +5,26 @@ subtitle: Constraints, Selectors, Rules, Variables & Scope, Dimensions & Positio
 color: b
 layout: post
 ---
+Soon after the W3C introduced Cascading Style Sheets, [Greg Badros](http://www.badros.com/greg/), the author of the Cassowary Constraint
+Solver & [recently retired Facebook VP](http://allthingsd.com/20130920/facebook-engineering-and-products-vp-greg-badros-to-leave-company/),
+proposed [Constraint CSS (CCSS)](http://www.cs.washington.edu/research/constraints/web/ccss-uwtr.pdf) as a general solution for CSS layout.
+Back in '99 Badros demonstrated *responsive* layouts with CCSS that today's designers still can't reproduce without grinding out piles of JavaScript.
+For more than a decade, no one seemed to take notice outside academia... Until Apple implemented Cassowary & Greg's pioneering concepts in its new
+AutoLayout engine with the launch of OS X Lion. Despite the evolutionary leap for app developers, web designer's have had to settle
+with [float-based](http://www.sitepoint.com/give-floats-the-flick-in-css-layouts/) & table-based layouts that have remained unimproved to this day.
 
-Constraints allows you to design great layout.
+> "We should contemplate how very, very far behind the web platform is in making it delightful to build the sorts of things that are work-a-day in native environments." <a href="http://infrequently.org/2012/02/misdirection/">Alex Russell</a>
 
-## Constraints
+The foundation of GSS is a modernized implementation of CCSS.  From CCSS primitives other, more exotic layout API's can and are accomplished.
 
-Constraints express [relationships between variables](#constraintsaretwoways) that [may or may not hold](#mayofmaynothold). You can constrain any numerical style property of an element, not just its position & size.
+## Constraints, the basics
+
+Constraints express [relationships between variables](#constraintsaretwoways) that [may or may not hold](#mayofmaynothold). You can constrain any
+numerical style property of an element, not just its position & size.
 
 For example, if I want all paragraph tags to have line-height greater than 16px and less than 1/12th the size of the window:
 
-  {% highlight css %}
+{% highlight css %}
 
 p[line-height] >= 16;
 p[line-height] <= ::window[height] / 12;
@@ -78,23 +88,19 @@ For example:
 
 {% highlight css %}
 
-  #gss {
-    width: == 200;
-  }
-
-  #cassowary {
-    width: == 200;
-  }
-
-  #gss[width] + #cassowary[width] == 350;
+#gss[width] == 200;
+#cassowary[width] == 200;
+#gss[width] + #cassowary[width] == 350;
 
 {% endhighlight %}
 
 In the previous example, we're asking GSS to give the `#GSS` and `#cassowary` elements a width of 200px and we
 later declare a constraint for the sum of these two elements to be equal to 350px. In this case, one of these
-two constraints will not hold. As we'll see later in the documentation you can influence the constraints solving
-by given more intent to GSS about what you want. <a href="http://codepen.io/cbchouinard/pen/XJROdV" target="_blank">Live example.</a>
+two constraint will not hold. <a href="http://codepen.io/cbchouinard/pen/XJROdV" target="_blank">Live example.</a>
 
+As we'll see next, you can influence the constraints solving by given more information to GSS about your intent.
+
+<a name="strenghts"></a>
 ### Strenghts
 Strenghts allows you to guide GSS in your layout intention by giving the GSS constraints solver more details about which constraints you prioritize.
 
@@ -121,80 +127,42 @@ There are 4 levels of built-in strength:
 
 `!medium` is the default for all constraints when no strenght is explicitly defined.
 
-Using the [May or may not hold example](#mayofmaynothold) example we saw previously,
-we'll give in the following example more strenghts to the each individual `width` to
+Using the [May or may not hold](#mayofmaynothold) example we saw previously,
+we'll now give a stronger strenght to each individual `width` constraints to
 make sure they overcome the sum constraints: <a href="http://codepen.io/cbchouinard/pen/bNRbQg" target="_blank">Live example.</a>
-
 
 #### !require strenght
 `!require` is a special strength that guarantees the constraint will hold, otherwise everything breaks.
 
-**Pro Tip** Use `!require` carefully & sparingly.  `!require`'s quickly lead to systems where
+**Pro Tip** Use `!require` carefully & sparingly. `!require`'s quickly lead to systems where
 all required constraints cannot be satisfied.
 
 For example, the following GSS expressions will be unsolvable:
 
 {% highlight css %}
 
-  #gss {
-    width: == 200 !require;
-  }
-
-  #cassowary {
-    width: == 200 !require;
-  }
-
-  #gss[width] + #cassowary[width] == 350 !require;
+#gss[width] == 200 !require;
+#cassowary[width] == 200 !require;
+#gss[width] + #cassowary[width] == 350 !require;
 
 {% endhighlight %}
 
-We're asking GSS to find a solution where the width of the #gss and #cassowary element must absolutely be 200px
-and their sum must absolutly be 350px which is impossible.
+We're asking GSS to find a solution where the widths of the #gss and #cassowary element must be 200px
+and their sum must be 350px which is impossible.
 
 ### Constraints order
 Generally speaking, later constraint statements are more powerful than earlier ones. There could be exception
-to this behavior as well see in the following sections.
+to this behavior as we'll see in the following sections.
 
-Taking the [May or may not hold example](#mayofmaynothold) we saw previously, by changing the order you'll get a
+Taking the [May or may not hold example](#mayofmaynothold) we saw previously, by changing the order of the constraints you'll get a
 different result. <a href="http://codepen.io/cbchouinard/pen/rawBRr" target="_blank">Live example.</a>
 
-## Stays <a name="stays"></a>
-
-Ambiguity can be largely overcome by declaring more constraints, but what about situations like:
-
-{% highlight css %}
-
-#box[right] == ::window[right];
-#box[width] >= 100;
-#box[left]  >= 100;
-
-/* the #box's width will stretch */
-
-{% endhighlight %}
-
-Will the `#box` move or stretch to satisfy the last constraint?  Again, the later constraint statements are more
-powerful than later ones, so the box's width would stretch.  You can control this by either changing the order in
-which the constraints are declared or by using a `stay` like so:
-
-{% highlight css %}
-
-#box[right] == ::window[right];
-#box[width] >= 100;
-#box[left]  >= 100;
-@stay(#box[width]);
-
-/* the #box's position will move */
-{% endhighlight %}
-
-
-Many `stay`s can be declared at once with `@stay([var1],[var2],[var3])`.
-
-
+<a name="lineararithmetic"></a>
 ## Linear Arithmetic
 
 Cassowary only allows for "Linear Arithmetic" constraints, you can do simple math operations like `+`, `-`, `*` and `/`,
 but all expressions must be linear (of the form `y = mx + b`).  Basically, you can do most things except multiply or
-divide two constraint variables.
+divide two constraint variables.  <a href="http://codepen.io/cbchouinard/pen/MYvOWO" target="_blank">Live example.</a>
 
 {% highlight css %}
 
@@ -204,7 +172,7 @@ divide two constraint variables.
 
 {% endhighlight %}
 
-I wish we could go non-linear, but we can't because math.
+We wish we could go non-linear, but we can't because math.
 
 ## Units of measurement
 Default unit in GSS are pixels. GSS also supports the following units:
@@ -214,10 +182,23 @@ Default unit in GSS are pixels. GSS also supports the following units:
 #pourcentage[width] == 10%;
 {% endhighlight %}
 
+<a name="selectors"></a>
 ## Selectors
 
-GSS Selectors guide: [view all selectors](/guides/selectors)
+GSS supports many selectors to allow you to select elements for which you want to declare constraints.
 
+{% highlight css %}
+.className > #someElm ~ div {
+  width: == 100;
+}
+{% endhighlight %}
+
+Since we have a lot of selector we've dedicated a guide for them. We invite you to scroll all the way
+down in that guide, there's some useful information there: [GSS Selectors Guide](/guides/selectors)
+
+Note that this guide is refering to [ruleset](rulesets) which are covered next.
+
+<a name="rulesets"></a>
 ## Rulesets
 GSS allows you to declare constraint using ruleset as with CSS:
 
@@ -289,7 +270,7 @@ If you want to select an element from the element's parent you can use the `^` p
 In this example `(^ #elm)` will search for a `#elm` element contained in the current element having
 the `.container` class. <a href="http://codepen.io/cbchouinard/pen/yyXPej" target="_blank">Live example.</a>
 
-
+<a name="variablesandscope"></a>
 ## Variables and scope
 Declaring a variable in GSS is as simple as using it:
 
@@ -690,6 +671,6 @@ Virtuals are a very interesting concept that allows you to constraints elements 
 
 {% endhighlight %}
 
-In this example we are constraining `#elmA` and `#elmB` against the virtual element. 
+In this example we are constraining `#elmA` and `#elmB` against the virtual element.
 
 Virtuals are very handy with [VFL](/guides/vfl-guide).

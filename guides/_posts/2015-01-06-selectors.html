@@ -8,7 +8,8 @@ layout: post
 
 ## Selectors
 
-GSS supports the following list of selectors:
+In order to apply constraint to element you first need to select them from the DOM. GSS supports
+the following list of basic selectors. <a href="http://codepen.io/cbchouinard/pen/Eavbyd" target="_blank">Live example.</a>
 
 #### Elements
 
@@ -28,6 +29,8 @@ GSS supports the `*` selector meaning all element of the page will be selected.
 
 {% endhighlight %}
 
+Using the element's class attribute `<div class='className'></div>` this selector will select
+all elements that have the class `className`.
 
 #### ID
 
@@ -40,26 +43,32 @@ GSS supports the `*` selector meaning all element of the page will be selected.
 
 ## Combinators
 
-The following combinators are supported in GSS.
+The following selector combinators are supported in GSS.
 
-#### Selectors union
+#### union
 
 {% highlight css %}
 
-  div, .className {
-  	width: == 100;
-  }
+div, .className {
+  width: == 100;
+}
+
+/* inline syntax */
+(div, .className)[width] == 100;
 
 {% endhighlight %}
 
-For all `div` elements and elements having the `.className` class define, the rule will be applied.
+For all `div` elements and elements having the `.className` class, a `width` of 100 will be constrained.
 
 #### All descendant elements
 
 {% highlight css %}
-  div .className {
-  	width: == 100;
-  }
+div .className {
+  width: == 100;
+}
+
+/* inline syntax */
+(div .className)[width] == 100;
 {% endhighlight %}
 
 Select all element having the `className` class define that are descendant of a `div` element.
@@ -67,40 +76,58 @@ Select all element having the `className` class define that are descendant of a 
 #### Attribute selector
 
 {% highlight css %}
-  div.className {
-    width: == 100;
-  }
+div.className {
+  width: == 100;
+}
+
+/* inline syntax */
+(div.className)[width] == 100;
 {% endhighlight %}
 
-Select all div element that have the `className` class.
+Select all `div` element that have the `className` class.
 
 #### All child elements
 
 {% highlight css %}
-  div > .className {
-  	width: == 100;
-  }
+div > .className {
+  width: == 100;
+}
+
+/* inline syntax */
+(div > .className)[width] == 100;
 {% endhighlight %}
 
-#### Next element
+Select all children elements of each `div` elements.
+
+#### Next sibling element
 
 {% highlight css %}
 
-  div + .className {
-  	width: == 100;
-  }
+div + .className {
+  width: == 100;
+}
+
+/* inline syntax */
+(div + .className)[width] == 100;
 
 {% endhighlight %}
+
+Select the next sibling element of all `div` if the sibling has the `className` class.
 
 #### All direct sibling elements
 
 {% highlight css %}
 
-  div ++ .className {
-  	width: == 100;
-  }
+div ++ .className {
+  width: == 100;
+}
+
+/* inline syntax */
+(div ++ .className)[width] == 100;
 
 {% endhighlight %}
+
+Select the previous and next sibling element of all `div` if they have the `className` class.
 
 #### All succeeding sibling elements
 
@@ -112,16 +139,22 @@ Select all div element that have the `className` class.
 
 {% endhighlight %}
 
+Select all succeeding sibling elements of div that have the `className` class.
+
 #### All sibling elements
 
 {% highlight css %}
 
-  div ~~ .className {
-  	width: == 100;
-  }
+div ~~ .className {
+  width: == 100;
+}
+
+/* inline syntax */
+(div ~~ .className)[width] == 100;
 
 {% endhighlight %}
 
+Select all preceeding and succeeding sibling elements of `div` that have the `className` class.
 
 ### Reverse Combinators
 
@@ -334,6 +367,11 @@ Tough we do not necessarely recommand this practice, you could declare a global 
 
 In this case, the variable `[someVar]` is globally declared eventough it is declare within a ruleset.
 
+
+## Selector Ruleset Scoping
+Selector within ruleset are scoped to that ruleset. [current scope](/guides/constraints#variablesandscope)
+
+TODO - Complete section.
 
 ## Selectors and the DOM
 
