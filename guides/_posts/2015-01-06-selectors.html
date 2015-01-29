@@ -42,10 +42,12 @@ all elements that have the class `className`.
 
 
 ## Combinators
+Combinators are used to combine basic selectors to allow more fine grained selection of elements.
+ <a href="http://codepen.io/cbchouinard/pen/WbEXKd" target="_blank">Live example.</a>
 
-The following selector combinators are supported in GSS.
+The following combinators can be use in GSS:
 
-#### union
+#### Union
 
 {% highlight css %}
 
@@ -97,7 +99,7 @@ div > .className {
 (div > .className)[width] == 100;
 {% endhighlight %}
 
-Select all children elements of each `div` elements.
+Select all direct child elements having the `className` class of each `div` elements.
 
 #### Next sibling element
 
@@ -112,7 +114,7 @@ div + .className {
 
 {% endhighlight %}
 
-Select the next sibling element of all `div` if the sibling has the `className` class.
+Select the direct succeeding sibling elements of all `div` if those siblings have the `className` class.
 
 #### All direct sibling elements
 
@@ -127,19 +129,19 @@ div ++ .className {
 
 {% endhighlight %}
 
-Select the previous and next sibling element of all `div` if they have the `className` class.
+Select the previous and next direct sibling elements of all `div` if those siblings have the `className` class.
 
 #### All succeeding sibling elements
-
 {% highlight css %}
+div ~ .className {
+  width: == 100;
+}
 
-  div ~ .className {
-  	width: == 100;
-  }
-
+/* inline syntax */
+(div ~ .className)[width] == 100;
 {% endhighlight %}
 
-Select all succeeding sibling elements of div that have the `className` class.
+Select all succeeding sibling elements of `div` that have the `className` class.
 
 #### All sibling elements
 
@@ -156,11 +158,33 @@ div ~~ .className {
 
 Select all preceeding and succeeding sibling elements of `div` that have the `className` class.
 
-### Reverse Combinators
+## Combinators limitation
 
-For parent-child selector, the reverse combinator `!` allows you to reverse the selector relationship to child-parent.
+Combinators requires a selector on both side of the combinator. For example the following is not currently supported:
 
-For sibling selectors, the reverse combinator `!` allows you to go up in the DOM for the selection.
+{% highlight css %}
+
+div ~ {
+  top: == 100;
+}
+
+{% endhighlight %}
+
+You can use the `*` to get the same results
+
+{% highlight css %}
+
+div ~ * {
+  top: == 100;
+}
+
+{% endhighlight %}
+
+## Reverse Combinators
+
+For parent-child selector, the reverse combinator `!` allows you to reverse the selector relationship
+to child-parent. For sibling selectors, the reverse combinator `!` allows you to go up in the DOM for
+the selection. <a href="http://codepen.io/cbchouinard/pen/jELaRK" target="_blank">Live example.</a>
 
 #### All parent elements
 
@@ -169,6 +193,9 @@ For sibling selectors, the reverse combinator `!` allows you to go up in the DOM
   div ! .className {
   	width: == 100;
   }
+
+  /* inline syntax */
+  (div ! .className)
 
 {% endhighlight %}
 
@@ -186,7 +213,7 @@ Select elements with the `.className` class that are parents of a `div` element.
 
 Select elements with the `.className` class that are direct parents of a `div` element.
 
-#### Previous element
+#### Previous sibling element
 
 {% highlight css %}
 
@@ -195,6 +222,8 @@ Select elements with the `.className` class that are direct parents of a `div` e
   }
 
 {% endhighlight %}
+
+Select the direct previous sibling elements of div elements that have the `className` class.
 
 #### All preceeding sibling elements
 
@@ -206,21 +235,14 @@ Select elements with the `.className` class that are direct parents of a `div` e
 
 {% endhighlight %}
 
-##### Combinators limitation
-
-Combinators requires a selector on both side of the combinator. For example the following is not currently supported:
-
-{% highlight css %}
-
-div ~ {
-  top: == 100;
-}
-
-{% endhighlight %}
 
 ## Pseudo-classes
 
-The following pseudo-classes are supported in GSS. The selectors and combinator will create a collection of matching element. Pseudo-classes allows you to further select element within that collection.
+When using selectors, GSS creates a collection of matching elements and then iterates over those elements
+to apply the constraints you've defined against each element of the collection. Pseudo-classes allows you
+to further select an element within that collection.
+
+The following pseudo-classes are supported in GSS.
 
 #### :next element in the collection
 
@@ -232,7 +254,8 @@ The following pseudo-classes are supported in GSS. The selectors and combinator 
 
 {% endhighlight %}
 
-The `div` selector will create a collection of matching `div` elements. The pseudo-classes `:next` in this example will select the second `div` in the collection.
+The `div` selector will create a collection of matching `div` elements. The pseudo-classes `:next` in this example will select
+the next `div` in the collection relative to the current div which is represented by `&`.
 
 #### :previous element in the collection
 
@@ -244,6 +267,8 @@ div {
 
 {% endhighlight %}
 
+Like the `:next` pseudo-class but instead of getting the next div in the collection it gets the previous one.
+
 #### :get element in the collection
 
 {% highlight css %}
@@ -254,6 +279,15 @@ div > .someClass:get('parentNode') {
 
 {% endhighlight %}
 
+#### First element in the collection
+
+{% highlight css %}
+
+div:first[size] == 100;
+
+{% endhighlight %}
+
+Selects the first div found and add a constraint of 100px on the `size`.
 
 #### Last element in the collection
 
@@ -263,34 +297,32 @@ div > .someClass:get('parentNode') {
 
 {% endhighlight %}
 
-We define a constraint on the size of the last div in the document.
+Selects the last div found and add a constraint of 100px on the `size`.
 
-## Pseudo selector
-GSS provides the following pseudo selectors:
+## Special pseudo selectors
+
+GSS provides the following special pseudo selectors:
 
 ### Parent selector
 
 {% highlight css %}
 
-.className {
-  width: == ^[width];
+section {
+  .className {
+    width: == ^[width];
+  }
 }
 
-{% endhighlight %}
-
-Alternative syntax:
-
-{% highlight css %}
-
+/* Alternative syntax */
 .className {
   width: == ::parent[width];
 }
 
 {% endhighlight %}
 
-Assigned the width of the elements having `.className` class to the width of their parent element.
-
-You can also go up the chain of parents element by stacking the `^` selector:
+As we've seen previously, GSS will iterate over all selected elements to apply contraints.
+When using the `^` pseudo selector you are telling GSS to select the parent element selected in the parent ruleset
+of the current selected element. <a href="http://codepen.io/cbchouinard/pen/JoyMpR" target="_blank">Live example.</a>
 
 {% highlight css %}
 
@@ -300,7 +332,7 @@ You can also go up the chain of parents element by stacking the `^` selector:
 
 {% endhighlight %}
 
-In this example, the width of the element having the `.className` class will be equal the width of the parent of its parent.
+In the previous example, GSS will access the parent of the parent of the current selected element.
 
 ### this selector
 
