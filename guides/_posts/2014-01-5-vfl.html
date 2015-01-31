@@ -60,7 +60,7 @@ Two elements can be horizontally connected without any gap. <a href="http://code
 
 {% highlight css %}
 /* VFL */
-@h [#maroon][#blue];
+@h (#maroon)(#blue);
 
 /* Equivalent CCSS */
 #maroon[right] == #blue[left];
@@ -75,9 +75,9 @@ To align elements with a gap, use a hyphen and `gap( Number | Constraint Variabl
 
 {% highlight css %}
 /* VFL */
-@horizontal [#button]-[#textField] gap(8);
+@h (#button)-(#textField) gap(8);
 /* or */
-@horizontal [#button]-8-[#textField];
+@h (#button)-8-(#textField);
 
 /* Equivalent CCSS */
 #button[right] + 8 == #textField[left];
@@ -87,8 +87,8 @@ If no `gap()` is defined, but a hyphen is used to make a connection then a `stan
 
 {% highlight css %}
 /* VFL */
-@horizontal (#button)-(#textField);
-@vertical (#button)-(#textField);
+@h (#button)-(#textField);
+@v (#button)-(#textField);
 
 /* Equivalent CCSS */
 #button(right) + hgap == #textField(left);
@@ -97,11 +97,11 @@ If no `gap()` is defined, but a hyphen is used to make a connection then a `stan
 
 The `hgap` & `vgap` variables can be used like normal variables, and again like all constraint variables are globally scoped.
 
-User defined variables can be used for gaps as well. <a href="http://codepen.io/cbchouinard/pen/pvrXRW" target="_blank">Live example.</a>
+User defined variables can be used for gaps as well. <a href="http://codepen.io/cbchouinard/pen/PwKrjN" target="_blank">Live example.</a>
 
 {% highlight css %}
 /* VFL */
-@horizontal (#box1)-(#box2) gap(col-gap);
+@h (#box1)-(#box2) gap(col-gap);
 
 /* Equivalent CCSS */
 #box1[right] + col-gap == #box2[left];
@@ -109,7 +109,7 @@ User defined variables can be used for gaps as well. <a href="http://codepen.io/
 
 {% highlight css %}
 /* VFL */
-@horizontal (#b1)-100-(#b2)-(#b3)-(#b4) gap(#box1[width]);
+@h (#b1)-100-(#b2)-(#b3)-(#b4) gap(#box1[width]);
 
 /* Equivalent CCSS */
 #b1[right] + 100 == #b2[left];
@@ -117,34 +117,35 @@ User defined variables can be used for gaps as well. <a href="http://codepen.io/
 #b3[right] + #box1[width] == #b4[left];
 {% endhighlight %}
 
-
 <h2>Containment within an Element</h2>
 
-For alignment contained within an element, surround a VFL alignment with `|`'s and use `in( Selector )`:
+For alignment contained within an element, surround a VFL alignment with `|`'s and use `in( Selector )`. <a href="http://codepen.io/cbchouinard/pen/emEwRr" target="_blank">Live example.</a>
 
 <img class="vfl-small-img" src="../../assets/images/vfl/connectionToSuperview.png" width="152" height="32" alt="ConnectionToSuperview">
 
 {% highlight css %}
 /* VFL */
-@h |-50-[#purple-box]-50-| in(#container);
+@h |-50-(#purple-box)-50-| in(#container);
 
 /* Equivalent CCSS */
 #container[left] + 50 == #purple-box[left];
 #container[right] - 50 == #purple-box[right];
 {% endhighlight %}
 
-The default containing element selector is `::this`.  The above example can be written:
+The default containing element selector is `&`.
+
+The above example can be written:
 
 {% highlight css %}
 /* VFL */
 #container {
-  @h |-50-[#box]-50-|;
+  @h |-50-(#box)-50-|;
 }
 
 /* Equivalent CCSS */
 #container {
-  ::[left] + 50 == #purple-box[left];
-  ::[right] - 50 == #purple-box[right];
+  &[left] + 50 == #purple-box[left];
+  &[right] - 50 == #purple-box[right];
 }
 {% endhighlight %}
 
@@ -157,24 +158,25 @@ You can specify the gaps to a containing element using `outer-gap( Number | Cons
 {% highlight css %}
 /* VFL */
 #container {
-  @h |-[#a]-[#b]-[#c]-|
+  @h |-(#a)-(#b)-(#c)-|
     gap(8) outer-gap(16);
 }
 
 /* Equivalent VFL */
-@horizontal |-16-[#a]-8-[#b]-8-[#c]-16-| in(#container);
+@horizontal |-16-(#a)-8-(#b)-8-(#c)-16-| in(#container);
 {% endhighlight %}
 
 
 <h2>Alignment to Points</h2>
 
 Elements can be aligned relative to arbitrary positioned points using `< Number | Constraint Variable | Element Property >`
+<a href="http://codepen.io/cbchouinard/pen/bNrPvW" target="_blank">Live example.</a>
 
 To horizontally align two buttons, each 8px from the center of the window:
 
 {% highlight css %}
 /* VFL */
-@h [#btn1]-<::window[center-x]>-[#btn2] gap(8);
+@h (#btn1)-<::window[center-x]>-(#btn2) gap(8);
 
 /* Equivalent CCSS */
 #btn1[right] + 8 == ::window[center-x];
@@ -185,7 +187,7 @@ Alignments can be positioned within points:
 
 {% highlight css %}
 /* VFL */
-@h <#wall[center-x]>-[#poster]-[#clock]-<::window[right])> gap(7);
+@h <#wall[center-x]>-(#poster)-(#clock)-<::window[right])> gap(7);
 
 /* Equivalent CCSS */
 #wall[center-x] + 7 == #poster[left];
@@ -197,7 +199,7 @@ Numbers, variables and arithmetic can be used:
 
 {% highlight css %}
 /* VFL */
-@v <100>[#box]<[row2]>;
+@v <100>(#box)<[row2]>;
 
 /* Equivalent CCSS */
 100 == #box[top];
@@ -208,8 +210,8 @@ Consecutive points are not constrained to each-other:
 
 {% highlight css %}
 /* VFL */
-@h [#btn1]-<#col3[left]>
-           <#col4[right]>-[#btn2]
+@h (#btn1)-<#col3[left]>
+           <#col4[right]>-(#btn2)
   gap(8);
 
 /* Equivalent CCSS */
@@ -218,31 +220,14 @@ Consecutive points are not constrained to each-other:
 {% endhighlight %}
 
 
-<h2>Implicit Connections</h2>
+## Cushions
 
-Align group elements matching a selector:
-
-{% highlight css %}
-
-@v .section;
-
-@h .menu-item
-  in(#menu)
-  gap(16)
-  outer-gap(32);
-
-{% endhighlight %}
-
-**WARNING:** only relatively simple selectors without spaces currently work.
-
-
-<h2>Cushions</h2>
-
-Cushions are similar to connections, only they use inequality instead of equality constraints.
+Cushions are similar to connections gaps, only they use inequality instead of equality constraints.
+<a href="http://codepen.io/cbchouinard/pen/JoyQBq" target="_blank">Live example.</a>
 
 {% highlight css %}
 /* VFL */
-@horizontal [#box1]~[#box2];
+@h (#box1)~(#box2);
 
 /* Equivalent CCSS */
 #box1[right] <= #box2[left];
@@ -250,7 +235,7 @@ Cushions are similar to connections, only they use inequality instead of equalit
 
 {% highlight css %}
 /* VFL */
-@vertical [#box1]~100~[#box2];
+@v (#box1)~100~(#box2);
 
 /* Equivalent CCSS */
 #box1[bottom] + 100 <= #box2[top];
@@ -258,8 +243,8 @@ Cushions are similar to connections, only they use inequality instead of equalit
 
 {% highlight css %}
 /* VFL */
-@horizontal [#box1]~-~[#box2];
-@vertical [#box3]~-~[#box4];
+@h (#box1)~-~(#box2);
+@v (#box3)~-~(#box4);
 
 /* Equivalent CCSS */
 #box1[right] + [hgap] <= #box2[left];
@@ -270,12 +255,14 @@ Cushions are similar to connections, only they use inequality instead of equalit
 <h2>Size Predicates</h2>
 
 Size Predicates allow elements to be sized in the dimension parallel with the alignment.
+<a href="http://codepen.io/cbchouinard/pen/wBqLQe" target="_blank">Live example.</a>
+
 
 <img class="vfl-small-img" src="../../assets/images/vfl/priority.png" width="102" height="40" alt="Priority">
 
 {% highlight css %}
 /* VFL */
-@horizontal [#button(100)];
+@h (#button(==100));
 
 /* Equivalent CCSS */
 #button[width] == 100;
@@ -285,9 +272,9 @@ Size Predicates allow elements to be sized in the dimension parallel with the al
 
 {% highlight css %}
 /* VFL */
-@horizontal [#button1(==#button2)];
+@h (#button1(==#button2));
 /* or */
-@horizontal [#button1(==#button2[width])];
+@h (#button1(==#button2[width]));
 
 /* Equivalent CCSS */
 #button1[width] == #button2[width];
@@ -299,32 +286,136 @@ Multiple size predicates:
 
 {% highlight css %}
 /* VFL */
-@horizontal [#flexibleButton(>= 70, <= 100))];
+@h (#flexibleButton(>= 70, <= 100)));
 
 /* Equivalent CCSS */
 #flexibleButton[width] >= 70;
 #flexibleButton[width] <= 100;
 {% endhighlight %}
 
-<img class="vfl-small-img" src="../../assets/images/vfl/completeLayout.png" width="315" height="27" alt="CompleteLayout">
+
+## VFL Selectors
+All previous example of VFL expressions use basic [selectors](/guides/selectors). But you can also use combinators in VFL expression
+like this:
 
 {% highlight css %}
-/* VFL */
-@horizontal |-24-[#find]-[#findNext]-[#findField(>=30)]-24-| in(#popup);
-
-/* Equivalent CCSS */
-#popup[left] + 24 == #find[left];
-#find[right] + [hgap] == #findNext[left];
-#findField[width] >= 30;
-#findNext[right] + [hgap] == #findField[left];
-#findField[right] + 24 == #popup[right];
+@v | (.featured > article ~ .title) | in(#elm > .class .class2"_fallout")
 {% endhighlight %}
 
 
 
-<h2>VFL Chains</h2>
 
-Chains are a powerful mechanism to take each element within an VFL alignment (excluding a containment element & points) and construct a chained constraint statement against a property of each element.
+
+
+## VFL Splat
+When a selector in your VFL expression finds more than one element, due to [plural binding](/guides/selectors/#pluralbinding),
+if the number of element within each selection expression are not equal then some elements will not be constraint.
+<a href="http://codepen.io/cbchouinard/pen/vEJqbG" target="_blank">Live example.</a>
+
+In the this example, the last two `article` elements will not be constrained since there're no `section` element to bind to.
+As you can see in the CCSS generated constraints the elements are getting using plural binding.
+
+{% highlight css %}
+
+<section></section>
+<article></article>
+<article></article>
+<article></article>
+<footer></footer>
+
+<style type="text/gss">
+
+  /* the last two articles will not be constraints because of plural binding */
+  @h |-(section)-(article)-(footer)-| in(::window);
+
+  /* this generates the following CCSS */
+  ::window[left] + [hgap] == section[left];
+  section[right] + [hgap] == article[left];
+  article[right] + [hgap] == footer[left];
+  footer[right] + [hgap] == ::window[right];
+
+</style>
+
+{% endhighlight %}
+
+If the number of selected elements matches, the position of the elements within each collection of selected
+elements will overlap. Since you are constraining a collection of elements against another collection of elements
+and not elements of the collection against each other. <a href="http://codepen.io/cbchouinard/pen/yyodWx" target="_blank">Live example.</a>
+
+{% highlight html %}
+
+<section></section>
+<section></section>
+<section></section>
+<article></article>
+<article></article>
+<article></article>
+<footer></footer>
+
+<style type="text/gss">
+
+/* the 3 sections will overlap over each other as the 3 articles. */
+@h |-(section)-(article)-(footer)-| in(::window);
+
+</style>
+
+{% endhighlight %}
+
+Splats enable GSS to iterate over the collection of selected elements and position elements
+next to each other. <a href="http://codepen.io/cbchouinard/pen/ogerrX" target="_blank">Live example.</a>
+
+{% highlight css %}
+
+<section></section>
+<section></section>
+<article></article>
+<article></article>
+<article></article>
+<div></div>
+<div></div>
+
+<style type="text/gss">
+
+/* elements are not 'pluraly' binded */
+@h |-(section)-10-...-(article)-20-...-(div)...-| in(::window);
+
+</style>
+
+{% endhighlight %}
+
+In the previous example, the two `section` will be positioned next to each other with a gap of 10px. The
+three articles will be positionned next to each other with a gap of 20px. Finally the two div will be right next to each
+other without any gap.
+
+## Virtual with VFL
+[Virtuals](/guides/constraints) can be created and/or positionned using VFL expressions.
+
+
+
+
+## VFL rulesets
+
+You can use a VFL expression as the rule of a [rulesets](/guides/constraints/#rulesets). It will
+behave in the same way as a selector rule. GSS will create a collection of all elements involved
+in the VFL expression and iterates over them.
+
+This allows you to do interesing things. For example, if you want all the elements of the VFL expression
+to have the same width you can do the following:
+
+{% highlight css %}
+
+@h |-(section)-10-...-(article)-20-...-(div)...-| in(::window) {
+      width: == :next[width];
+}
+
+{% endhighlight %}
+
+
+## VFL Chains
+
+Chains are a powerful mechanism to take each element within an VFL alignment (excluding a containment element & points)
+and construct a chained constraint statement against a property of each element.
+<a href="http://codepen.io/cbchouinard/pen/vEJqbG" target="_blank">Live example.</a>
 
 Chains take the form `chain-{Property}({Head Operator} {Expression} {TailOperator})`.
 
@@ -339,10 +430,10 @@ For example,
 
 {% highlight css %}
 /* VFL */
-@h [#b1][#b2][#b3][#b4] chain-height chain-width(250);
+@h (#b1)(#b2)(#b3)(#b4) chain-height chain-width(250);
 
 /* or, more explicitly */
-@h [#b1][#b2][#b3][#b4] chain-height(==) chain-width(== 250 ==);
+@h (#b1)(#b2)(#b3)(#b4) chain-height(==) chain-width(== 250 ==);
 
 /* Equivalent CCSS */
 #b1[right] == #b2[left];
@@ -355,13 +446,13 @@ For example,
 
 {% highlight css %}
 /* VFL */
-@vertical |-8-[#b1][#b2]-8-|
+@v |-8-(#b1)(#b2)-8-|
   in(#panel)
   chain-center-x(::window[centerX])
   chain-width(>= 50);
 
 /* or, more explicitly */
-@vertical |-8-[#b1][#b2]-8-|
+@v |-8-(#b1)(#b2)-8-|
   in(#panel)
   chain-center-x(== ::window[centerX] ==)
   chain-width(>= 50 <=);
@@ -374,9 +465,7 @@ For example,
 #b1[width] >= 50 <= #b2[width];
 {% endhighlight %}
 
-
-
-<h2>VFL Strength & Weight</h2>
+## VFL Strength & Weight
 
 As established with CCSS, Strength & Weight can be used in VFL statements using `!{Strength}{Weight}` at the end of a statement.  Strengths can be `weak`, `medium`, `strong` & `require`.  Weights are positive integers.  As a rule of thumb, use Strengths first & foremost & resort to weights as a last resort.
 
@@ -386,7 +475,7 @@ Alignment Strength & Weight:
 
 {% highlight css %}
 /* VFL */
-@vertical [#topfield]-10-[#bottomfield] !strong100;
+@v (#topfield)-10-(#bottomfield) !strong100;
 
 /* Equivalent CCSS */
 #topfiled[bottom] + 10 == #bottomfield[top] !strong100;
@@ -396,7 +485,7 @@ Size Predicates have their own Strength & Weight:
 
 {% highlight css %}
 /* VFL */
-@vertical [#box1(>= [row-height] !require, == 20 !strong)][#box2][#box3] !medium;
+@v (#box1(>= [row-height] !require, == 20 !strong))(#box2)(#box3) !medium;
 
 /* Equivalent CCSS */
 #box1[height] == 20 !strong;
@@ -409,7 +498,7 @@ Chains have their own Strength & Weight:
 
 {% highlight css %}
 /* VFL */
-@vertical [#b1][#b2][#b3][#b4]
+@vertical (#b1)(#b2)(#b3)(#b4)
   chain-width(==!weak10)
   chain-height(<=150>=!required)
   !medium;

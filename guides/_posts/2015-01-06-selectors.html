@@ -516,9 +516,41 @@ div[width] == section[width];
 
 {% endhighlight %}
 
-## selector pairing
-TODO - if 2 elm on one side, 3 elm on the other side, the last elem on the right side will not be constraint.
+<a name="pluralbinding"></a>
+## Plural binding
+Let's say you have the following DOM elements:
 
+{% highlight html %}
+
+<section id="s1"></section>
+<section id="s1"></section>
+<section id="s1"></section>
+
+<article id="a1"></article>
+<article id="a1"></article>
+
+{% endhighlight %}
+
+What happens if you do declare the following constraint on those elements:
+
+{% highlight css %}
+
+section[width] == article[width];
+
+{% endhighlight %}
+
+GSS will do plural binding between those elements, which means it will pair elements together in order to apply constraint. Using
+the IDs of the element, GSS will declare the following constraints:
+
+{% highlight html %}
+
+#s1[width] == #a1[width];
+#s2[width] == #a2[width];
+#s3[width] == ?
+
+{% endhighlight %}
+
+As you can see here, no constraint will be declare on `#s3` since there wasn't any element to pair width.
 
 ### Two selectors per expression
 GSS limits to two the number of selector in a GSS expression. As for now the following is not supported:
