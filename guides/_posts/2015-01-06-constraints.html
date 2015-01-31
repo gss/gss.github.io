@@ -439,26 +439,29 @@ will create a new one on the scope where it was declared.
 `varY` is been declared in sibling rulesets therefore two distinct variables will be created and scope to their respective ruleset.
 <a href="http://codepen.io/cbchouinard/pen/zxzwXJ" target="_blank">Live example.</a>
 
-#### Prevent a variable from being hoisted
-If you don't want your variable to be hoisted to nested scopes you can declare you variable
-with a `:` after the variable name:
+#### Properties are not hoisted
+Only variable are captured in scope for hosting. Properties are not scoped and are therefore not accessible
+from child scopes.
 
 {% highlight css %}
 div {
-  varX: == 40;
+  varX: == 40; /* property constraint */
+  varY == 45; /* variable constraint */
 
   .someClass {
-    width: == varX; // ^varX will be hoisted but will be captured.
+    /* varX is not hoisted here since on the parent scope varX is a property and not a variable */
+    /* a new variable varX is there created and scoped to .someClass */
+    width: == varX;
+
     .someNestedClass {
-      varY == 45;
+      /* varY here is hoisted from the div scope since a varY variable is scoped at that level */
       width: == varY;
+      /* varX here is the .someClass varX scoped variable */
       top: == varX;
     }
   }
 }
 {% endhighlight %}
-
-TODO - Explain here that .someNestedClass will then have varY hoisted.
 
 #### Override hoisted variables locally
 You can override a variable locally within the scope of a ruleset using the `&` pseudo selector:
@@ -482,11 +485,16 @@ equivalent of `^varX` which is constraint to be equal to 50.
 
 
 ## Positions constraints
-GSS provide properties to quickly constraint the dimensions and positions of elements. The top-left corner
-of the page as the coordinate `x = left = 0, y = top = 0`.
-TODO - explains that cassowary can go negative when underconstraint.
-When constraining positions in GSS you will
-always constraints them base on the `0px, 0px` coordinate of the page.
+Position in GSS will always be relative to the element in which you instantiated the GSS engine. For example,
+if you instantiate the GSS engine in the `html`, `head` or `body` element, then elements will be `absolute` positionned
+at `x = left = 0, y = top = 0`. It's also possible to [positionning element relative to a container element](#relativepositionning)
+as well see later.
+
+GSS provide properties to quickly constraint the dimensions and positions of elements. For example, assuming the `body` is the root
+element for GSS, the `$[top-left]` property of the root element will be `x = left = 0, y = top = 0`.
+
+If your solution is underconstraints, GSS can place element at negative coordinates if that's the solution for the constraints
+you've declared. In that case, you need to declare more constraints.
 
 ### Top
 
@@ -596,14 +604,15 @@ from the top-left of the page.
 {% highlight css %}
 #someElm[center-x] == 100;
 
-// you can also use the condense syntax:
+/* you can also use the condense syntax: */
 #someElm[cx] == 100;
+
+/* center-x will expand in the following constraints */
+#someElm[left] + #someElm[width] / 2 == 100;
 
 {% endhighlight %}
 
 Place the horizontal center of the element 100px from the left of the page.
-
-TODO - center-x will result in the following CCSS: #som[right] + #some[width] / 2
 
 ### center-y, cy
 
@@ -611,8 +620,11 @@ TODO - center-x will result in the following CCSS: #som[right] + #some[width] / 
 
 #someElm[center-y] == 100;
 
-// you can also use the condense syntax:
+/* you can also use the condense syntax: */
 #someElm[cy] == 100;
+
+/* center-y will expand in the following constraints */
+#someElm[top] + #someElm[height] / 2 == 100;
 
 {% endhighlight %}
 
@@ -624,9 +636,9 @@ Place the vertical center of the element 100px from the top of the page.
 #someElm[center] == 100;
 {% endhighlight %}
 
-`center` is a 2d property shortcut for doing that will constraint both
-`center-x` and `center-y` to be 100px from the top-left corner of the page.
+`center` is a 2d property shortcut for doing constraining both `center-x` and `center-y` at once.
 
+<a name="relativepositionning"></a>
 ### Relatively positionned parents.
 
 GSS deals with relative parents in two distinct way. One being when the parent `position: relative` property
@@ -642,6 +654,11 @@ positionned according to the top-left of the page.
 
 
 #### position: relative in style attribute
+When you are dealing with a very large page composed of hundreds of constraints, GSS will need to evaluate all of them in order
+to find a solution for your constraints.
+
+You can split the calculation of solution by element's container, like `section` element for example. To do so,
+add a `style='position: relative'` 
 
 TODO - Rephrasing here: not performance issue but performance improvement for big site.
 **Pro Tip** If you have within your site some pages with multiple sections, GSS will need calculate the constraints for

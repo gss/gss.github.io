@@ -106,12 +106,12 @@ though there's a `height` constraint defined after the condition.
 
 ### Condition looping
 As describe in the [GSS constraints guide](/guide/constraints), constraints are two ways. You need to be well aware of this fact
-when using conditions. GSS is pretty good at handling cases where a looping could occurs but still be aware that in some very
-complicated conditions nesting you could have some situation where you can into a loop but GSS should get your back the vast majority
+when using conditions. GSS is pretty good at handling cases where a looping could occurs but still be aware that in some
+complexe conditions nesting you could have some situation where you get in a loop but GSS should get your back the vast majority
 of the time.
 
-For example, the following could have led to a loop but the cassowary solver will figure out that the solution for this set of
-constraints is to give a width of 600px of #elm.
+For example, the following could have led to a loop but the GSS cassowary solver will figure out the solution for this set of
+constraints without getting in a loop:
 
 {% highlight css %}
 
