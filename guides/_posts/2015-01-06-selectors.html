@@ -8,14 +8,14 @@ layout: post
 
 ## Selectors
 
-In order to apply constraint to element you first need to select them from the DOM. GSS supports
+In order to apply constraint to element you first need to select and observes them from the DOM. GSS supports
 the following list of basic selectors. <a href="http://codepen.io/cbchouinard/pen/Eavbyd" target="_blank">Live example.</a>
 
 #### Elements
 
 {% highlight css %}
 
-  div[width]: == 100;
+  div[width] == 100;
 
 {% endhighlight %}
 
@@ -25,7 +25,7 @@ GSS supports the `*` selector meaning all element of the page will be selected.
 
 {% highlight css %}
 
-  .className[width]: == 100;
+  .className[width] == 100;
 
 {% endhighlight %}
 
@@ -36,7 +36,7 @@ all elements that have the class `className`.
 
 {% highlight css %}
 
-  #elementId[width]: == 100;
+  #elementId[width] == 100;
 
 {% endhighlight %}
 
@@ -62,6 +62,9 @@ div, .className {
 
 For all `div` elements and elements having the `.className` class, a `width` of 100 will be constrained.
 
+-TODO explain we don't duplicate items.
+
+<a name="descendant"></a>
 #### All descendant elements
 
 {% highlight css %}
@@ -158,6 +161,16 @@ div ~~ .className {
 
 Select all preceeding and succeeding sibling elements of `div` that have the `className` class.
 
+### Performance consideration
+TODO - use native as possible
+document.querySelectAll("a + b")
+... ~~().filter (el) { if el.match(c) }
++ d
+
+
+
+~~ .c + d
+
 ## Combinators limitation
 
 Combinators requires a selector on both side of the combinator. For example the following is not currently supported:
@@ -223,7 +236,7 @@ Select elements with the `.className` class that are direct parents of a `div` e
 
 {% endhighlight %}
 
-Select the direct previous sibling elements of div elements that have the `className` class.
+Select the direct previous sibling elements of `div` elements that have the `className` class.
 
 #### All preceeding sibling elements
 
@@ -269,16 +282,6 @@ div {
 
 Like the `:next` pseudo-class but instead of getting the next div in the collection it gets the previous one.
 
-#### :get element in the collection
-
-{% highlight css %}
-
-div > .someClass:get('parentNode') {
-  TODO - not sure about this one. Need some testing.
-}
-
-{% endhighlight %}
-
 #### First element in the collection
 
 {% highlight css %}
@@ -287,13 +290,13 @@ div:first[size] == 100;
 
 {% endhighlight %}
 
-Selects the first div found and add a constraint of 100px on the `size`.
+Selects the first `div` found and add a constraint of 100px on the `size`.
 
 #### Last element in the collection
 
 {% highlight css %}
 
-  div:last[size] == 100;
+div:last[size] == 100;
 
 {% endhighlight %}
 
@@ -303,7 +306,7 @@ Selects the last div found and add a constraint of 100px on the `size`.
 
 GSS provides the following special pseudo selectors:
 
-### Parent selector
+### Parent selector ^
 
 {% highlight css %}
 
@@ -324,17 +327,26 @@ As we've seen previously, GSS will iterate over all selected elements to apply c
 When using the `^` pseudo selector you are telling GSS to select the parent element selected in the parent ruleset
 of the current selected element. <a href="http://codepen.io/cbchouinard/pen/JoyMpR" target="_blank">Live example.</a>
 
+You can chain pseudo parent selector. In the following, GSS will access the current `className` parent's parent which in
+this case would be a `section` element.
+
 {% highlight css %}
 
-.className {
-  width: == ^^[width];
+section {
+  article {
+    .className {
+      width: == ^^[width];
+    }
+  }
 }
 
 {% endhighlight %}
 
-In the previous example, GSS will access the parent of the parent of the current selected element.
+As previously mentionned it is important to understand that the parent pseudo selector will select
+an element according to the ruleset scope and not the DOM. As you can see in the next example, the `div` are
+constraints against their ruleset parent element and not their DOM parent. <a href="http://codepen.io/cbchouinard/pen/JoyMpR" target="_blank">Live example.</a>
 
-### this selector
+### this selector &
 
 {% highlight css %}
 
@@ -342,11 +354,7 @@ In the previous example, GSS will access the parent of the parent of the current
   line-height: == &[font-size] + 10;
 }
 
-{% endhighlight %}
-
-Alternative syntaxes:
-
-{% highlight css %}
+/* Alternatives syntaxes */
 
 .className {
   line-height: == ::this[font-size] + 10;
@@ -358,7 +366,7 @@ Alternative syntaxes:
 
 {% endhighlight %}
 
-In these example, the line-height of the selected element will by 10px more than the font-size of the element.
+In this example, the line-height of the selected element will by 10px more than its own font-size.
 
 ### ::window selector
 
@@ -370,14 +378,21 @@ In these example, the line-height of the selected element will by 10px more than
 
 {% endhighlight %}
 
- The window selector gives you access to the visible part of the page in the browser. The `::window` pseudo selector will not take into
- account the scroll bar if any.
+The `::window` selector gives you access to the visible part of the page in the browser. The `::window` width and height don't take into consideration
+scroll bars.
 
- `::window` pseudo selector is very handy for positionning and dimensionning elements.
+Scrolling the page will not re-calculate constraints using the `::window` so you need to keep this in mind when constraining elements
+in relation with the `::window` pseudo.
 
-### Global scope selector
+In the next example, the gray `div` will be centered with `::window` but as you can see scrolling don't have any
+effect on its position. <a href="http://codepen.io/cbchouinard/pen/jELKpr" target="_blank">Live example</a>
 
-The global scope allows you to access global variables or select elements from the root of the DOM three when selector from within a ruleset.
+
+### Global scope selector $
+
+The global scope allows you select elements from the root of the DOM three when selecting elements within rulesets.
+
+TODO - select element from the element where the GSS engine was define...
 
 {% highlight css %}
 
@@ -387,29 +402,80 @@ The global scope allows you to access global variables or select elements from t
 
 {% endhighlight %}
 
-Tough we do not necessarely recommand this practice, you could declare a global variable within a ruleset like so:
+## Selector within rulesets
+Using selectors within rulesets is the equivalent of using the [descendant](#descendant) combinator. In the following example,
+a constraint on the `.className` element will only be define if that element has a descendant element with an id equal to `#elm`.
 
 {% highlight css %}
 
 .className {
-  $[someVar] == 10;
+  line-height: == #elm[line-height];
 }
+
+/* is the equivalent of */
+
+.className[line-height] == (.className #elm)[line-height];
 
 {% endhighlight %}
 
-In this case, the variable `[someVar]` is globally declared eventough it is declare within a ruleset.
+## Selector splat
+Selector splat enables you to select elements having a sequence number in their ID or class name.
+<a href="http://codepen.io/cbchouinard/pen/yyoWeN" target="_blank">Live example</a>
 
+{% highlight css %}
 
-## Selector Ruleset Scoping
-Selector within ruleset are scoped to that ruleset. [current scope](/guides/constraints#variablesandscope)
+.parent.btn0...2.featured[x] <= 0
 
-TODO - Complete section.
+/* is the equivalent of doing : * /
+.parent.btn0.featured[x] <= 0
+.parent.btn1.featured[x] <= 0
+.parent.btn2.featured[x] <= 0
+
+{% endhighlight %}
+
+The splat sequence can start at the number you want:
+
+{% highlight css %}
+
+.btn2...4.featured[x] <= 0
+
+/* which is the equivalent of: * /
+.btn2.featured[x] <= 0
+.btn3.featured[x] <= 0
+.btn4.featured[x] <= 0
+
+{% endhighlight %}
+
+You can chain splat selectors like this for ID or class names having multiple number sequence in them:
+
+{% highlight css %}
+
+#cell-x1...2-y1...2-z1...2[width] == 10;
+
+/* which is the equivalent of: * /
+#cell-x1-y1-z1[width] == 10;
+#cell-x2-y2-z2[width] == 10;
+#cell-x3-y3-z3[width] == 10;
+#cell-x1-y1-z1[width] == 10;
+#cell-x2-y2-z2[width] == 10;
+#cell-x3-y3-z3[width] == 10;
+#cell-x1-y1-z1[width] == 10;
+#cell-x2-y2-z2[width] == 10;
+#cell-x3-y3-z3[width] == 10;
+
+{% endhighlight %}
 
 ## Selectors and the DOM
 
-The collection of element built from selectors is built according to the DOM elements' order. The elements collection order needs to be understood when using pseudo-classes like in this example:
+The collection of element built from selectors is built according to the DOM elements' order and not in the order in which
+you positionned the elements with GSS.
+
+For example, if you have GSS constraints that positions all `section` elements to appear before `div` elements, the following example
+will not take that positionning into account when using the `:next` pseudo-class.
 
 {% highlight css %}
+
+section[bottom] <= div[top];
 
 section, div {
 	top: == &:next[top];
@@ -417,22 +483,42 @@ section, div {
 
 {% endhighlight %}
 
-In this case, some `div` element can appear in the collection before some `section` element. So `&:next` can return either a `section` element or a `div` element depending on the DOM order.
+In this case, if some `div` comes first in the DOM they will be added to the collection of selected elements before `section` elements. So
+`&:next` can return either a `section` element or a `div` element depending on the DOM order.
 
 Depending on your intention, this can make total sense but keep in mind that these constraints will be applied base on the DOM order.
 
+### Selector specificity
+Selector specificity is not supported in GSS.
 
-### Inline syntax
-All selector combinator can be used inline like the following:
+> "...constraints can be used to specify declaratively the desired layout of a web document. They allow partial specification of the layout, which can be combined with other partial specifications in a predictable way. They also provide a uniform mechanism for understanding layout and cascading." [Greg J. Badros](http://www.badros.com/greg/papers/css-uist99.pdf)
+
+You can always declare you're constraint in a way to will take precedence over other. You can do something like this
 
 {% highlight css %}
-  (div > .className)[width] == 100;
+
+div[width] == #someElm[width];
+div[width] == .className[width];
+div[width] == section[width];
+
 {% endhighlight %}
 
-In this case we're telling GSS to define a constraint on the width of all child element of div having the `.className` class.
+With CSS the selector specificity would set the `div` width to equal the `#someElm` since `ID` have higher score than class and tag selector.
 
-### Specificity
-The current version of GSS doesn't support specificity on selector.
+With constraints these all three constraints will be evaluated in the solving of the constraints system. So if you really want to give higher
+priority to `#someElm` you can set higher strength on it:
+
+{% highlight css %}
+
+div[width] == #someElm[width] !strong;
+div[width] == .className[width];
+div[width] == section[width];
+
+{% endhighlight %}
+
+## selector pairing
+TODO - if 2 elm on one side, 3 elm on the other side, the last elem on the right side will not be constraint.
+
 
 ### Two selectors per expression
 GSS limits to two the number of selector in a GSS expression. As for now the following is not supported:
@@ -440,6 +526,8 @@ GSS limits to two the number of selector in a GSS expression. As for now the fol
 {% highlight css %}
     #div4[width] == #div1[width] + #div2[width] + #div3[width];
 {% endhighlight %}
+
+TODO - explains that limitation only applies to distinct selectors. div1[y] + div1[x] only counts for one.
 
 The support for more than 3 selectors in GSS expression will probably be added in a near future but in meantime you can do something like:
 

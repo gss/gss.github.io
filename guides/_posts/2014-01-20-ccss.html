@@ -5,7 +5,7 @@ subtitle: lay it out like it's 1999
 color: b
 layout: post
 ---
-Soon after the W3C introduced Cascading Style Sheets, [Greg Badros](http://www.badros.com/greg/), the author of the Cassowary Constraint Solver & [recently retired Facebook VP](http://allthingsd.com/20130920/facebook-engineering-and-products-vp-greg-badros-to-leave-company/), proposed [Constraint CSS (CCSS)](http://www.cs.washington.edu/research/constraints/web/ccss-uwtr.pdf) as a general solution for CSS layout.  Back in '99 Badros demonstrated *responsive* layouts with CCSS that today's designers still can't reproduce without grinding out piles of JavaScript.  For more than a decade, no one seemed to take notice outside academia... Until Apple implemented Cassowary & Greg's pioneering concepts in its new AutoLayout engine with the launch of OS X Lion. Despite the evolutionary leap for app developers, web designer's have had to settle with [float-based](http://www.sitepoint.com/give-floats-the-flick-in-css-layouts/) & table-based layouts that have remained unimproved to this day.  
+Soon after the W3C introduced Cascading Style Sheets, [Greg Badros](http://www.badros.com/greg/), the author of the Cassowary Constraint Solver & [recently retired Facebook VP](http://allthingsd.com/20130920/facebook-engineering-and-products-vp-greg-badros-to-leave-company/), proposed [Constraint CSS (CCSS)](http://www.cs.washington.edu/research/constraints/web/ccss-uwtr.pdf) as a general solution for CSS layout.  Back in '99 Badros demonstrated *responsive* layouts with CCSS that today's designers still can't reproduce without grinding out piles of JavaScript.  For more than a decade, no one seemed to take notice outside academia... Until Apple implemented Cassowary & Greg's pioneering concepts in its new AutoLayout engine with the launch of OS X Lion. Despite the evolutionary leap for app developers, web designer's have had to settle with [float-based](http://www.sitepoint.com/give-floats-the-flick-in-css-layouts/) & table-based layouts that have remained unimproved to this day.
 
 > "We should contemplate how very, very far behind the web platform is in making it delightful to build the sorts of things that are work-a-day in native environments." <a href="http://infrequently.org/2012/02/misdirection/">Alex Russell</a>
 
@@ -37,7 +37,7 @@ or, we could express the same constraints within a CSS ruleset alongside old-sch
 p {
   color: purple;
   line-height: >= 16;
-  line-height: <= ::window[height] / 12;  
+  line-height: <= ::window[height] / 12;
 }
 
 {% endhighlight %}
@@ -47,13 +47,13 @@ of course, you can nest rules too:
 {% highlight css %}
 
 .content {
-  
+
   margin-right: == ::parent[margin-right] * -1;
-  
+
   p, blockquote {
     color: purple;
     line-height: >= 16;
-    line-height: <= ::window[height] / 12;  
+    line-height: <= ::window[height] / 12;
   }
 }
 
@@ -99,7 +99,7 @@ y >= 10;
 
 {% endhighlight %}
 
-x and y have a constraint to be equal, so x and y will be 100.  
+x and y have a constraint to be equal, so x and y will be 100.
 
 Constraints are incrementally added to a `solver`, then the solver computes a feasible & optimal solution to all the constraints.  With constraint programming you input the *what* you want to happen, not *how* it will happen. With procedural programming, you focus on the *how*.  This makes constraints a perfect fit for empowering declarative languages like CSS.
 
@@ -115,7 +115,7 @@ A custom constraint variable can be created by simply using it in a constraint.
 
 {% endhighlight %}
 
-This automatically defines the constraint variable `[col-size]` that can be re-used in other constraints.  
+This automatically defines the constraint variable `[col-size]` that can be re-used in other constraints.
 
 ## Custom Element Constraint Variables
 
@@ -136,14 +136,14 @@ Constraint variables are defined in a global scope, as is right in the constrain
 {% highlight css %}
 
 /* the !require strength ensures this constraint will hold */
-[col-size] == ::window[width] / 12 !require; 
+[col-size] == ::window[width] / 12 !require;
 
 .menu {
   width: == [col-size];
 }
 
 .post {
-  width: == 6 * [col-size];  
+  width: == 6 * [col-size];
   h1 {
     padding-left: == [col-size];
   }
@@ -185,15 +185,15 @@ The this and parent selectors can only be used in a nested ruleset, as with:
 
 {% highlight css %}
 #product {
-  
+
   $col-width: == ::[width] / 12 !require;
   $col-left: == ::[left] + ::[$col-width];
-  
+
   .price {
     left:  == ::parent[$col-left];
     width: == ::parent[$col-width];
   }
-  
+
   .description {
     left: == ::parent[$col-left] + ::parent[$col-width];
   }
@@ -256,7 +256,7 @@ Constraints of the same strength can be made relatively stronger or weaker with 
 
 /* Constraints of the same strength... */
 
-#planet[weight] == 600 !medium1000; 
+#planet[weight] == 600 !medium1000;
 #planet[weight] == 30 !medium;
 #planet[weight] == 10 !medium;
 #planet[weight] == 20 !medium;
@@ -280,7 +280,7 @@ Constraints of the same strength can be made relatively stronger or weaker with 
 
 {% endhighlight %}
 
-Should the box move its position to the right or stretch its width to make its right edge flush with the window?  A critical best practice is to *fully constrain* an element, in other words, you should adequately specify an element's position & size.  If an element is under-constrained you will have unpredictable results. 
+Should the box move its position to the right or stretch its width to make its right edge flush with the window?  A critical best practice is to *fully constrain* an element, in other words, you should adequately specify an element's position & size.  If an element is under-constrained you will have unpredictable results.
 
 
 ## Stays <a name="stays"></a>
@@ -328,18 +328,18 @@ For constraints at the same strength, GSS tries to minimize the degree to which 
 
 {% endhighlight %}
 
-`#laser[amo]` will be 2 because that minimizes the total degree to which all constraints would not be satisfied, or the total of each constraint's "error".  
+`#laser[amo]` will be 2 because that minimizes the total degree to which all constraints would not be satisfied, or the total of each constraint's "error".
 
-**When `#laser[amo]` is 2**; the first constraint has error of 1, the second has an error of 0 & the third has error of 1, **total error = 2**.  
+**When `#laser[amo]` is 2**; the first constraint has error of 1, the second has an error of 0 & the third has error of 1, **total error = 2**.
 
-**If `#laser[amo]` was 3**; the first constraint has error of 0, the second with 1 & the third with 2, **total error = 3**.  
+**If `#laser[amo]` was 3**; the first constraint has error of 0, the second with 1 & the third with 2, **total error = 3**.
 
 The total error is always minimized.
 
 
 ## Linear Arithmetic
 
-Cassowary only allows for "Linear Arithmetic" constraints, you can do simple math operations like `+`, `-`, `*` and `/`, but all expressions must be linear (of the form `y = mx + b`).  Basically, you can do most things except multiply or divide two constraint variables.  
+Cassowary only allows for "Linear Arithmetic" constraints, you can do simple math operations like `+`, `-`, `*` and `/`, but all expressions must be linear (of the form `y = mx + b`).  Basically, you can do most things except multiply or divide two constraint variables.
 
 {% highlight css %}
 

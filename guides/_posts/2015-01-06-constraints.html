@@ -100,8 +100,8 @@ two constraint will not hold. <a href="http://codepen.io/cbchouinard/pen/XJROdV"
 
 As we'll see next, you can influence the constraints solving by given more information to GSS about your intent.
 
-<a name="strenghts"></a>
-### Strenghts
+<a name="strengths"></a>
+## Strenghts
 Strenghts allows you to guide GSS in your layout intention by giving the GSS constraints solver more details about which constraints you prioritize.
 
 Stronger constraints completely overcome weaker ones - this is the phenomena of the [Constraint Hierarchy](http://www.cs.washington.edu/research/constraints/theory/hierarchies-92.html).  Strengths are declared in the same fashion of CSS's `!important`:
@@ -131,13 +131,13 @@ Using the [May or may not hold](#mayofmaynothold) example we saw previously,
 we'll now give a stronger strenght to each individual `width` constraints to
 make sure they overcome the sum constraints: <a href="http://codepen.io/cbchouinard/pen/bNRbQg" target="_blank">Live example.</a>
 
-#### !require strenght
+#### !require strength
 `!require` is a special strength that guarantees the constraint will hold, otherwise everything breaks.
 
 **Pro Tip** Use `!require` carefully & sparingly. `!require`'s quickly lead to systems where
-all required constraints cannot be satisfied.
+all required constraints cannot be satisfied in which case the GSS engine will throw an error.
 
-For example, the following GSS expressions will be unsolvable:
+For example, the following GSS expressions will be unsolvable and throw an exception:
 
 {% highlight css %}
 
@@ -160,26 +160,31 @@ different result. <a href="http://codepen.io/cbchouinard/pen/rawBRr" target="_bl
 <a name="lineararithmetic"></a>
 ## Linear Arithmetic
 
-Cassowary only allows for "Linear Arithmetic" constraints, you can do simple math operations like `+`, `-`, `*` and `/`,
-but all expressions must be linear (of the form `y = mx + b`).  Basically, you can do most things except multiply or
-divide two constraint variables.  <a href="http://codepen.io/cbchouinard/pen/MYvOWO" target="_blank">Live example.</a>
+Cassowary, which is the constraints solving algorithm used by GSS, only allows for "Linear Arithmetic" constraints, you can do simple
+math operations like `+`, `-`, `*` and `/`, but all expressions must be linear (of the form `y = mx + b`).  Basically, you can do
+most things except multiply or divide two constraint variables.  <a href="http://codepen.io/cbchouinard/pen/MYvOWO" target="_blank">Live example.</a>
 
 {% highlight css %}
 
 /* this is not linear & will throw an error */
 
-#box1[width] / #box1[height] == #box2[width] / #2box[height];
+#box1[width] / #box2[height] == varX;
 
 {% endhighlight %}
-
-We wish we could go non-linear, but we can't because math.
 
 ## Units of measurement
 Default unit in GSS are pixels. GSS also supports the following units:
 
 {% highlight css %}
-#em[width] == 10em;
-#pourcentage[width] == 10%;
+em /* use the font size of the element */
+rem /* use the font size of the html element */
+vh /* viewport height */
+vw /* viewport width */
+vmax /* the greatest value between vh or vw */
+vmin /* the lowest value between vh or vw */
+cm /* centimeter */
+mm /* millimeter */
+in /* inches */
 {% endhighlight %}
 
 <a name="selectors"></a>
@@ -194,9 +199,9 @@ GSS supports many selectors to allow you to select elements for which you want t
 {% endhighlight %}
 
 Since we have a lot of selector we've dedicated a guide for them. We invite you to scroll all the way
-down in that guide, there's some useful information there: [GSS Selectors Guide](/guides/selectors)
+down in that guide, there's some useful information there: [GSS Selectors Guide](/guides/selectors) \*
 
-Note that this guide is refering to [ruleset](rulesets) which are covered next.
+\* Note that this guide is refering to [rulesets](rulesets) which are covered next.
 
 <a name="rulesets"></a>
 ## Rulesets
@@ -229,8 +234,6 @@ div {
 }
 {% endhighlight %}
 
-**Pro Tip** We recommand keeping your styling with CSS and layout with GSS in seperates style elements or files.
-
 ### Rulesets and selectors
 Rulesets will scope the nested selectors to all descendant of the ruleset elements. For example:
 
@@ -246,8 +249,7 @@ Its important to understand that the constraints will be define independantly fo
 element but not the other, the first `div` will have a constraint declare but not the second one since
 it doesn't contain a `#elm` element. <a href="http://codepen.io/cbchouinard/pen/yyXPyK" target="_blank">Live example.</a>
 
-
-If you want to select and element from the entire DOM you need to do the following:
+If you want to select and element from the root you need to do the following:
 
 {% highlight css %}
 div {
@@ -270,29 +272,87 @@ If you want to select an element from the element's parent you can use the `^` p
 In this example `(^ #elm)` will search for a `#elm` element contained in the current element having
 the `.container` class. <a href="http://codepen.io/cbchouinard/pen/yyXPej" target="_blank">Live example.</a>
 
-<a name="variablesandscope"></a>
-## Variables and scope
-Declaring a variable in GSS is as simple as using it:
+
+## Properties
+All the previous example constrained CSS properties like `width` or `line-height`. But you can also
+constraint non-CSS property using GSS.
 
 {% highlight css %}
-[var1] == 100;
+
+.post {
+  custom-properties: == &[line-height] * 3;
+}
+
+/* you can also declare custom properties using inline syntax as well */
+.post[custom-properties] == .post[line-height] * 3;
+
 {% endhighlight %}
 
+This will automatically create a `[col-size]` variable for each element with the class post, and constrain it to be the
+same as 3 times that post's line-height.  Don't forget this relationship is 2-way, so further constraining a
+post's [col-size] can affect its line-height, which can be remedied using by taking advantage of the
+"Constraint Hierarchy" with [Strengths](#strengths).
 
-Square brackets are optional. The following GSS is equivalent to the previous one:
+<a name="variables"></a>
+## Constraints Variables
+In addition to properties, GSS allows you to declare variables. You can access variables declared in parent rulesets
+or at the root of the stylesheet like this:
+
 {% highlight css %}
-var1 == 100;
+
+<style text='text/gss'>
+varX = 100;
+
+.className {
+  width: == varX;
+  varY == &[height];
+
+  #div {
+    width: == varX;
+  }
+}
+</script>
+
 {% endhighlight %}
 
-### Global variable
+Variables are hoisted and can be access child scope. You can learn more about variable's hoisting and scoping in [scope section](#scope).
+
+
+## CSS property name
+Now that we've seen properties and variables you can do some interesting things by using CSS property as variables. For example you
+can declare constraints on CSS properties of parent scope:
+
+{% highlight css %}
+<style text='text/gss'>
+varX = 100;
+
+.className {
+  width == varX;
+
+  #someElm {
+    width == &[height];
+  }
+}
+</script>
+
+{% endhighlight %}
+
+Since `width` in the `.className` ruleset is used as a variable and not a property, it is hoisted. Therefore,
+the constraint on the `width` declare in the `#someElm` ruleset will affect the `.className` width and not the
+`width` of `#someElm` itself.
+
+### Global variables
 Global variables can be define using the `$` symbol.
 
 {% highlight css %}
 $var1 == 100;
 {% endhighlight %}
 
-### Scope
-GSS will scope variables base on the location they are first declared. A variable can be scoped
+You can access global scope variables from everywhere using the `$`.
+
+<a name="scope"></a>
+## Scope
+GSS will scope variables base on their top most location. A variable can be scoped
 within a style element, within a ruleset or globally for the entire document.
 
 {% highlight css %}
@@ -322,8 +382,11 @@ In this example, `#elm1` will have a width of 100px and `#elm2` will have a widt
 The two `varX` are in distinct scope and are therefore indenpendant from each other.
 <a href="http://codepen.io/cbchouinard/pen/EaXmRp" target="_blank">Live example.</a>
 
+If we would have use a global variable for `varX` then the two constrained elements would have
+had the same width. <a href="http://codepen.io/cbchouinard/pen/yyoxxm" target="_blank">Live example.</a>
+
 #### Ruleset
-Variable define inside ruleset are scoped to the ruleset.
+Variables defined inside a ruleset are scoped to that ruleset.
 
 {% highlight css %}
 .someClass {
@@ -369,12 +432,12 @@ div {
 {% endhighlight %}
 
 In this case, `varX` used in the nested selectors is hoisted from the `div` scope. Internally, GSS will go up the
-scope tree using the parent pseudo selector `^varX`, if no variable are found at that level GSS will do `^^varX`
-and so on until it finds a variable or until it reach the root scope in which case no variable exist so GSS will
-create a new on on the scope where it was declared.
+scope tree using the parent pseudo selector `^varX`, if no variable is found at that level, GSS will do `^^varX`
+and so on until it finds a variable or until it reach the root scope at what point if no GSS didn't find a variable it
+will create a new one on the scope where it was declared.
 
-`varY` is been declare in sibling rules therefore it will be define in those two scope and these are two distinct
-and independent variables. <a href="http://codepen.io/cbchouinard/pen/zxzwXJ" target="_blank">Live example.</a>
+`varY` is been declared in sibling rulesets therefore two distinct variables will be created and scope to their respective ruleset.
+<a href="http://codepen.io/cbchouinard/pen/zxzwXJ" target="_blank">Live example.</a>
 
 #### Prevent a variable from being hoisted
 If you don't want your variable to be hoisted to nested scopes you can declare you variable
@@ -385,8 +448,7 @@ div {
   varX: == 40;
 
   .someClass {
-    width: == varX; // ^varX will be unreachable.
-
+    width: == varX; // ^varX will be hoisted but will be captured.
     .someNestedClass {
       varY == 45;
       width: == varY;
@@ -396,6 +458,7 @@ div {
 }
 {% endhighlight %}
 
+TODO - Explain here that .someNestedClass will then have varY hoisted.
 
 #### Override hoisted variables locally
 You can override a variable locally within the scope of a ruleset using the `&` pseudo selector:
@@ -406,7 +469,7 @@ div {
 
   .className {
     &varX == 60;
-    width: == &varX;
+    width: == &varX; /*  60 */
   }
 }
 {% endhighlight %}
@@ -420,7 +483,9 @@ equivalent of `^varX` which is constraint to be equal to 50.
 
 ## Positions constraints
 GSS provide properties to quickly constraint the dimensions and positions of elements. The top-left corner
-of the page as the coordinate `x = left = 0, y = top = 0`. When constraining positions in GSS you will
+of the page as the coordinate `x = left = 0, y = top = 0`.
+TODO - explains that cassowary can go negative when underconstraint.
+When constraining positions in GSS you will
 always constraints them base on the `0px, 0px` coordinate of the page.
 
 ### Top
@@ -538,6 +603,8 @@ from the top-left of the page.
 
 Place the horizontal center of the element 100px from the left of the page.
 
+TODO - center-x will result in the following CCSS: #som[right] + #some[width] / 2
+
 ### center-y, cy
 
 {% highlight css %}
@@ -576,6 +643,7 @@ positionned according to the top-left of the page.
 
 #### position: relative in style attribute
 
+TODO - Rephrasing here: not performance issue but performance improvement for big site.
 **Pro Tip** If you have within your site some pages with multiple sections, GSS will need calculate the constraints for
 all the section at once in order to find the best possible solution. In some case, that can lead to
 performance issue. If that's the case, you can position each section using regular CSS by declaring then as
@@ -627,6 +695,10 @@ property to set them both the width and the height at the same time:
 {% endhighlight %}
 
 ## Intrinsic values
+TODO - rewording, deferred to CSS...
+TODO - define the concept of of &computed-* like &computed-height
+TODO - GSS can sometime disagree with CSS on measurement. May have to !require.
+TODO - Stronger constraint can affect the value of the intrinsic constraint element and you get in this.
 
 When you want to constraint the position of an element GSS needs to know the dimension of the element. For example how could
 GSS position an element using the bottom-right property without knowing the height and width of that element.
@@ -656,21 +728,86 @@ For example if we add a `width` constraint on `.SelectorA` this constraint will 
 precendence over all other constraints.
 
 ## Virtuals
-Virtuals are a very interesting concept that allows you to constraints elements against `virtual` element that don't actually exists in the DOM.
 
+Virtuals are boxes you define in GSS that don't exists in the DOM but against which you can constraint DOM element. This is a
+practical way to apply constraints to a group of element without the need to add an element to the DOM.
 
 {% highlight css %}
 
-  "virtual" {
+  "area" {
     size: == ::window[size] / 2;
     center: == ::window[center];
   }
 
-  #elmA[top-left] == "virtual"[top-left];
-  #elmB[bottom-right] == "virtual"[top-right];
+  #elmA[top-left] == "area"[top-left];
+  #elmB[bottom-right] == "area"[top-right];
 
 {% endhighlight %}
 
-In this example we are constraining `#elmA` and `#elmB` against the virtual element.
+As you can see from the previous example, we are constraining `#elmA` and `#elmB` against the virtual element.
+<a href="http://codepen.io/cbchouinard/pen/WbOWgB" target="_blank">Live example.</a>
 
-Virtuals are very handy with [VFL](/guides/vfl-guide).
+In regards of constraining dimensions and positions, virtuals are no different from DOM element in the sens that you can
+declare constraints on them as shown previously. The only difference is since they don't exist in the DOM they are
+not stylable with CSS. Doing the following will have no effect:
+
+{% highlight css %}
+
+"area" {
+  /* Styling virtuals have no effect since they don't exist in the DOM */
+  background-color: blue;
+}
+
+{% endhighlight %}
+
+### Virtual hoisting
+GSS virtual are treated as variables and are therefore hoisted. You can do the following:
+
+{% highlight css %}
+
+.className {
+  "area"[size] == 200;
+
+  #someElm > div {
+    width: == "area"[width]; /* "area" will be hoisted from the .className scope */
+  }
+}
+
+{% endhighlight %}
+
+
+
+### Virtual splat
+Virtual splats allow you to create a grid of virtuals. For example, if you want to split the viewport in four equally dimensioned
+virtuals you can do the following:
+
+{% highlight css %}
+
+
+"area1...4" {
+  width: == ::window[width] / 2;
+  height: == ::window[height] / 2;
+}
+
+"area1...2" {
+  top: == 0;
+  right: == &:next[left];
+}
+
+"area3...4" {
+  right: == &:next[left];
+}
+
+"area1", "area3" {
+  top: == &:previous[bottom];
+}
+"area2", "area4" {
+  top: == &:previous[bottom];
+}
+
+{% endhighlight %}
+
+Using those virtual boxes, you can now constraints some DOM element against those four boxes. <a href="http://codepen.io/cbchouinard/pen/VYzOPx" target="_blank">Live example.</a>
+
+
+## @if @else conditions

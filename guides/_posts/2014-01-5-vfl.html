@@ -22,7 +22,7 @@ With only inequality constraints at your disposal, constraining common layout sc
 #panel[right] - 10 == #button4[right];
 {% endhighlight %}
 
-Not to mention the obligatory size & vertical constraints needed to fully specify the panel and buttons - ugh...  
+Not to mention the obligatory size & vertical constraints needed to fully specify the panel and buttons - ugh...
 
 This is where Grid-flavored VFL comes in.  The brains at Apple came up with VFL as a more programatic way to install constraints in Cocoa AutoLayout.  The idea is rather simple, the syntax should visually depict the layout.  GSS takes the good parts of VFL and makes it more suitable for CSS, throws in some sugar and drops the cruft.  So the above example of 4 buttons in a panel becomes:
 
@@ -41,7 +41,7 @@ This is where Grid-flavored VFL comes in.  The brains at Apple came up with VFL 
 
 <h2>Basics</h2>
 
-Horizontal layouts can be created with the CSS directive `@h`, `@horizontal` or `@-gss-horizontal`.  
+Horizontal layouts can be created with the CSS directive `@h`, `@horizontal` or `@-gss-horizontal`.
 
 Vertical layouts with the CSS directive `@v`, `@vertical` or `@-gss-vertical`.
 
@@ -54,7 +54,7 @@ Internally, GSS compiles VFL into CCSS (in)equality constraints, so after each V
 
 <h2>Connections</h2>
 
-Two elements can be horizontally connected without any gap:
+Two elements can be horizontally connected without any gap. <a href="http://codepen.io/cbchouinard/pen/pvrXRW" target="_blank">Live example.</a>
 
 <img class="vfl-small-img" src="../../assets/images/vfl/flushViews.png" width="99" height="20" alt="FlushViews">
 
@@ -65,7 +65,6 @@ Two elements can be horizontally connected without any gap:
 /* Equivalent CCSS */
 #maroon[right] == #blue[left];
 {% endhighlight %}
-
 
 
 <h2>Connection Gaps</h2>
@@ -88,29 +87,29 @@ If no `gap()` is defined, but a hyphen is used to make a connection then a `stan
 
 {% highlight css %}
 /* VFL */
-@horizontal [#button]-[#textField];
-@vertical [#button]-[#textField];
+@horizontal (#button)-(#textField);
+@vertical (#button)-(#textField);
 
 /* Equivalent CCSS */
-#button[right] + [hgap] == #textField[left];
-#button[bottom] + [vgap] == #textField[top];
+#button(right) + hgap == #textField(left);
+#button(bottom) + vgap == #textField(top);
 {% endhighlight %}
 
-The `[hgap]` & `[vgap]` variables can be used like normal variables, and again like all constraint variables are globally scoped.
+The `hgap` & `vgap` variables can be used like normal variables, and again like all constraint variables are globally scoped.
 
-User defined variables can be used for gaps as well:
+User defined variables can be used for gaps as well. <a href="http://codepen.io/cbchouinard/pen/pvrXRW" target="_blank">Live example.</a>
 
 {% highlight css %}
 /* VFL */
-@horizontal [#box1]-[#box2] gap([col-gap]);
+@horizontal (#box1)-(#box2) gap(col-gap);
 
 /* Equivalent CCSS */
-#box1[right] + [col-gap] == #box2[left];
+#box1[right] + col-gap == #box2[left];
 {% endhighlight %}
 
 {% highlight css %}
 /* VFL */
-@horizontal [#b1]-100-[#b2]-[#b3]-[#b4] gap(#box1[width]);
+@horizontal (#b1)-100-(#b2)-(#b3)-(#b4) gap(#box1[width]);
 
 /* Equivalent CCSS */
 #b1[right] + 100 == #b2[left];
@@ -209,9 +208,9 @@ Consecutive points are not constrained to each-other:
 
 {% highlight css %}
 /* VFL */
-@h [#btn1]-<#col3[left]> 
-           <#col4[right]>-[#btn2] 
-  gap(8); 
+@h [#btn1]-<#col3[left]>
+           <#col4[right]>-[#btn2]
+  gap(8);
 
 /* Equivalent CCSS */
 #btn1[right] + 8 == #col3[left];
@@ -227,7 +226,7 @@ Align group elements matching a selector:
 
 @v .section;
 
-@h .menu-item 
+@h .menu-item
   in(#menu)
   gap(16)
   outer-gap(32);
@@ -239,7 +238,7 @@ Align group elements matching a selector:
 
 <h2>Cushions</h2>
 
-Cushions are similar to connections, only they use inequality instead of equality constraints. 
+Cushions are similar to connections, only they use inequality instead of equality constraints.
 
 {% highlight css %}
 /* VFL */
@@ -325,9 +324,9 @@ Multiple size predicates:
 
 <h2>VFL Chains</h2>
 
-Chains are a powerful mechanism to take each element within an VFL alignment (excluding a containment element & points) and construct a chained constraint statement against a property of each element.  
+Chains are a powerful mechanism to take each element within an VFL alignment (excluding a containment element & points) and construct a chained constraint statement against a property of each element.
 
-Chains take the form `chain-{Property}({Head Operator} {Expression} {TailOperator})`.  
+Chains take the form `chain-{Property}({Head Operator} {Expression} {TailOperator})`.
 
 The `Head Operator`, `Expression` and `Tail Operator` are optional.
 
@@ -356,15 +355,15 @@ For example,
 
 {% highlight css %}
 /* VFL */
-@vertical |-8-[#b1][#b2]-8-| 
-  in(#panel) 
-  chain-center-x(::window[centerX]) 
+@vertical |-8-[#b1][#b2]-8-|
+  in(#panel)
+  chain-center-x(::window[centerX])
   chain-width(>= 50);
-  
+
 /* or, more explicitly */
-@vertical |-8-[#b1][#b2]-8-| 
-  in(#panel) 
-  chain-center-x(== ::window[centerX] ==) 
+@vertical |-8-[#b1][#b2]-8-|
+  in(#panel)
+  chain-center-x(== ::window[centerX] ==)
   chain-width(>= 50 <=);
 
 /* Equivalent CCSS */
@@ -410,9 +409,9 @@ Chains have their own Strength & Weight:
 
 {% highlight css %}
 /* VFL */
-@vertical [#b1][#b2][#b3][#b4] 
-  chain-width(==!weak10) 
-  chain-height(<=150>=!required) 
+@vertical [#b1][#b2][#b3][#b4]
+  chain-width(==!weak10)
+  chain-height(<=150>=!required)
   !medium;
 
 /* Equivalent CCSS */
