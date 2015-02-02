@@ -113,7 +113,7 @@ In the previous example, we're asking GSS to give the `#GSS` and `#cassowary` el
 later constraint the sum of these two elements to be equal to 350px. In this case, one of these
 two constraint will not hold. <a href="http://codepen.io/cbchouinard/pen/XJROdV" target="_blank">Live example.</a>
 
-As we'll see next, you can influence the constraints solving by given more information to GSS about your intent.
+As we'll see next, you can influence the constraints solving by given more information to GSS about your intents.
 
 <a name="strengths"></a>
 ## Strengths
@@ -206,7 +206,7 @@ in /* inches */
 <a name="selectors"></a>
 ## Selectors
 
-GSS supports many selectors allowing you to select elements for which you want to declare constraints on.
+GSS supports many selectors allowing you to select elements on which you want to declare constraints.
 
 {% highlight css %}
 .className > #someElm ~ div {
@@ -221,7 +221,7 @@ information at the bottom: [GSS Selectors Guide](/guides/selectors) \*
 
 <a name="rulesets"></a>
 ## Rulesets
-With GSS you can declare constraint using rulesets as with CSS:
+With GSS you can declare constraints using rulesets as with CSS:
 
 {% highlight css %}
   .Selector {
@@ -229,7 +229,7 @@ With GSS you can declare constraint using rulesets as with CSS:
   }
 {% endhighlight %}
 
-Within a ruleset, constraints are defined on properties using the same syntax as CSS using the colon `:`.
+Within a ruleset, constraints are defined on properties using the same syntax as CSS using colon `:`.
 
 Rulesets can be nested:
 
@@ -241,7 +241,7 @@ Section > article {
 }
 {% endhighlight %}
 
-You can defined CSS alongside GSS in rules:
+You can defined CSS alongside GSS:
 
 {% highlight css %}
 div {
@@ -260,8 +260,9 @@ div {
 {% endhighlight %}
 
 In this example, GSS will iterate over each `div` found and will search for an element with `id='elm'` in the current `div`
-descendant elements. Its important to understand that constraints will be define independantly for each selected instance of
-`div`. For example, if there are two `div` selected and the first one has a child `#elm`
+descendant elements. Its important to understand that constraints will be define independantly for each selected `div`.
+
+For example, if there are two `div` selected and the first one has a child `#elm`
 element but not the other, the first `div` will have a constraint declare but not the second one.
 <a href="http://codepen.io/cbchouinard/pen/yyXPyK" target="_blank">Live example.</a>
 
@@ -285,7 +286,7 @@ If you want to select an element within the parent's child elements, you can use
 
 {% endhighlight %}
 
-In this example `(^ #elm)` will search for an `id=#elm` element contained in the current `.container` parent's
+In this example `(^ #elm)` will search for an `id=elm` element contained in the current `.container` parent's
 element. <a href="http://codepen.io/cbchouinard/pen/yyXPej" target="_blank">Live example.</a>
 
 ## Properties
@@ -304,7 +305,7 @@ constraint non-CSS property using GSS.
 {% endhighlight %}
 
 This will automatically create a `[custom-properties]` property for each element having a `.post` class. That property
-will be constrained to be equal to three time the line-height property..
+will be constrained to be equal to three time the line-height property.
 
 Don't forget this relationship is 2-way, so further constraining a
 post's [custom-properties] can affect its line-height, which can be remedied by taking advantage of the
@@ -332,11 +333,11 @@ varX = 100;
 
 {% endhighlight %}
 
-Variables are hoisted and can be access child scope. You can learn more about variable's hoisting and scoping in [scope section](#scope).
+Variables are hoisted and can be access from child' scopes. You can learn more about variable's hoisting and scoping in [scope section](#scope).
 
 
 ## CSS property name
-Now that we've seen properties and variables you can do some interesting things by using CSS property as variables. For example you
+Now that we've seen properties and variables, you can do some interesting things by using CSS properties as variables. For example you
 can declare constraints on CSS properties of parent scope:
 
 {% highlight css %}
@@ -370,7 +371,7 @@ You can access global scope variables from everywhere using the `$`.
 <a name="scope"></a>
 ## Scope
 GSS will scope variables base on their top most location. A variable can be scoped
-within a style element, within a ruleset or globally for the entire document.
+within a style element, within a gss style file, within a ruleset or globally for the entire document.
 
 {% highlight css %}
   .Selector {
@@ -389,7 +390,7 @@ The order doesn't matter, GSS will search for the top most variable declaration.
   varX == 100;
 {% endhighlight %}
 
-#### Style sheet
+#### Style sheet or GSS file
 When declaring a variable, by default the variable will be scoped within the style element.
 In other words, if you have more than one stylesheet and both have a variable with the same
 name, these two variables will be in two different scope and therefore are independant of each other.
@@ -412,6 +413,8 @@ The two `varX` are in distinct scope and are therefore indenpendant from each ot
 
 If we would have use a global variable for `varX` then the two constrained elements would have
 had the same width. <a href="http://codepen.io/cbchouinard/pen/yyoxxm" target="_blank">Live example.</a>
+
+The same scoping logic applies to GSS files.
 
 #### Ruleset
 Variables defined inside a ruleset are scoped to that ruleset.
@@ -476,12 +479,12 @@ div {
   varY == 45; /* variable constraint */
 
   .someClass {
-    /* varX is not hoisted here since on the parent scope varX is a property and not a variable. */
+    /* varX is not hoisted here since on the parent scope varX is a property. */
     /* A new variable varX is there created and scoped to .someClass */
     width: == varX;
 
     .someNestedClass {
-      /* varY here is hoisted from the div scope since a varY variable is scoped at that level */
+      /* varY is hoisted from the div scope since it's scoped at that level */
       width: == varY;
       /* varX here is the .someClass varX scoped variable */
       top: == varX;
@@ -500,7 +503,7 @@ div {
 
   .className {
     varX: == 60;
-    width: == &[varX]; /*  60 since we are using the .className property varX */
+    width: == &[varX]; /*  60 since we are using the property varX */
   }
 }
 {% endhighlight %}

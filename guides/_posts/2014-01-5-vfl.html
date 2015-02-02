@@ -12,6 +12,18 @@ layout: post
 }
 </style>
 
+<ul class="large-list cols-2">
+  <li><a href="#basics">Basics</li>
+  <li><a href="#connectiongaps">Connected gaps</a></li>
+  <li><a href="#points">Points</a></li>
+  <li><a href="#cushions">Cushions</a></li>
+  <li><a href="#sizepredicates">Size predicates</a></li>
+  <li><a href="#vflsplats">VFL splats</a></li>
+  <li><a href="#virtuals">Virtuals with VFL</a></li>
+  <li><a href="#rulesets">Rulesets</a></li>
+  <li><a href="#chains">VFL Chains</a></li>
+</ul>
+
 With only inequality constraints at your disposal, constraining common layout scenarios quickly becomes tedious.  To horizontally align 4 buttons within a panel with a gap of 10px requires something like:
 
 {% highlight css %}
@@ -38,7 +50,7 @@ This is where Grid-flavored VFL comes in.  The brains at Apple came up with VFL 
 @horizontal button in(#panel) gap(10);
 {% endhighlight %}
 
-
+<a name="basics"></a>
 <h2>Basics</h2>
 
 Horizontal layouts can be created with the CSS directive `@h`, `@horizontal` or `@-gss-horizontal`.
@@ -67,6 +79,7 @@ Two elements can be horizontally connected without any gap. <a href="http://code
 {% endhighlight %}
 
 
+<a name="connectiongaps"></a>
 <h2>Connection Gaps</h2>
 
 To align elements with a gap, use a hyphen and `gap( Number | Constraint Variable | Element Property )`:
@@ -117,6 +130,7 @@ User defined variables can be used for gaps as well. <a href="http://codepen.io/
 #b3[right] + #box1[width] == #b4[left];
 {% endhighlight %}
 
+
 <h2>Containment within an Element</h2>
 
 For alignment contained within an element, surround a VFL alignment with `|`'s and use `in( Selector )`. <a href="http://codepen.io/cbchouinard/pen/emEwRr" target="_blank">Live example.</a>
@@ -150,7 +164,6 @@ The above example can be written:
 {% endhighlight %}
 
 
-
 <h2>Outer-Gaps</h2>
 
 You can specify the gaps to a containing element using `outer-gap( Number | Constraint Variable | Element Property )`, which overrides `gap()` if specified:
@@ -166,7 +179,7 @@ You can specify the gaps to a containing element using `outer-gap( Number | Cons
 @horizontal |-16-(#a)-8-(#b)-8-(#c)-16-| in(#container);
 {% endhighlight %}
 
-
+<a name="points"></a>
 <h2>Alignment to Points</h2>
 
 Elements can be aligned relative to arbitrary positioned points using `< Number | Constraint Variable | Element Property >`
@@ -220,6 +233,7 @@ Consecutive points are not constrained to each-other:
 {% endhighlight %}
 
 
+<a name="cushions"></a>
 ## Cushions
 
 Cushions are similar to connections gaps, only they use inequality instead of equality constraints.
@@ -252,6 +266,7 @@ Cushions are similar to connections gaps, only they use inequality instead of eq
 {% endhighlight %}
 
 
+<a name="sizepredicates"></a>
 <h2>Size Predicates</h2>
 
 Size Predicates allow elements to be sized in the dimension parallel with the alignment.
@@ -302,11 +317,7 @@ like this:
 @v | (.featured > article ~ .title) | in(#elm > .class .class2"_fallout")
 {% endhighlight %}
 
-
-
-
-
-
+<a name="vflsplats"></a>
 ## VFL Splat
 When a selector in your VFL expression finds more than one element, due to [plural binding](/guides/selectors/#pluralbinding),
 if the number of element within each selectors expression are not equal, then some elements will not be constraint.
@@ -386,6 +397,7 @@ In the previous example, the two `section` will be positioned next to each other
 three articles will be positioned next to each other with a gap of 20px. Finally the two div will be right next to each
 other without any gap.
 
+<a name="virtuals"></a>
 ## Virtual with VFL
 [Virtuals](/guides/constraints) can be created and/or positionned using VFL expressions.
 
@@ -398,6 +410,7 @@ You can position virtual as any other elements :
 
 {% endhighlight %}
 
+<a name="rulesets"></a>
 ## VFL rulesets
 
 You can use a VFL expression as the rule of a [rulesets](/guides/constraints/#rulesets). It will
@@ -418,6 +431,7 @@ to have the same width you can do the following:
 You can do with rulesets the same things as VFL Chains but they offer an alternative way to chains elements
 within your VFL expression.
 
+<a name="vflchains"></a>
 ## VFL Chains
 
 Chains are a powerful mechanism to take each element within an VFL alignment (excluding a containment element & points)

@@ -6,6 +6,15 @@ color: b
 layout: post
 ---
 
+<ul class="large-list cols-3">
+  <li><a href="#selectors">Selectors</li>
+  <li><a href="#combinators">Combinators</a></li>
+  <li><a href="#pseudoselectors">Pseudo selectors</a></li>
+  <li><a href="#selectorsplats">Selector splats</a></li>
+  <li><a href="#pluralbinding">Plural binding</a></li>
+</ul>
+
+<a name="selectors"></a>
 ## Selectors
 
 In order to apply constraints to elements, you first need to select and observe them from the DOM. GSS supports
@@ -40,6 +49,7 @@ all elements that have the class `className`.
 
 {% endhighlight %}
 
+<a name="combinators"></a>
 ## Combinators
 Combinators are used to combine basic selectors to allow more fine grained selection of elements.
  <a href="http://codepen.io/cbchouinard/pen/WbEXKd" target="_blank">Live example.</a>
@@ -185,6 +195,8 @@ div ~ * {
 
 {% endhighlight %}
 
+
+<a name="reversecombinators"></a>
 ## Reverse Combinators
 
 For parent-child selector, the reverse combinator `!` allows you to reverse the selector relationship
@@ -241,6 +253,7 @@ Select the direct previous sibling elements of `div` elements having the `classN
 {% endhighlight %}
 
 
+<a name="pseudoclasses"></a>
 ## Pseudo-classes
 
 When using selectors, GSS creates a collection of matching elements and then iterates over those elements
@@ -294,7 +307,7 @@ div:last[size] == 100;
 Selects the last div found and add a constraint of 100px on the `size`.
 
 
-
+<a name="pseudoselectors"></a>
 ## Special pseudo selectors
 
 GSS provides the following special pseudo selectors:
@@ -410,6 +423,8 @@ a constraint on the `.className` element will only be define if that element has
 
 {% endhighlight %}
 
+
+<a name="selectorsplats"></a>
 ## Selector splat
 Selector splat enables you to select elements having a sequence number in their ID or class name.
 <a href="http://codepen.io/cbchouinard/pen/yyoWeN" target="_blank">Live example</a>
