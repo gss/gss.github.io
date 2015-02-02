@@ -390,8 +390,14 @@ other without any gap.
 ## Virtual with VFL
 [Virtuals](/guides/constraints) can be created and/or positionned using VFL expressions.
 
+You can position virtual as any other elements :
 
+{% highlight css %}
 
+/* horizontally align two virtuals with a gap of 10px between each
+@h |-("area1")-10-("area2")-| in(::window)
+
+{% endhighlight %}
 
 ## VFL rulesets
 

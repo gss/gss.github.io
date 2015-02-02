@@ -60,9 +60,8 @@ div, .className {
 
 {% endhighlight %}
 
-For all `div` elements and elements having the `.className` class, a `width` of 100 will be constrained.
-
--TODO explain we don't duplicate items.
+For all `div` elements and elements having the `.className` class, a `width` of 100 will be constrained. `div` elements
+having the `.className` class will be selected only once.
 
 <a name="descendant"></a>
 #### All descendant elements
@@ -162,17 +161,11 @@ div ~~ .className {
 Select all preceeding and succeeding sibling elements of `div` that have the `className` class.
 
 ### Performance consideration
-TODO - use native as possible
-document.querySelectAll("a + b")
-... ~~().filter (el) { if el.match(c) }
-+ d
-
-
-
-~~ .c + d
+When our selector matches CSS ones, GSS will use the CSS native selectors. For non CSS-native selector, GSS will
+filter the collection of elements selected by native CSS selectors. Performance wise, it is therefore preferable to
+use native selector as much as possible.
 
 ## Combinators limitation
-
 Combinators requires a selector on both side of the combinator. For example the following is not currently supported:
 
 {% highlight css %}
@@ -390,9 +383,8 @@ effect on its position. <a href="http://codepen.io/cbchouinard/pen/jELKpr" targe
 
 ### Global scope selector $
 
-The global scope allows you select elements from the root of the DOM three when selecting elements within rulesets.
-
-TODO - select element from the element where the GSS engine was define...
+The global scope allows you select elements from the root of the DOM three when selecting elements within rulesets. The root
+element is the element in which you instantiate the GSS engine.
 
 {% highlight css %}
 
@@ -559,7 +551,11 @@ GSS limits to two the number of selector in a GSS expression. As for now the fol
     #div4[width] == #div1[width] + #div2[width] + #div3[width];
 {% endhighlight %}
 
-TODO - explains that limitation only applies to distinct selectors. div1[y] + div1[x] only counts for one.
+This limitation only applies for distinct selectors. For example the following is ok since we're using `div1` twice:
+
+{% highlight css %}
+    #div4[width] == #div1[width] + #div1[height] + #div3[width];
+{% endhighlight %}
 
 The support for more than 3 selectors in GSS expression will probably be added in a near future but in meantime you can do something like:
 
@@ -567,3 +563,13 @@ The support for more than 3 selectors in GSS expression will probably be added i
 [tempSum] = #div1[width] + #div2[width];
 #div4[width] == [tempSum] + #div3[width];
 {% endhighlight %}
+
+## Read next
+If you come from the CCSS guide [continue your learning of CCSS](/guides/constraints/#rulesets)
+
+Learn how to use [CCSS constraints](/guides/constraints)
+
+GSS provides conditionnal statements to allow you to do responsive design. Read our [@if @else guide](/guides/ifelse) to learn more.
+
+With only CCSS constraints at your disposal, constraining common layout scenarios quickly becomes tedious. Read our
+[VFL guide](/guides/ifelse) to learn how to more efficiently constraint your layout.

@@ -1,0 +1,103 @@
+<html>
+<head>
+	<title>CCSS to AST viewer</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+	<style type="text/css">
+     	html:not(.gss-ready) { opacity: 0; }
+	</style>
+	<noscript>
+	  <style type="text/css"> html:not(.gss-ready) { opacity: 1; }
+	  </style>
+	</noscript>
+
+	<h1>CCSS to AST viewer</h1>
+	<p>Visualize the AST generated from CCSS expressions.</p>
+
+	<textarea id="ccssIn" rows="10" cols="50" placeholder="Type your CCSS here"></textarea>
+	<textarea id="ccssOut" rows="10" cols="50" placeholder="Generated AST"></textarea>
+	<button id="compile" onclick="outputASTFromCCSS()">Compile to AST</button>
+
+	<style type="text/gss">
+
+		h1 {
+			left: == ($ #ccssIn)[left];
+			size: == &[intrinsic-size];
+		}
+
+		p {
+			left: == ($ h1)[left];
+			size: == &[intrinsic-size];
+		}
+
+		textarea {
+			center-y: == ::window[center-y];
+			height: == ::window[height] / 2;
+		}
+
+		#compile[width] == #compile[intrinsic-width];
+
+		[textareagap] == 50;
+		@h |-(textarea)-...-| in(::window) gap([textareagap]) {
+			&[width] == ^[textareawidth];
+		};
+
+		@v (h1)-10-(p)-35-(#ccssIn);
+		@v (#ccssOut)-(#compile) gap(20);
+		@h (#compile)| in(#ccssIn);
+
+	</style>
+
+	<script src="ccss-compiler-bundle.js"></script>
+	<script src="https://rawgit.com/gss/engine/master/dist/gss.js"></script>
+
+	<script type="text/javascript">
+  		window.engine = new GSS(document);
+	</script>
+
+	<script type="text/javascript">
+
+		function outputASTFromCCSS()
+		{
+			var ccssInput = document.getElementById('ccssIn').value;
+
+			try {
+				var ccss = CCSS.parse(ccssInput);
+				var outputccss = document.getElementById('ccssOut');
+				var output = "";
+
+				ccss.commands.forEach(function(subCommands) {
+					output += JSON.stringify(subCommands) + "\n";
+				});
+
+				outputccss.value = output;
+			}
+			catch (e)
+			{
+				console.log(e);
+				 document.getElementById('ccssOut').value = e;
+			}
+		}
+
+		document.querySelector("#ccssIn").addEventListener('keydown', handleTab, false);
+		document.querySelector("#ccssOut").addEventListener('keydown', handleTab, false);
+
+		function handleTab(e)
+		{
+			if(e.keyCode === 9) { // tab was pressed
+				var start = this.selectionStart;
+				var end = this.selectionEnd;
+				var target = e.target;
+				var value = target.value;
+
+				target.value = value.substring(0, start) + "\t" + value.substring(end);
+				this.selectionStart = this.selectionEnd = start + 1;
+				e.preventDefault();
+			}
+		}
+	</script>
+
+</body>
+</html>

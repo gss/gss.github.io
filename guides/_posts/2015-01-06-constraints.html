@@ -1,7 +1,7 @@
 ---
-uid: constraints
-title: Constraints Style Sheets
-subtitle: Constraints, Selectors, Rules, Variables & Scope, Dimensions & Positions, Instrinsic Values and Virtuals.
+uid: CCSS
+title: Constraint CSS
+subtitle: LAY IT OUT LIKE IT'S 1999
 color: b
 layout: post
 ---
@@ -77,12 +77,15 @@ y >= 10;
 
 x and y have a constraint to be equal, so x and y will be 100.
 
-Constraints are incrementally added to a `solver`, then the solver computes a feasible & optimal solution to all the constraints.  With constraint programming you input the *what* you want to happen, not *how* it will happen. With procedural programming, you focus on the *how*.  This makes constraints a perfect fit for empowering declarative languages like CSS.
+Constraints are incrementally added to a `solver`, then the solver computes a feasible & optimal solution to all the constraints.
+With constraint programming you input the *what* you want to happen, not *how* it will happen. With procedural programming,
+you focus on the *how*.  This makes constraints a perfect fit for empowering declarative languages like CSS.
 
 
 <a name="mayofmaynothold"></a>
 ### Constraints May or may not hold
-GSS will find the best solution that satisfies the constraints you've defined. By default, GSS use what we call soft constraints which means that it is preferred but not required that certain constraints be satisfied.
+GSS will find the best solution that satisfies the constraints you've defined. By default, GSS use what we call soft constraints,
+which means that it is preferred but not required that certain constraints be satisfied.
 
 For example:
 
@@ -95,14 +98,15 @@ For example:
 {% endhighlight %}
 
 In the previous example, we're asking GSS to give the `#GSS` and `#cassowary` elements a width of 200px and we
-later declare a constraint for the sum of these two elements to be equal to 350px. In this case, one of these
+later constraint the sum of these two elements to be equal to 350px. In this case, one of these
 two constraint will not hold. <a href="http://codepen.io/cbchouinard/pen/XJROdV" target="_blank">Live example.</a>
 
 As we'll see next, you can influence the constraints solving by given more information to GSS about your intent.
 
 <a name="strengths"></a>
-## Strenghts
-Strenghts allows you to guide GSS in your layout intention by giving the GSS constraints solver more details about which constraints you prioritize.
+## Strengths
+Strengths allow you to guide GSS in your layout intention by giving the GSS constraints solver more details about which
+constraints you prioritize.
 
 Stronger constraints completely overcome weaker ones - this is the phenomena of the [Constraint Hierarchy](http://www.cs.washington.edu/research/constraints/theory/hierarchies-92.html).  Strengths are declared in the same fashion of CSS's `!important`:
 
@@ -128,7 +132,7 @@ There are 4 levels of built-in strength:
 `!medium` is the default for all constraints when no strenght is explicitly defined.
 
 Using the [May or may not hold](#mayofmaynothold) example we saw previously,
-we'll now give a stronger strenght to each individual `width` constraints to
+we'll now give a stronger strength to each individual `width` constraints to
 make sure they overcome the sum constraints: <a href="http://codepen.io/cbchouinard/pen/bNRbQg" target="_blank">Live example.</a>
 
 #### !require strength
@@ -137,7 +141,7 @@ make sure they overcome the sum constraints: <a href="http://codepen.io/cbchouin
 **Pro Tip** Use `!require` carefully & sparingly. `!require`'s quickly lead to systems where
 all required constraints cannot be satisfied in which case the GSS engine will throw an error.
 
-For example, the following GSS expressions will be unsolvable and throw an exception:
+For example, the following GSS constraints will be unsolvable and throw an exception:
 
 {% highlight css %}
 
@@ -151,8 +155,8 @@ We're asking GSS to find a solution where the widths of the #gss and #cassowary 
 and their sum must be 350px which is impossible.
 
 ### Constraints order
-Generally speaking, later constraint statements are more powerful than earlier ones. There could be exception
-to this behavior as we'll see in the following sections.
+Generally speaking, later constraint declarations are more powerful than earlier ones. There are exceptions to this behavior,
+as we'll see in the following sections.
 
 Taking the [May or may not hold example](#mayofmaynothold) we saw previously, by changing the order of the constraints you'll get a
 different result. <a href="http://codepen.io/cbchouinard/pen/rawBRr" target="_blank">Live example.</a>
@@ -173,7 +177,7 @@ most things except multiply or divide two constraint variables.  <a href="http:/
 {% endhighlight %}
 
 ## Units of measurement
-Default unit in GSS are pixels. GSS also supports the following units:
+The default unit of measurement in GSS is pixel. GSS also supports the following units:
 
 {% highlight css %}
 em /* use the font size of the element */
@@ -190,7 +194,7 @@ in /* inches */
 <a name="selectors"></a>
 ## Selectors
 
-GSS supports many selectors to allow you to select elements for which you want to declare constraints.
+GSS supports many selectors allowing you to select elements for which you want to declare constraints on.
 
 {% highlight css %}
 .className > #someElm ~ div {
@@ -198,14 +202,14 @@ GSS supports many selectors to allow you to select elements for which you want t
 }
 {% endhighlight %}
 
-Since we have a lot of selector we've dedicated a guide for them. We invite you to scroll all the way
-down in that guide, there's some useful information there: [GSS Selectors Guide](/guides/selectors) \*
+Since GSS has a lot of selectors, we've dedicated a guide for them. We invite you to read all of it since there are some useful
+information at the bottom: [GSS Selectors Guide](/guides/selectors) \*
 
 \* Note that this guide is refering to [rulesets](rulesets) which are covered next.
 
 <a name="rulesets"></a>
 ## Rulesets
-GSS allows you to declare constraint using ruleset as with CSS:
+With GSS you can declare constraint using rulesets as with CSS:
 
 {% highlight css %}
   .Selector {
@@ -235,7 +239,7 @@ div {
 {% endhighlight %}
 
 ### Rulesets and selectors
-Rulesets will scope the nested selectors to all descendant of the ruleset elements. For example:
+Rulesets will scope the nested selectors to the descendants elements of the ruleset elements. For example:
 
 {% highlight css %}
 div {
@@ -243,13 +247,13 @@ div {
 }
 {% endhighlight %}
 
-In this example, GSS will search for a descendant element of a div having an element with `id='elm'`.
-Its important to understand that the constraints will be define independantly for each instance of
-`div` found. For example, if there're two `div` on the page, the first one having a inner `#elm`
-element but not the other, the first `div` will have a constraint declare but not the second one since
-it doesn't contain a `#elm` element. <a href="http://codepen.io/cbchouinard/pen/yyXPyK" target="_blank">Live example.</a>
+In this example, GSS will iterate over each `div` found and will search for an element with `id='elm'` in the current `div`
+descendant elements. Its important to understand that constraints will be define independantly for each selected instance of
+`div`. For example, if there are two `div` selected and the first one has a child `#elm`
+element but not the other, the first `div` will have a constraint declare but not the second one.
+<a href="http://codepen.io/cbchouinard/pen/yyXPyK" target="_blank">Live example.</a>
 
-If you want to select and element from the root you need to do the following:
+If you want to select and element from the GSS root element, you need to do the following:
 
 {% highlight css %}
 div {
@@ -257,7 +261,7 @@ div {
 }
 {% endhighlight %}
 
-If you want to select an element from the element's parent you can use the `^` pseudo selector:
+If you want to select an element within the parent's child elements, you can use the `^` pseudo selector:
 
 {% highlight css %}
 
@@ -269,12 +273,11 @@ If you want to select an element from the element's parent you can use the `^` p
 
 {% endhighlight %}
 
-In this example `(^ #elm)` will search for a `#elm` element contained in the current element having
-the `.container` class. <a href="http://codepen.io/cbchouinard/pen/yyXPej" target="_blank">Live example.</a>
-
+In this example `(^ #elm)` will search for an `id=#elm` element contained in the current `.container` parent's
+element. <a href="http://codepen.io/cbchouinard/pen/yyXPej" target="_blank">Live example.</a>
 
 ## Properties
-All the previous example constrained CSS properties like `width` or `line-height`. But you can also
+All the previous examples constrained CSS properties like `width` or `line-height`. But you can also
 constraint non-CSS property using GSS.
 
 {% highlight css %}
@@ -288,9 +291,11 @@ constraint non-CSS property using GSS.
 
 {% endhighlight %}
 
-This will automatically create a `[col-size]` variable for each element with the class post, and constrain it to be the
-same as 3 times that post's line-height.  Don't forget this relationship is 2-way, so further constraining a
-post's [col-size] can affect its line-height, which can be remedied using by taking advantage of the
+This will automatically create a `[custom-properties]` property for each element having a `.post` class. That property
+will be constrained to be equal to three time the line-height property..
+
+Don't forget this relationship is 2-way, so further constraining a
+post's [custom-properties] can affect its line-height, which can be remedied by taking advantage of the
 "Constraint Hierarchy" with [Strengths](#strengths).
 
 <a name="variables"></a>
@@ -338,8 +343,8 @@ varX = 100;
 {% endhighlight %}
 
 Since `width` in the `.className` ruleset is used as a variable and not a property, it is hoisted. Therefore,
-the constraint on the `width` declare in the `#someElm` ruleset will affect the `.className` width and not the
-`width` of `#someElm` itself.
+the constraint on the `width` declared in `#someElm` ruleset will affect the `.className` width and not the
+`#someElm` `width`.
 
 ### Global variables
 Global variables can be define using the `$` symbol.
@@ -359,6 +364,17 @@ within a style element, within a ruleset or globally for the entire document.
   .Selector {
     width: == 100;
   }
+{% endhighlight %}
+
+In the following example, `varX` used within `.selector` will be hoisted since it is declare in a parent scope.
+The order doesn't matter, GSS will search for the top most variable declaration.
+
+{% highlight css %}
+  .selector {
+    width: == varX;
+  }
+
+  varX == 100;
 {% endhighlight %}
 
 #### Style sheet
@@ -404,7 +420,7 @@ In this example, each `varX` is in a different scope and are therefore independa
 each other. <a href="http://codepen.io/cbchouinard/pen/XJgRPq" target="_blank">Live example.</a>
 
 ### Hoisting
-When using a variable in GSS, before creating the variable GSS will look on parent'
+When using a variable in GSS, before creating the variable, GSS will look on parent
 scopes to see if there's an existing variable with the same name.
 
 For example:
@@ -431,17 +447,16 @@ div {
 }
 {% endhighlight %}
 
-In this case, `varX` used in the nested selectors is hoisted from the `div` scope. Internally, GSS will go up the
+In this case, `varX` used in the nested rulesets is hoisted from the `div` scope. Internally, GSS will go up the
 scope tree using the parent pseudo selector `^varX`, if no variable is found at that level, GSS will do `^^varX`
-and so on until it finds a variable or until it reach the root scope at what point if no GSS didn't find a variable it
+and so on until it finds a variable or until it reach the root scope, at which point, if GSS didn't find a variable it
 will create a new one on the scope where it was declared.
 
-`varY` is been declared in sibling rulesets therefore two distinct variables will be created and scope to their respective ruleset.
-<a href="http://codepen.io/cbchouinard/pen/zxzwXJ" target="_blank">Live example.</a>
+`varY` is been declared in two sibling rulesets. In this case, two distinct variables will be created and scoped to their
+respective ruleset. <a href="http://codepen.io/cbchouinard/pen/zxzwXJ" target="_blank">Live example.</a>
 
 #### Properties are not hoisted
-Only variable are captured in scope for hosting. Properties are not scoped and are therefore not accessible
-from child scopes.
+Only variables are hoisted. Since properties aren't hoisted, they cannot be access from child scope.
 
 {% highlight css %}
 div {
@@ -449,8 +464,8 @@ div {
   varY == 45; /* variable constraint */
 
   .someClass {
-    /* varX is not hoisted here since on the parent scope varX is a property and not a variable */
-    /* a new variable varX is there created and scoped to .someClass */
+    /* varX is not hoisted here since on the parent scope varX is a property and not a variable. */
+    /* A new variable varX is there created and scoped to .someClass */
     width: == varX;
 
     .someNestedClass {
@@ -463,55 +478,48 @@ div {
 }
 {% endhighlight %}
 
-#### Override hoisted variables locally
-You can override a variable locally within the scope of a ruleset using the `&` pseudo selector:
+#### Property and variable with the same name
+If you declare a property having the same name as a hoisted variable, you need to use the `&` selector to
+access the property otherwise you'll get the hoisted variable.
 
 {% highlight css %}
 div {
   varX == 50;
 
   .className {
-    &varX == 60;
-    width: == &varX; /*  60 */
+    varX: == 60;
+    width: == &[varX]; /*  60 since we are using the .className property varX */
   }
 }
 {% endhighlight %}
 
-In this example, `&[varX]` will be scoped locally to the `.className` ruleset. The `varX` defined
-under the `div` selector.
-
-Note the use of the `&` in `width: == &varX;`, without it hoisting would still occur and reference the
-equivalent of `^varX` which is constraint to be equal to 50.
-
-
 ## Positions constraints
 Position in GSS will always be relative to the element in which you instantiated the GSS engine. For example,
 if you instantiate the GSS engine in the `html`, `head` or `body` element, then elements will be `absolute` positionned
-at `x = left = 0, y = top = 0`. It's also possible to [positionning element relative to a container element](#relativepositionning)
+from `x = left = 0, y = top = 0`. It's also possible to [positionning element relative to a container element](#relativepositionning)
 as well see later.
 
-GSS provide properties to quickly constraint the dimensions and positions of elements. For example, assuming the `body` is the root
+GSS provide properties to quickly constrain the dimensions and positions of elements. For example, assuming the `body` is the root
 element for GSS, the `$[top-left]` property of the root element will be `x = left = 0, y = top = 0`.
 
-If your solution is underconstraints, GSS can place element at negative coordinates if that's the solution for the constraints
-you've declared. In that case, you need to declare more constraints.
+If you're under constraining your elements, GSS might find a solution where negative coordinates are the solution. In that
+case you need to declare more constraints.
+
+The following documentation assume the GSS engine was declared in the `body` element so we are positionning elements from the
+top-left corner of the page `x=0, y=0`.
 
 ### Top
 
 {% highlight css %}
 
-  #someElm[top] == 20;
+#someElm[top] == 20;
 
-{% endhighlight %}
-
-Place the top of the element 20px from the top of the page. Top is the equivalent of the following:
-
-{% highlight css %}
-
+/* equivalent to : */
 #someElm[y] == 20;
 
 {% endhighlight %}
 
+Place the top of the element 20px from the top of the page.
 
 ### Bottom
 
@@ -519,16 +527,12 @@ Place the top of the element 20px from the top of the page. Top is the equivalen
 
 #someElm[bottom] == 100;
 
-{% endhighlight %}
-
-Place the bottom of the element 100px from the top of the page. `bottom` is the equivalent of:
-
-{% highlight css %}
-
+/* equivalent to : */
 #someElm[bottom] == #someElm[top] + #someElm[height];
 
 {% endhighlight %}
 
+Place the bottom of the element 100px from the top of the page.
 
 ### Left
 
@@ -536,16 +540,12 @@ Place the bottom of the element 100px from the top of the page. `bottom` is the 
 
 #someElm[left] == 20;
 
-{% endhighlight %}
-
-Place the left of the element 20px from the left of the page. Left is the equivalent of:
-
-{% highlight css %}
-
+/* equivalent to : */
 #someElm[x] == 20;
 
 {% endhighlight %}
 
+Place the left of the element 20px from the left of the page. Left is the equivalent of:
 
 ### Right
 
@@ -553,27 +553,22 @@ Place the left of the element 20px from the left of the page. Left is the equiva
 
 #someElm[right] == 100;
 
-{% endhighlight %}
-
-Place the right of the element 100px from the left of the page. `right` is the equivalent of:
-
-{% highlight css %}
-
+/* equivalent to : */
 #someElm[rigth] == #someElm[left] + #someElm[width];
 
 {% endhighlight %}
+
+Place the right of the element 100px from the left of the page.
 
 ### position
 
 {% highlight css %}
 #someElm[position] == 100;
-{% endhighlight %}
 
-Constraining the `position` is the equivalent of constraining:
-
-{% highlight css %}
+/* equivalent to : */
 #someElm[top] == 100;
 #somElm[left] == 100;
+
 {% endhighlight %}
 
 ### top-left, top-right
@@ -581,12 +576,18 @@ Constraining the `position` is the equivalent of constraining:
 {% highlight css %}
 #someElm[top-left] == 100;
 #otherElm[top-right] == 200;
+
+/* equivalent to : */
+#someElm[top] == 100;
+#someElm[left] == 100;
+#otherElm[top] == 200;
+#otherElm[right] == 200;
+
 {% endhighlight %}
 
 Position the `#someElm` top-left corner to be at 100px from the top-left of the page.
 Same thing for `#otherElm` excepts its the top-right corner that's been position 200px
 from the top-left of the page.
-
 
 ### bottom-left, bottom-right
 
@@ -596,7 +597,7 @@ from the top-left of the page.
 {% endhighlight %}
 
 Position the `#someElm` bottom-left corner to be at 100px from the top-left of the page.
-Same thing for `#otherElm` excepts its the bottom-right corner that's been position 200px
+Same thing for `#otherElm`, excepts its the bottom-right corner that's been position 200px
 from the top-left of the page.
 
 ### center-x, cx
@@ -612,7 +613,7 @@ from the top-left of the page.
 
 {% endhighlight %}
 
-Place the horizontal center of the element 100px from the left of the page.
+Horizontally place the horizontal center of the element at 100px from the left of the page.
 
 ### center-y, cy
 
@@ -654,17 +655,12 @@ positionned according to the top-left of the page.
 
 
 #### position: relative in style attribute
-When you are dealing with a very large page composed of hundreds of constraints, GSS will need to evaluate all of them in order
-to find a solution for your constraints.
+When you are dealing with a very large page composed of hundreds of constraints, GSS will need to evaluate all constraints in order
+to find a solution for them.
 
 You can split the calculation of solution by element's container, like `section` element for example. To do so,
-add a `style='position: relative'` 
-
-TODO - Rephrasing here: not performance issue but performance improvement for big site.
-**Pro Tip** If you have within your site some pages with multiple sections, GSS will need calculate the constraints for
-all the section at once in order to find the best possible solution. In some case, that can lead to
-performance issue. If that's the case, you can position each section using regular CSS by declaring then as
-follow:
+add a `style='position: relative'` so GSS will evaluate sections independantly of each other resulting in faster solution
+evaluation.
 
 {% highlight css %}
 
@@ -696,12 +692,12 @@ follow:
 In this example, we are constraining `x` and `y` to be zero wich is the top-left corner of the section
 element. By doing so, all position constraints will be calculated relative to the section element.
 
-With the `position: relative` declare in the `style` attribute, GSS will solve independently each sections which
-will results in better performance. <a href="http://codepen.io/cbchouinard/pen/pvwaNN" target="_blank">Live example.</a>
+With the `position: relative` declared in the `style` attribute, GSS will solve independently each sections which
+should results in better performance. <a href="http://codepen.io/cbchouinard/pen/pvwaNN" target="_blank">Live example.</a>
 
 ## Dimensions
-GSS provides property to constraints the dimension of an element. We've already saw the `width` and `height`. You can use the 2D dimension
-property to set them both the width and the height at the same time:
+GSS provides property to constraints the dimension of an element. We've already saw the `width` and `height`. You can use the
+2D dimension property to set them both the width and the height at the same time:
 
 {% highlight css %}
 
@@ -712,19 +708,14 @@ property to set them both the width and the height at the same time:
 {% endhighlight %}
 
 ## Intrinsic values
-TODO - rewording, deferred to CSS...
-TODO - define the concept of of &computed-* like &computed-height
-TODO - GSS can sometime disagree with CSS on measurement. May have to !require.
-TODO - Stronger constraint can affect the value of the intrinsic constraint element and you get in this.
-
 When you want to constraint the position of an element GSS needs to know the dimension of the element. For example how could
 GSS position an element using the bottom-right property without knowing the height and width of that element.
 
-One way to solve this, would be to constraint the dimension of the element. But what if it had text in it? You'll then need to know the
-exact width and height require to display the text. What if that text is dynamic?
+One way to solve this, would be to constrain the dimension of the element. But what if it had text in it? You'll then need to know the
+exact width and height require to display the text. What if that text is dynamic? The element might also be styled using CSS and you
+want to get the dimensions of that styling.
 
-GSS provides the `intrinsic-` properties to get the dimension of the element defined by the text occupying the element and/or the
-CSS styling the element.
+GSS provides the `intrinsic-` properties which defers to CSS the dimension styling of the element.
 
 {% highlight css %}
 
@@ -739,15 +730,13 @@ CSS styling the element.
 
 {% endhighlight %}
 
-Once an intrinsic value is constrained on a property, GSS will not evaluate other constraints you define on the same property.
-
-For example if we add a `width` constraint on `.SelectorA` this constraint will be ignored by GSS since `intrinsic-*` have total
-precendence over all other constraints.
+Once an intrinsic constraint is declared on a property, GSS will evaluate other constraints you define on the same property but will
+not apply the calculated value to the element. For example, if we add a `width` constraint on `.SelectorA`, that constraint will be
+evaluated by GSS but not applied to the element since `intrinsic-*` have precendence over all other constraints.
 
 ## Virtuals
-
-Virtuals are boxes you define in GSS that don't exists in the DOM but against which you can constraint DOM element. This is a
-practical way to apply constraints to a group of element without the need to add an element to the DOM.
+Virtuals are boxes you define in GSS that don't exists in the DOM but against which you can constraint DOM element. Virtual are a
+practical way to apply constraints a group of element without the need to add a container element to the DOM.
 
 {% highlight css %}
 
@@ -765,7 +754,7 @@ As you can see from the previous example, we are constraining `#elmA` and `#elmB
 <a href="http://codepen.io/cbchouinard/pen/WbOWgB" target="_blank">Live example.</a>
 
 In regards of constraining dimensions and positions, virtuals are no different from DOM element in the sens that you can
-declare constraints on them as shown previously. The only difference is since they don't exist in the DOM they are
+declare constraints on them as shown previously. The only difference is, since they don't exist in the DOM, they are
 not stylable with CSS. Doing the following will have no effect:
 
 {% highlight css %}
@@ -791,7 +780,6 @@ GSS virtual are treated as variables and are therefore hoisted. You can do the f
 }
 
 {% endhighlight %}
-
 
 
 ### Virtual splat
@@ -824,7 +812,11 @@ virtuals you can do the following:
 
 {% endhighlight %}
 
-Using those virtual boxes, you can now constraints some DOM element against those four boxes. <a href="http://codepen.io/cbchouinard/pen/VYzOPx" target="_blank">Live example.</a>
+Using those virtual boxes, you can now constrain DOM elements against those four boxes. <a href="http://codepen.io/cbchouinard/pen/VYzOPx" target="_blank">Live example.</a>
 
 
-## @if @else conditions
+## Read next
+GSS provides conditionnal statements to allow you to do responsive design. Read our [@if @else guide](/guides/ifelse) to learn more.
+
+With only CCSS constraints at your disposal, constraining common layout scenarios quickly becomes tedious. Read our
+[VFL guide](/guides/ifelse) to learn how to more efficiently constrain your layout.

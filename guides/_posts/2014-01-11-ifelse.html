@@ -28,6 +28,7 @@ like `col-count` or even to a custom variable?
 
 Which brings us to `@if` and `@else` directives.  Think of them as a more expressive replacement for Media Queries and the
 much desired Element Query, that allow CSS rules to be adaptive to any arbitrary property or custom constraint variable.
+<a href="http://codepen.io/cbchouinard/pen/emEaQR" target="_blank">Live example.</a>
 
 Instead of continuing the tradition of the Query types; `min-width`, `max-width`, `min-height` & `max-height`; for every
 available CSS property, `@if` `@else` directives use the conditional operators: `<`, `<=`, `>`, `>=`, `!=`, `==`, `or`, and `and`.
@@ -77,7 +78,7 @@ But, any property can be used within an `@if`, `@else` conditional.  So, if you 
 {% endhighlight %}
 
 When the `section` element width goes bellows 400px, the `article` elements will be constraints
-by the `@if` block otherwise by the `@else` block. <a href="http://codepen.io/cbchouinard/pen/emEaQR" target="_blank">Live example.</a>
+by the `@if` block otherwise by the `@else` block.
 
 ### Constraints evaluation in conditions
 In order to determine if some conditions hold, GSS needs to evaluate every constraints outside of conditions before evaluating if
@@ -123,3 +124,7 @@ constraints without getting in a loop:
 }
 
 {% endhighlight %}
+
+## Read next
+With only CCSS constraints at your disposal, constraining common layout scenarios quickly becomes tedious. Read our
+[VFL guide](/guides/ifelse) to learn how to more efficiently constraint your layout.
