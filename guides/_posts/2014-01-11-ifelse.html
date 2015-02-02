@@ -75,44 +75,45 @@ But, any property can be used within an `@if`, `@else` conditional.  So, if you 
   }
 }
 
-{% endhighlight %}
+{% endhighlight %}`
 
-When the `section` element width goes bellows 400px, the `article` elements will be constraints
+When the `section` element `width` goes bellows 400px, the `article` elements will be constraints
 by the `@if` block otherwise by the `@else` block.
 
 ### Constraints evaluation in conditions
-In order to determine if some conditions hold, GSS needs to evaluate every constraints outside of conditions before evaluating if
-conditions are met, which include constraints appearing after conditions.
+In order to determine if some conditions hold, GSS needs to evaluate every constraints outside of those conditions before evaluating if
+they are met, which include constraints appearing after the conditions declaration.
 
 As explained in the [GSS constraints guide](/guide/constraints), the order of constraints declaration can affects the
 resulting solution.
 
-Constraints within the condition of the following example will be added to the solver after the outside constraints. Which
-make sens since the condition is true, you want the constraints within that condition to overcome the other evenly strenghted ones.
+The constraint within the condition of the following example will be added to the solver after the outside constraints. Which
+make sens since the condition is true, you want the constraint within that condition to overcome the other evenly strenghted ones.
 
 {% highlight css %}
 
 #elm[width] == ::window[width];
 
-@if elm[width] < 400
+@if elm[width] < 400 {
   #elm[height] == 300;
+}
 
 #elm[width] == 300;
 #elm[height] == 500;
 
 {% endhighlight %}
 
-In this example, if the `width` of the screen is smaller than 400px, the `height` of the element will be constraint to 300px even
+In this example, if the `width` of the screen is smaller than 400px, the `height` of the element will be constrain to 300px even
 though there's a `height` constraint defined after the condition.
 
 ### Condition looping
 As describe in the [GSS constraints guide](/guide/constraints), constraints are two ways. You need to be well aware of this fact
-when using conditions. GSS is pretty good at handling cases where a looping could occurs but still be aware that in some
+when using conditions. GSS is pretty good at handling cases where a looping could occurs but still, be aware that in some
 complexe conditions nesting you could have some situation where you get in a loop but GSS should get your back the vast majority
 of the time.
 
-For example, the following could have led to a loop but the GSS cassowary solver will figure out the solution for this set of
-constraints without getting in a loop:
+For example, the following could have led to a loop, but the GSS cassowary solver will figure out the solution for this set of
+constraints without looping:
 
 {% highlight css %}
 

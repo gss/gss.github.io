@@ -309,11 +309,11 @@ like this:
 
 ## VFL Splat
 When a selector in your VFL expression finds more than one element, due to [plural binding](/guides/selectors/#pluralbinding),
-if the number of element within each selection expression are not equal then some elements will not be constraint.
+if the number of element within each selectors expression are not equal, then some elements will not be constraint.
 <a href="http://codepen.io/cbchouinard/pen/vEJqbG" target="_blank">Live example.</a>
 
-In the this example, the last two `article` elements will not be constrained since there're no `section` element to bind to.
-As you can see in the CCSS generated constraints the elements are getting using plural binding.
+In this example, the last two `article` elements will not be constrained since there's no `section` element to bind to.
+As you can see in the CCSS generated constraints, the elements are pluraly binded.
 
 {% highlight css %}
 
@@ -330,8 +330,8 @@ As you can see in the CCSS generated constraints the elements are getting using 
 
   /* this generates the following CCSS */
   ::window[left] + [hgap] == section[left];
-  section[right] + [hgap] == article[left];
-  article[right] + [hgap] == footer[left];
+  section[right] + [hgap] == article[left]; /* plural binding */
+  article[right] + [hgap] == footer[left]; /* plural binding */
   footer[right] + [hgap] == ::window[right];
 
 </style>
@@ -339,8 +339,7 @@ As you can see in the CCSS generated constraints the elements are getting using 
 {% endhighlight %}
 
 If the number of selected elements matches, the position of the elements within each collection of selected
-elements will overlap. Since you are constraining a collection of elements against another collection of elements
-and not elements of the collection against each other. <a href="http://codepen.io/cbchouinard/pen/yyodWx" target="_blank">Live example.</a>
+elements will overlap since you're basically constraining the whole collection to the same values. <a href="http://codepen.io/cbchouinard/pen/yyodWx" target="_blank">Live example.</a>
 
 {% highlight html %}
 
@@ -361,7 +360,7 @@ and not elements of the collection against each other. <a href="http://codepen.i
 
 {% endhighlight %}
 
-Splats enable GSS to iterate over the collection of selected elements and position elements
+Splats will iterate over the collection of selected elements and position elements
 next to each other. <a href="http://codepen.io/cbchouinard/pen/ogerrX" target="_blank">Live example.</a>
 
 {% highlight css %}
@@ -384,7 +383,7 @@ next to each other. <a href="http://codepen.io/cbchouinard/pen/ogerrX" target="_
 {% endhighlight %}
 
 In the previous example, the two `section` will be positioned next to each other with a gap of 10px. The
-three articles will be positionned next to each other with a gap of 20px. Finally the two div will be right next to each
+three articles will be positioned next to each other with a gap of 20px. Finally the two div will be right next to each
 other without any gap.
 
 ## Virtual with VFL
@@ -416,6 +415,8 @@ to have the same width you can do the following:
 
 {% endhighlight %}
 
+You can do with rulesets the same things as VFL Chains but they offer an alternative way to chains elements
+within your VFL expression.
 
 ## VFL Chains
 
