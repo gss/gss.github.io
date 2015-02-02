@@ -1,10 +1,21 @@
 ---
 uid: CCSS
 title: Constraint CSS
-subtitle: LAY IT OUT LIKE IT'S 1999
+subtitle: lay it out like it's 1999
 color: b
 layout: post
 ---
+
+<ul class="large-list cols-2">
+  <li><a href="#basicconstraint">Constraints, the basics</li>
+  <li><a href="#selectors">Selectors</a></li>
+  <li><a href="#rulesets">Rulesets</a></li>
+  <li><a href="#scope">Scope</a></li>
+  <li><a href="#position">Positionning elements</a></li>
+  <li><a href="#virtuals">Virtuals</a></li>
+</ul>
+
+
 Soon after the W3C introduced Cascading Style Sheets, [Greg Badros](http://www.badros.com/greg/), the author of the Cassowary Constraint
 Solver & [recently retired Facebook VP](http://allthingsd.com/20130920/facebook-engineering-and-products-vp-greg-badros-to-leave-company/),
 proposed [Constraint CSS (CCSS)](http://www.cs.washington.edu/research/constraints/web/ccss-uwtr.pdf) as a general solution for CSS layout.
@@ -17,6 +28,7 @@ with [float-based](http://www.sitepoint.com/give-floats-the-flick-in-css-layouts
 
 The foundation of GSS is a modernized implementation of CCSS.  From CCSS primitives other, more exotic layout API's can and are accomplished.
 
+<a name="basicconstraint"></a>
 ## Constraints, the basics
 
 Constraints express [relationships between variables](#constraintsaretwoways) that [may or may not hold](#mayofmaynothold). You can constrain any
@@ -493,6 +505,7 @@ div {
 }
 {% endhighlight %}
 
+<a name="position"></a>
 ## Positions constraints
 Position in GSS will always be relative to the element in which you instantiated the GSS engine. For example,
 if you instantiate the GSS engine in the `html`, `head` or `body` element, then elements will be `absolute` positionned
@@ -734,6 +747,7 @@ Once an intrinsic constraint is declared on a property, GSS will evaluate other 
 not apply the calculated value to the element. For example, if we add a `width` constraint on `.SelectorA`, that constraint will be
 evaluated by GSS but not applied to the element since `intrinsic-*` have precendence over all other constraints.
 
+<a name="virtuals"></a>
 ## Virtuals
 Virtuals are boxes you define in GSS that don't exists in the DOM but against which you can constraint DOM element. Virtual are a
 practical way to apply constraints a group of element without the need to add a container element to the DOM.

@@ -1,7 +1,7 @@
 ---
 uid: selectors
 title: GSS Selectors
-subtitle: Selectors, combinators, pseudo-classes.
+subtitle: selectors, combinators, pseudo-classes.
 color: b
 layout: post
 ---
@@ -39,7 +39,6 @@ all elements that have the class `className`.
   #elementId[width] == 100;
 
 {% endhighlight %}
-
 
 ## Combinators
 Combinators are used to combine basic selectors to allow more fine grained selection of elements.
@@ -559,7 +558,8 @@ This limitation only applies for distinct selectors. For example the following i
     #div4[width] == #div1[width] + #div1[height] + #div3[width];
 {% endhighlight %}
 
-The support for more than three selectors in GSS expression will probably be added in a near future but in meantime you can do something like:
+The support for more than three selectors in GSS expression will probably be added in a near future but in meantime you can
+do something like:
 
 {% highlight css %}
 [tempSum] = #div1[width] + #div2[width];
