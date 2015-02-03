@@ -430,64 +430,11 @@ to have the same width you can do the following:
 You can do with rulesets the same things as VFL Chains but they offer an alternative way to chains elements
 within your VFL expression.
 
-<a name="vflchains"></a>
-## VFL Chains
-
-Chains are a powerful mechanism to take each element within an VFL alignment (excluding a containment element & points)
-and construct a chained constraint statement against a property of each element.
-<a href="http://codepen.io/cbchouinard/pen/vEJqbG" target="_blank">Live example.</a>
-
-Chains take the form `chain-{Property}({Head Operator} {Expression} {TailOperator})`.
-
-The `Head Operator`, `Expression` and `Tail Operator` are optional.
-
-The `Head Operator` is assumed to be `==`.
-If no `Expression` is given than the elements properties are chained together.
-
-If unspecified, the `Tail Operator` is inferred from the `Head Operator`.
-
-For example,
-
-{% highlight css %}
-/* VFL */
-@h (#b1)(#b2)(#b3)(#b4) chain-height chain-width(250);
-
-/* or, more explicitly */
-@h (#b1)(#b2)(#b3)(#b4) chain-height(==) chain-width(== 250 ==);
-
-/* Equivalent CCSS */
-#b1[right] == #b2[left];
-#b2[right] == #b3[left];
-#b3[right] == #b4[left];
-#b1[height] == #b2[height] == #b3[height];
-#b1[width] == 250 == #b2[width] == 250 == #b3[width];
-{% endhighlight %}
-
-
-{% highlight css %}
-/* VFL */
-@v |-8-(#b1)(#b2)-8-|
-  in(#panel)
-  chain-center-x(::window[centerX])
-  chain-width(>= 50);
-
-/* or, more explicitly */
-@v |-8-(#b1)(#b2)-8-|
-  in(#panel)
-  chain-center-x(== ::window[centerX] ==)
-  chain-width(>= 50 <=);
-
-/* Equivalent CCSS */
-#panel[top] + 8 == #b1[top];
-#b1[bottom] == #b2[top];
-#b2[bottom] + 8 == ::window[bottom];
-#b1[centerX] == #panel[center-x] == #b2[center-x];
-#b1[width] >= 50 <= #b2[width];
-{% endhighlight %}
-
 ## VFL Strength & Weight
 
-As established with CCSS, Strength & Weight can be used in VFL statements using `!{Strength}{Weight}` at the end of a statement.  Strengths can be `weak`, `medium`, `strong` & `require`.  Weights are positive integers.  As a rule of thumb, use Strengths first & foremost & resort to weights as a last resort.
+As established with CCSS, Strength & Weight can be used in VFL statements using `!{Strength}{Weight}` at the end of a statement.
+Strengths can be `weak`, `medium`, `strong` & `require`.  Weights are positive integers.  As a rule of thumb, use Strengths first
+& foremost & resort to weights as a last resort.
 
 Alignment Strength & Weight:
 
@@ -498,7 +445,7 @@ Alignment Strength & Weight:
 @v (#topfield)-10-(#bottomfield) !strong100;
 
 /* Equivalent CCSS */
-#topfiled[bottom] + 10 == #bottomfield[top] !strong100;
+#topfiled[bottom] + 10 == #bottomfield[top] !strong;
 {% endhighlight %}
 
 Size Predicates have their own Strength & Weight:
@@ -512,21 +459,4 @@ Size Predicates have their own Strength & Weight:
 #box1[height] >= [row-height] !require;
 #box1[bottom] == #box2[top] !medium;
 #box2[bottom] == #box3[top] !medium;
-{% endhighlight %}
-
-Chains have their own Strength & Weight:
-
-{% highlight css %}
-/* VFL */
-@v (#b1)(#b2)(#b3)(#b4)
-  chain-width(==!weak10)
-  chain-height(<=150>=!required)
-  !medium;
-
-/* Equivalent CCSS */
-#b1[bottom] == #b2[top] !medium;
-#b2[bottom] == #b3[top] !medium;
-#b3[bottom] == #b4[top] !medium;
-#b1[width] == #b2[width] == #b3[width] == #b4[width] !weak10;
-#b1[height] <= 150 >= #b2[height] <= 150 >= #b3[height] <= 150 >= #b4[height] !required;
 {% endhighlight %}
