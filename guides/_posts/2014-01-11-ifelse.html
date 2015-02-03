@@ -53,24 +53,15 @@ But, any property can be used within an `@if`, `@else` conditional.  So, if you 
 
 {% highlight css %}
 
-@if section[width] <= 400 {
-  section {
-    article {
-      :first[top] == ^[top];
-      bottom: == :next[top];
-      left: == ^[left];
+section {
+  article {
+    @if ^[width] <= 400 {
       width: == ^[width];
       height: == ^[height] / 2;
     }
-  }
-}
-@else  {
-  section {
-    article {
+    @else  {
       width: == ^[width] / 2;
       height: == ^[height];
-      top: == :next[top];
-      right: == :next[left];
     }
   }
 }
