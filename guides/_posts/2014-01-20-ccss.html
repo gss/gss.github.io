@@ -31,10 +31,11 @@ The foundation of GSS is a modernized implementation of CCSS.  From CCSS primiti
 <a name="basicconstraint"></a>
 ## Constraints, the basics
 
-Constraints express [relationships between variables](#constraintsaretwoways) that [may or may not hold](#mayofmaynothold). You can constrain any
-numerical style property of an element, not just its position & size.
+Constraints express [relationships between variables](#constraintsaretwoway) that [may or may not hold](#mayormaynothold).
+Any numeric property of an element can be constrained, not just position & size.
 
-For example, if I want all paragraph tags to have line-height greater than 16px and less than 1/12th the size of the window:
+In the following example, all paragraph tags are constrained to have line-height greater than 16px and
+less than 1/12th the size of the window:
 
 {% highlight css %}
 
@@ -43,22 +44,22 @@ p[line-height] <= ::window[height] / 12;
 
 {% endhighlight %}
 
-### Constraints declaration
+### Constraint declaration
 
-Let's go through the syntax for declaring a constraint:
+The syntax for declaring a constraint is as follows:
 
 `p[line-height] >= 16;`
 
 + `p` is the selector. This constraint will apply to every `p` tag in the page.
-+ `[]` is the style property selector.
-+ `line-height` is the style property for which a value will be calculated by GSS.
++ `[]` is the property selector.
++ `line-height` is the property for which a value will be calculated by GSS.
 + `>=` defines an inequality constraint. You can declare inequality and equality constraint.
-+ `16` is the numerical value for the constraint in pixel unit. The default unit in GSS are pixels.
++ `16` is the numerical value for the constraint in pixels (the default unit of measurement in GSS).
 
 <a href="http://codepen.io/cbchouinard/pen/OPmdVL" target="_blank">Live example</a>
 
-<a name="constraintsaretwoways"></a>
-### Constraints are 2-ways
+<a name="constraintsaretwoway"></a>
+### Constraints are two-way
 Do not confuse an equality constraint with your everyday variable assignment. For example, in a vanilla programming paradigm:
 
 {% highlight javascript %}
@@ -90,11 +91,10 @@ y >= 10;
 x and y have a constraint to be equal, so x and y will be 100.
 
 Constraints are incrementally added to a `solver`, then the solver computes a feasible & optimal solution to all the constraints.
-With constraint programming you input the *what* you want to happen, not *how* it will happen. With procedural programming,
-you focus on the *how*.  This makes constraints a perfect fit for empowering declarative languages like CSS.
+Constraint programming takes what should happen as input, not how it will happen. Procedural programming focuses on the how.
+This makes constraints a perfect fit for empowering declarative languages like CSS.
 
-
-<a name="mayofmaynothold"></a>
+<a name="mayormaynothold"></a>
 ### Constraints May or may not hold
 GSS will find the best solution that satisfies the constraints you've defined. By default, GSS use what we call soft constraints,
 which means that it is preferred but not required that certain constraints be satisfied.
@@ -143,7 +143,7 @@ There are 4 levels of built-in strength:
 
 `!medium` is the default for all constraints when no strenght is explicitly defined.
 
-Using the [May or may not hold](#mayofmaynothold) example we saw previously,
+Using the [May or may not hold](#mayormaynothold) example we saw previously,
 we'll now give a stronger strength to each individual `width` constraints to
 make sure they overcome the sum constraints: <a href="http://codepen.io/cbchouinard/pen/bNRbQg" target="_blank">Live example.</a>
 
@@ -170,7 +170,7 @@ and their sum must be 350px which is impossible.
 Generally speaking, later constraint declarations are more powerful than earlier ones. There are exceptions to this behavior,
 as we'll see in the following sections.
 
-Taking the [May or may not hold example](#mayofmaynothold) we saw previously, by changing the order of the constraints you'll get a
+Taking the [May or may not hold example](#mayormaynothold) we saw previously, by changing the order of the constraints you'll get a
 different result. <a href="http://codepen.io/cbchouinard/pen/rawBRr" target="_blank">Live example.</a>
 
 <a name="lineararithmetic"></a>
