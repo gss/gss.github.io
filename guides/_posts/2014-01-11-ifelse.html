@@ -68,18 +68,18 @@ section {
 
 {% endhighlight %}
 
-When the `section` element `width` goes bellows 400px, the `article` elements will be constrain
-by the `@if` block otherwise by the `@else` block.
+When the width of the section element goes below 400px, the article elements will be
+constrained by the @if block, otherwise by the @else block.
 
-### Constraints evaluation in conditions
-In order to determine if some conditions hold, GSS needs to evaluate every constraints outside of those conditions before evaluating if
-they are met, which include constraints appearing after the conditions declaration.
+### Constraint evaluation within conditionals
+In order to determine if a condition holds, GSS needs to evaluate every constraint outside of that conditional before evaluating if it is met.
+This includes constraints appearing after the conditional declaration.
 
-As explained in the [GSS constraints guide](/guide/constraints), the order of constraints declaration can affects the
+As explained in the [GSS constraints guide](/guide/constraints), the order of constraint declaration can affect the
 resulting solution.
 
-The constraint within the condition of the following example will be added to the solver after the outside constraints. Which
-make sens since the condition is true, you want the constraint within that condition to overcome the other evenly strenghted ones.
+In the following example, the constraint within the conditional will be added to the solver after the constraints outside of it.
+This causes the constraint within the conditional to overcome the other constraints of equal strength when the conditional evaluates as true.
 
 {% highlight css %}
 
@@ -89,22 +89,19 @@ make sens since the condition is true, you want the constraint within that condi
   #elm[height] == 300;
 }
 
-#elm[width] == 300;
 #elm[height] == 500;
 
 {% endhighlight %}
 
-In this example, if the `width` of the screen is smaller than 400px, the `height` of the element will be constrain to 300px even
+In this example, if the `width` of the screen is smaller than 400px, the `height` of the element will be constrained to 300px even
 though there's a `height` constraint defined after the condition.
 
 ### Condition looping
-As describe in the [GSS constraints guide](/guide/constraints), constraints are two ways. You need to be well aware of this fact
-when using conditions. GSS is pretty good at handling cases where a looping could occurs but still, be aware that in some
-complexe conditions nesting you could have some situation where you get in a loop but GSS should get your back the vast majority
-of the time.
+As described in the [GSS constraints guide](/guide/constraints), constraints are two-way. This should be carefully considered when using conditionals.
+Although GSS has been designed to detect and prevent cases when looping could occur, complex nesting of conditionals can still cause infinite loops.
 
-For example, the following could have led to a loop, but the GSS cassowary solver will figure out the solution for this set of
-constraints without looping:
+For example, since the conditional below changes a variable that is being checked, it would appear that it will lead to an infinite loop. However, the underlying
+constraint solver in GSS can determine a solution that satisfies constraints without looping.
 
 {% highlight css %}
 
@@ -119,4 +116,4 @@ constraints without looping:
 
 ## Read next
 With only CCSS constraints at your disposal, constraining common layout scenarios quickly becomes tedious. Read our
-[VFL guide](/guides/ifelse) to learn how to more efficiently constraint your layout.
+[VFL guide](/guides/vfl) to learn how to more efficiently constraint your layout.
