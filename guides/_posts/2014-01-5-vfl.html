@@ -39,15 +39,15 @@ Not to mention the obligatory size & vertical constraints needed to fully specif
 This is where Grid-flavored VFL comes in.  The brains at Apple came up with VFL as a more programatic way to install constraints in Cocoa AutoLayout.  The idea is rather simple, the syntax should visually depict the layout.  GSS takes the good parts of VFL and makes it more suitable for CSS, throws in some sugar and drops the cruft.  So the above example of 4 buttons in a panel becomes:
 
 {% highlight css %}
-@horizontal |-(#button1)-(#button2)-(#button3)-(#button4)-| in(#panel) gap(10);
+@h |-(#button1)-(#button2)-(#button3)-(#button4)-| in(#panel) gap(10);
 
 /* which is the same as */
 
-@horizontal |-10-(#button1)-10-(#button2)-10-(#button3)-10-(#button4)-10-| in(#panel);
+@h |-10-(#button1)-10-(#button2)-10-(#button3)-10-(#button4)-10-| in(#panel);
 
 /* which is the same, assuming we're using button tags, as */
 
-@horizontal button in(#panel) gap(10);
+@h button in(#panel) gap(10);
 {% endhighlight %}
 
 <a name="basics"></a>
@@ -96,7 +96,7 @@ To align elements with a gap, use a hyphen and `gap( Number | Constraint Variabl
 #button[right] + 8 == #textField[left];
 {% endhighlight %}
 
-If no `gap()` is defined, but a hyphen is used to make a connection then a `standard gap` variable is created,
+If no `gap()` is defined, but a hyphen is used to make a connection then a `standard gap` variable is created.
 
 {% highlight css %}
 /* VFL */
@@ -108,7 +108,7 @@ If no `gap()` is defined, but a hyphen is used to make a connection then a `stan
 #button(bottom) + vgap == #textField(top);
 {% endhighlight %}
 
-The `hgap` & `vgap` variables can be used like normal variables, and again like all constraint variables are globally scoped.
+The `hgap` & `vgap` variables can be used like normal variables and are declare in the current scope.
 
 User defined variables can be used for gaps as well. <a href="http://codepen.io/cbchouinard/pen/PwKrjN" target="_blank">Live example.</a>
 
@@ -157,10 +157,9 @@ The above example can be written:
 }
 
 /* Equivalent CCSS */
-#container {
-  &[left] + 50 == #purple-box[left];
-  &[right] - 50 == #purple-box[right];
-}
+#container[left] + 50 == #purple-box[left];
+#container[right] - 50 == #purple-box[right];
+
 {% endhighlight %}
 
 
@@ -176,7 +175,7 @@ You can specify the gaps to a containing element using `outer-gap( Number | Cons
 }
 
 /* Equivalent VFL */
-@horizontal |-16-(#a)-8-(#b)-8-(#c)-16-| in(#container);
+@h |-16-(#a)-8-(#b)-8-(#c)-16-| in(#container);
 {% endhighlight %}
 
 <a name="points"></a>
@@ -236,7 +235,7 @@ Consecutive points are not constrained to each-other:
 <a name="cushions"></a>
 ## Cushions
 
-Cushions are similar to connections gaps, only they use inequality instead of equality constraints.
+Cushions are similar to connection gaps, only they use inequality instead of equality constraints.
 <a href="http://codepen.io/cbchouinard/pen/JoyQBq" target="_blank">Live example.</a>
 
 {% highlight css %}
@@ -301,7 +300,7 @@ Multiple size predicates:
 
 {% highlight css %}
 /* VFL */
-@h (#flexibleButton(>= 70, <= 100)));
+@h (#flexibleButton(>= 70, <= 100));
 
 /* Equivalent CCSS */
 #flexibleButton[width] >= 70;
@@ -310,23 +309,23 @@ Multiple size predicates:
 
 
 ## VFL Selectors
-All previous example of VFL expressions use basic [selectors](/guides/selectors). But you can also use combinators in VFL expression
-like this:
+Although all previous examples of VFL expressions only use basic selectors, [combinators](/guides/selectors) can also be used in VFL
+expressions like so:
 
 {% highlight css %}
-@v | (.featured > article ~ .title) | in(#elm > .class .class2"_fallout")
+@v | (.featured > article ~ .title) | in(#elm > .class .class2"virtual")
 {% endhighlight %}
 
 <a name="vflsplats"></a>
 ## VFL Splat
-When a selector in your VFL expression finds more than one element, due to [plural binding](/guides/selectors/#pluralbinding),
-if the number of element within each selectors expression are not equal, then some elements will not be constraint.
+When a selector in a VFL expression finds more than one element, not all elements will be constrained if the
+number of elements within each selector's expression are not equal. This is due to [plural binding](/guides/selectors/#pluralbinding).
 <a href="http://codepen.io/cbchouinard/pen/vEJqbG" target="_blank">Live example.</a>
 
-In this example, the last two `article` elements will not be constrained since there's no `section` element to bind to.
-As you can see in the CCSS generated constraints, the elements are pluraly binded.
+In this example, the last two article elements will not be constrained since there is no section element to bind to.
+As can be seen in the generated CCSS, the elements are constrained using plural binding.
 
-{% highlight css %}
+{% highlight html %}
 
 <section></section>
 <article></article>
@@ -364,7 +363,7 @@ elements will overlap since you're basically constraining the whole collection t
 
 <style type="text/gss">
 
-/* the 3 sections will overlap over each other as the 3 articles. */
+/* the 3 sections will all have the same horizontal position as the 3 articles. */
 @h |-(section)-(article)-(footer)-| in(::window);
 
 </style>
@@ -374,7 +373,7 @@ elements will overlap since you're basically constraining the whole collection t
 Splats will iterate over the collection of selected elements and position elements
 next to each other. <a href="http://codepen.io/cbchouinard/pen/ogerrX" target="_blank">Live example.</a>
 
-{% highlight css %}
+{% highlight html %}
 
 <section></section>
 <section></section>
@@ -386,36 +385,36 @@ next to each other. <a href="http://codepen.io/cbchouinard/pen/ogerrX" target="_
 
 <style type="text/gss">
 
-/* elements are not 'pluraly' binded */
+/* not constrained using plural binding */
 @h |-(section)-10-...-(article)-20-...-(div)...-| in(::window);
 
 </style>
 
 {% endhighlight %}
 
-In the previous example, the two `section` will be positioned next to each other with a gap of 10px. The
-three articles will be positioned next to each other with a gap of 20px. Finally the two div will be right next to each
+In the previous example, the two sections will be positioned next to each other with a gap of 10px. The
+three articles will be positioned next to each other with a gap of 20px. Finally the two divs will be right next to each
 other without any gap.
 
 <a name="virtuals"></a>
-## Virtual with VFL
-[Virtuals](/guides/constraints) can be created and/or positionned using VFL expressions.
+## Virtual elements with VFL
+[Virtual elements](/guides/constraints/#virtuals) can be created and/or positioned using VFL expressions.
 
-You can position virtual as any other elements :
+You can position a virtual element the same as any other element:
 
 {% highlight css %}
 
-/* horizontally align two virtuals with a gap of 10px between each
-@h |-("area1")-10-("area2")-| in(::window)
+/* horizontally align two virtuals with a gap of 10px between them */
+@h |-("area1")-10-("area2")-| in(::window);
 
 {% endhighlight %}
 
 <a name="rulesets"></a>
 ## VFL rulesets
 
-You can use a VFL expression as the rule of a [rulesets](/guides/constraints/#rulesets). It will
+You can use a VFL expression as the rule in a [rulesets](/guides/constraints/#rulesets) and it will
 behave in the same way as a selector rule. GSS will create a collection of all elements involved
-in the VFL expression and iterates over them.
+in the VFL expression and iterate over them.
 
 This allows you to do interesing things. For example, if you want all the elements of the VFL expression
 to have the same width you can do the following:
@@ -519,7 +518,7 @@ Chains have their own Strength & Weight:
 
 {% highlight css %}
 /* VFL */
-@vertical (#b1)(#b2)(#b3)(#b4)
+@v (#b1)(#b2)(#b3)(#b4)
   chain-width(==!weak10)
   chain-height(<=150>=!required)
   !medium;
