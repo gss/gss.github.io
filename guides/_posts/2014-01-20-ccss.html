@@ -141,7 +141,7 @@ There are 4 levels of built-in strength:
 - `!strong`
 - `!require`
 
-`!medium` is the default for all constraints when no strenght is explicitly defined.
+`!medium` is the default for all constraints when no strength is explicitly defined.
 
 Using the [May or may not hold](#mayormaynothold) example we saw previously,
 we'll now give a stronger strength to each individual `width` constraints to
@@ -224,7 +224,7 @@ information at the bottom: [GSS Selectors Guide](/guides/selectors) \*
 With GSS you can declare constraints using rulesets as with CSS:
 
 {% highlight css %}
-  .Selector {
+  .selector {
     width: == 100;
   }
 {% endhighlight %}
@@ -374,7 +374,7 @@ GSS will scope variables base on their top most location. A variable can be scop
 within a style element, within a gss style file, within a ruleset or globally for the entire document.
 
 {% highlight css %}
-  .Selector {
+  .selector {
     width: == 100;
   }
 {% endhighlight %}
@@ -664,10 +664,10 @@ the element.
 
 #### position: relative in ruleset
 Even if the elements your constraining are placed within an element having the CSS property `position: relative`,
-the constraints will calculate absolute position agains the top-left corner of the page.
+the constraints will calculate absolute position agains the top-left corner of the root element.
 
 If you look at the calculated values, you'll see that they account for their relative parent position but are
-positionned according to the top-left of the page.
+positionned according to the top-left of the root element.
 
 
 #### position: relative in style attribute
@@ -717,7 +717,7 @@ GSS provides property to constraints the dimension of an element. We've already 
 
 {% highlight css %}
 
-.SelectorA {
+.selectorA {
   size: == 200;
 }
 
@@ -735,19 +735,19 @@ GSS provides the `intrinsic-` properties which defers to CSS the dimension styli
 
 {% highlight css %}
 
-  .SelectorA {
+  .selectorA {
     width: == &[intrinsic-width];
     height: == &[intrinsic-height];
   }
 
-  .SelectorB {
+  .selectorB {
     size: == &[intrinsic-size];
   }
 
 {% endhighlight %}
 
 Once an intrinsic constraint is declared on a property, GSS will evaluate other constraints you define on the same property but will
-not apply the calculated value to the element. For example, if we add a `width` constraint on `.SelectorA`, that constraint will be
+not apply the calculated value to the element. For example, if we add a `width` constraint on `.selectorA`, that constraint will be
 evaluated by GSS but not applied to the element since `intrinsic-*` have precendence over all other constraints.
 
 <a name="virtuals"></a>
