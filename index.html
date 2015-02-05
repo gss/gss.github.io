@@ -17,9 +17,7 @@ layout: default
     bottom: == ::[$bottom];
   }
 
-  @horizontal [#top-button1]-<::window[center-x]>-[#top-button2]
-    gap([baseline] / 2)
-    chain-top;
+  @horizontal |-[#top-button1]-[#top-button2]-| in(::window) gap([baseline] / 2) outer-gap([btnOuterGap]) chain-top;
 
   [top-image-gap] == [baseline];
   [top-image-gap] >= 0 !require;
@@ -42,11 +40,10 @@ layout: default
 
   @vertical [#top-home-image]-[#top-title] gap([top-image-gap]) !require;
 
-  @vertical [#top-title]-[#top-subtitle]-[#top-button1] gap([baseline]) !require;
+  @vertical [#top-title]-[#top-subtitle]-[#top-text]-[#top-button1] gap([baseline]) !require;
 
-  @vertical [#top-button2]-[#top-text] gap([baseline]) !require;
 
-  @vertical [#top-text]-| in(#top-home-section) gap([bottom-margin]) !require;
+  @vertical [#top-button1]-| in(#top-home-section) gap([bottom-margin]) !require;
 
   #top-title {
     height: == ::[intrinsic-height] !require;
@@ -59,9 +56,12 @@ layout: default
     height: == ::[intrinsic-height] !require;
     left: == [content-left] !require;
     right: == [content-right] !require;
-    padding-bottom: == [baseline];
     text-align: center;
     font-style: italic;
+  }
+
+  #top-text {
+    padding-bottom: == [baseline];
   }
 
   /*
@@ -84,12 +84,13 @@ layout: default
   <div id="top-home-image"></div>
 
   <h1 id="top-title">Grid Style Sheets</h1>
-  <h3 id="top-subtitle" class="large-font">GSS reimagines CSS layout & replaces the browser’s layout engine with one that harnesses the Cassowary Constraint Solver — the same algorithm Apple uses to compute native layout.</h3>
+  <h3 id="top-subtitle" class="large-font">GSS reimagines CSS layout & replaces the browser’s layout engine with one that harnesses the
+    Cassowary Constraint Solver — the same algorithm Apple uses to compute native layout.</h3>
+
+  <h3 id="top-text" class="large-font">Version 2.0 is out!</h3>
 
   <a href="/usage" class="top-button button" id="top-button1">Install</a>
-  <a href="https://github.com/gss/engine" class="top-button button" id="top-button2">Source</a>
-
-  <p id="top-text">GSS is under heavy development. Updated documentation coming soon.</p>
+  <a href="/guides/ccss" class="top-button button" id="top-button2">Get started</a>
 
 </section>
 
@@ -132,7 +133,6 @@ layout: default
       <li><a href="/guides/ccss">Nested Rules</a></li>
       <li><a>Respects Text Re-Flows</a></li>
       <li><a href="/guides/ccss">Constraint Strengths</a></li>
-      <li><a>Multi-threaded Web Workers<span class="super">*</span></a></li>
       <li><a>True Source Order Independence</a></li>
       <li><a>Works with Normal CSS</a></li>
     </ul>
