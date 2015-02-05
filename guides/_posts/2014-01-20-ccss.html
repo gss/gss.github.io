@@ -334,7 +334,16 @@ varX = 100;
 
 {% endhighlight %}
 
-Variables are hoisted and can be access from child' scopes. You can learn more about variable's hoisting and scoping in [scope section](#scope).
+Variables are hoisted and can be access from child' scopes. You can learn more about variable's
+hoisting and scoping in [scope section](#scope).
+
+Variable can be declare with `[]`. There's no difference between the two syntaxes:
+
+{% highlight css %}
+
+[varX] == 100; /* equivalent to varX == 100; */
+
+{% endhighlight %}
 
 ### Variables in constructor
 When instantiating GSS, you can provide global variable values to the constructor:
