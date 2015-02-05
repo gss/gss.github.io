@@ -23,7 +23,8 @@ layout: post
   <li><a href="#rulesets">Rulesets</a></li>
 </ul>
 
-With only inequality constraints at your disposal, constraining common layout scenarios quickly becomes tedious.  To horizontally align 4 buttons within a panel with a gap of 10px requires something like:
+With only inequality constraints at your disposal, constraining common layout scenarios quickly becomes tedious.  To horizontally align
+4 buttons within a panel with a gap of 10px requires something like:
 
 {% highlight css %}
 #panel[left] + 10 == #button1[left];
@@ -35,7 +36,10 @@ With only inequality constraints at your disposal, constraining common layout sc
 
 Not to mention the obligatory size & vertical constraints needed to fully specify the panel and buttons - ugh...
 
-This is where Grid-flavored VFL comes in.  The brains at Apple came up with VFL as a more programatic way to install constraints in Cocoa AutoLayout.  The idea is rather simple, the syntax should visually depict the layout.  GSS takes the good parts of VFL and makes it more suitable for CSS, throws in some sugar and drops the cruft.  So the above example of 4 buttons in a panel becomes:
+This is where Grid-flavored VFL comes in.  The brains at Apple came up with VFL as a more programatic way to install
+constraints in Cocoa AutoLayout.  The idea is rather simple, the syntax should visually depict the layout.  GSS takes the good
+parts of VFL and makes it more suitable for CSS, throws in some sugar and drops the cruft.  So the above example of 4 buttons
+in a panel becomes:
 
 {% highlight css %}
 @h |-(#button1)-(#button2)-(#button3)-(#button4)-| in(#panel) gap(10);
@@ -411,7 +415,7 @@ You can position a virtual element the same as any other element:
 <a name="rulesets"></a>
 ## VFL rulesets
 
-You can use a VFL expression as the rule in a [rulesets](/guides/constraints/#rulesets) and it will
+You can use a VFL expression as the rule in a [rulesets](/guides/ccss/#rulesets) and it will
 behave in the same way as a selector rule. GSS will create a collection of all elements involved
 in the VFL expression and iterate over them.
 

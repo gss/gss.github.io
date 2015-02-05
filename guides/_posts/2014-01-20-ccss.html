@@ -292,16 +292,16 @@ for a `#elm` element. <a href="http://codepen.io/cbchouinard/pen/yyXPej" target=
 
 ## Properties
 All the previous examples constrained CSS properties like `width` or `line-height`. But you can also
-constrain non-CSS property using GSS.
+constrain custom properties that are not recognized by CSS but that you can use in your GSS constraints.
 
 {% highlight css %}
 
 .post {
-  custom-properties: == &[line-height] * 3;
+  custom-property: == &[line-height] * 3;
 }
 
 /* you can also declare custom properties using inline syntax as well */
-.post[custom-properties] == .post[line-height] * 3;
+.post[custom-property] == .post[line-height] * 3;
 
 {% endhighlight %}
 
@@ -336,24 +336,26 @@ varX = 100;
 
 Variables are hoisted and can be access from child' scopes. You can learn more about variable's hoisting and scoping in [scope section](#scope).
 
-### Variable constants
-When instantiating GSS, you can provide some variables constants values to the constructor:
+### Variables in constructor
+When instantiating GSS, you can provide global variable values to the constructor:
 
-
-{% highlight css %}
+{% highlight html %}
 
 <script src="/bower_components/gss/dist/gss.js"></script>
 <script type="text/javascript">
- GSS.document = new GSS(document, {"some-gap": 20, "outer-radius": 20});
+  GSS.document = new GSS(document, {"some-width": 400, "some-height": 150});
 </script>
 
 <style type="text/gss">
-  
+
+  section[width] == $some-width;
+  section[height] == $some-height;
+
 </style>
 
 {% endhighlight %}
 
-In this example, I have two constraint variables “gap” and “outer-radius” in my GSS that I can initialize with the GSS constructor.
+Since they are global variables, don't forget to access them with `$`. <a href="http://codepen.io/cbchouinard/pen/pvWMJV" target="_blank">Live example.</a>
 
 ## CSS property name
 Now that we've seen properties and variables, you can do some interesting things by using CSS properties as variables. For example you
@@ -378,15 +380,6 @@ Since `width` in the `.className` ruleset is used as a variable and not a proper
 the constraint on the `width` declared in `#someElm` ruleset will affect the `.className` width and not the
 `#someElm` `width`.
 
-### Global variables
-Global variables can be define using the `$` symbol.
-
-{% highlight css %}
-$var1 == 100;
-{% endhighlight %}
-
-You can access global scope variables from everywhere using the `$`.
-
 <a name="scope"></a>
 ## Scope
 GSS will scope variables base on their top most location. A variable can be scoped
@@ -410,9 +403,9 @@ The order doesn't matter, GSS will search for the top most variable declaration.
 {% endhighlight %}
 
 #### Style sheet or GSS file
-When declaring a variable, by default the variable will be scoped within the style element.
-In other words, if you have more than one stylesheet and both have a variable with the same
-name, these two variables will be in two different scope and therefore are independant of each other.
+When declaring a variable at the root of a `style` block, the variable will be scoped to that `style` block.
+Which means, you'll not have access to that variable from other `style` block. In the following example, `varX`
+variables are independant from each other since they belong in two seperate scope.
 
 {% highlight css %}
 <style type="text/gss">
@@ -434,10 +427,10 @@ Global variable, accessed with `$`, are accessible accross stylesheets. In the p
 global variable for `varX` then the two constrained elements would have had the
 same width. <a href="http://codepen.io/cbchouinard/pen/yyoxxm" target="_blank">Live example.</a>
 
-The same scoping logic applies to GSS files.
+The same scoping logic applies to external GSS files.
 
 #### Ruleset
-Variables defined inside a ruleset are scoped to that ruleset.
+Variables defined inside a ruleset are scoped to the element(s) matching the ruleset's selector.
 
 {% highlight css %}
 .someClass {
@@ -451,8 +444,10 @@ Variables defined inside a ruleset are scoped to that ruleset.
 }
 {% endhighlight %}
 
-In this example, each `varX` is in a different scope and are therefore independant from
-each other. <a href="http://codepen.io/cbchouinard/pen/XJgRPq" target="_blank">Live example.</a>
+In this example, each `varX` is scoped to the element(s) matching the ruleset's selector. Which means, a variable
+`varX` will be defined for each element matching the ruleset's selector. Therefore, if the same element matches both
+ruleset selectors, then varX for that element will be equal to the value specified in the later ruleset.
+<a href="http://codepen.io/cbchouinard/pen/XJgRPq" target="_blank">Live example.</a>
 
 ### Hoisting
 When using a variable in GSS, before creating the variable, GSS will look on parent
@@ -528,21 +523,36 @@ div {
 }
 {% endhighlight %}
 
+
+### Global variables
+Global variables can be define using the `$` symbol.
+
+{% highlight css %}
+$var1 == 100;
+{% endhighlight %}
+
+You can access globally scoped variables from everywhere using the global operator `$`. If you declare a variable at the
+root of a stylesheet without the `$` that variable will be accessible through hoisting but only for constraints within t
+hat stylesheet. By declaring it with `$`, you can access the variable from all `style` blocks or GSS files in the current page.
+
+
+
 <a name="position"></a>
 ## Positions constraints
 Position in GSS will always be relative to the element in which you instantiated the GSS engine. For example,
 if you instantiate the GSS engine in the `html`, `head` or `body` element, then elements will be `absolute` positionned
-from `x = left = 0, y = top = 0`. It's also possible to [positionning element relative to a container element](#relativepositionning)
+from `left = 0, top = 0`. It's also possible to [positioning element relative to a container element](#relativepositionning)
 as well see later.
 
 GSS provide properties to quickly constrain the dimensions and positions of elements. For example, assuming the `body` is the root
 element for GSS, the `$[top-left]` property of the root element will be `x = left = 0, y = top = 0`.
 
 If you're under constraining your elements, GSS might find a solution where negative coordinates are the solution. In that
-case you need to declare more constraints.
+case you need to declare more constraints. For example, you could prevent that from happening by contraining the edges of the
+elements to the edge of `::window`.
 
 The following documentation assume the GSS engine was declared in the `body` element so we are positionning elements from the
-top-left corner of the page `x=0, y=0`.
+top-left corner of the page `left=0, top=0`.
 
 ### Top
 
@@ -581,7 +591,7 @@ Place the bottom of the element 100px from the top of the page.
 
 {% endhighlight %}
 
-Place the left of the element 20px from the left of the page. Left is the equivalent of:
+Place the left of the element 20px from the left of the page.
 
 ### Right
 
@@ -679,7 +689,7 @@ Place the vertical center of the element 100px from the top of the page.
 ### Relatively positionned parents.
 
 GSS deals with relative parents in two distinct way. One being when the parent `position: relative` property
-is declared in a CSS ruleset, the other is when the `position: relative` is declare in the `style` attribute of
+is declared in a CSS ruleset, the other is when the `position: relative` is declared in the `style` attribute of
 the element.
 
 #### position: relative in ruleset
@@ -691,12 +701,11 @@ positionned according to the top-left of the root element.
 
 
 #### position: relative in style attribute
-When you are dealing with a very large page composed of hundreds of constraints, GSS will need to evaluate all constraints in order
-to find a solution for them.
+When you are dealing with a very large page composed of multiples elements, GSS needs to know the position and dimension of
+each element in order to find a solution to the constraints you've defined.
 
-You can split the calculation of solution by element's container, like `section` element for example. To do so,
-add a `style='position: relative'` so GSS will evaluate sections independantly of each other resulting in faster solution
-evaluation.
+It is possible to localize computations within dedicated containers and rely on CSS to lay them out in the page.
+Sections with `position: relative` set in the `style` attribute will be solved separately, leading to better performance.
 
 {% highlight css %}
 
@@ -732,8 +741,8 @@ With the `position: relative` declared in the `style` attribute, GSS will solve 
 should results in better performance. <a href="http://codepen.io/cbchouinard/pen/pvwaNN" target="_blank">Live example.</a>
 
 ## Dimensions
-GSS provides property to constrain the dimension of an element. We've already saw the `width` and `height`. You can use the
-2D dimension property to set them both the width and the height at the same time:
+GSS provides property to constrain the dimension of an element. We've already saw the `width` and `height`.
+GSS provides syntax sugar called 2d properties to constrain both height and width of an element as a single property.
 
 {% highlight css %}
 
@@ -751,7 +760,11 @@ One way to solve this, would be to constrain the dimension of the element. But w
 exact width and height require to display the text. What if that text is dynamic? The element might also be styled using CSS and you
 want to get the dimensions of that styling.
 
-GSS provides the `intrinsic-` properties which defers to CSS the dimension styling of the element.
+In most cases, the constraints will provide those values indirectly regardless of the element's contents. It is possible to make
+GSS measure content the values coming from DOM or CSS - be it text, or blocks styled with css.
+
+GSS provides the `intrinsic-` properties which defers to CSS the dimension styling of the element and instruct GSS to measure
+the elements using that styling.
 
 {% highlight css %}
 
@@ -766,14 +779,17 @@ GSS provides the `intrinsic-` properties which defers to CSS the dimension styli
 
 {% endhighlight %}
 
-Once an intrinsic constraint is declared on a property, GSS will evaluate other constraints you define on the same property but will
-not apply the calculated value to that element. For example, if we add a `width` constraint on `.selectorA`, that constraint will be
+Once an intrinsic property is used on an element, GSS will evaluate other constraints you defined on the same property but the
+calculated value will not be assign to the property because `intrinsic` property makes the property read-only.
+
+For example, if we add a `width` constraint on `.selectorA`, that constraint will be
 evaluated by GSS but not applied to the element since `intrinsic-*` have precendence over all other constraints.
 
 <a name="virtuals"></a>
 ## Virtuals
-Virtuals are boxes you define in GSS that don't exists in the DOM but against which you can constraint DOM element. Virtual are a
-practical way to constrain a group of element without the need for a DOM container element.
+Virtuals are rectangles you define in GSS that don't have a representation in the DOM. You can contrain DOM element
+and other virtuals against the dimension and position of virtuals. Virtual are a practical way to constrain a group of element
+without the need for a DOM container element.
 
 {% highlight css %}
 
@@ -791,7 +807,7 @@ As you can see from the previous example, we are constraining `#elmA` and `#elmB
 <a href="http://codepen.io/cbchouinard/pen/WbOWgB" target="_blank">Live example.</a>
 
 In regards of constraining dimensions and positions, virtuals are no different from DOM element in the sens that you can
-declare constraints on them as shown previously. The only difference is, since they don't exist in the DOM, they are
+declare constraints on them as shown previously. The main difference is that since they don't exist in the DOM, they are
 not stylable with CSS. Doing the following will have no effect:
 
 {% highlight css %}
@@ -804,7 +820,7 @@ not stylable with CSS. Doing the following will have no effect:
 {% endhighlight %}
 
 ### Virtual hoisting
-GSS virtual are treated as variables and are therefore hoisted. You can do the following:
+Virtuals follow the same scoping rules as variables. You can do the following:
 
 {% highlight css %}
 

@@ -97,11 +97,12 @@ In this example, if the `width` of the screen is smaller than 400px, the `height
 though there's a `height` constraint defined after the condition.
 
 ### Condition looping
-As described in the [GSS constraints guide](/guide/constraints), constraints are two-way. This should be carefully considered when using conditionals.
-Although GSS has been designed to detect and prevent cases when looping could occur, complex nesting of conditionals can still cause infinite loops.
+As described in the [GSS constraints guide](/guide/constraints), constraints are two-way. This should be carefully considered when using
+conditionals. Although GSS has been designed to detect and prevent cases when looping could occur, complex nesting of conditionals can
+still cause infinite loops.
 
-For example, since the conditional below changes a variable that is being checked, it would appear that it will lead to an infinite loop. However, the underlying
-constraint solver in GSS can determine a solution that satisfies constraints without looping.
+For example, since the conditional below changes a variable that is being checked, it would appear that it will lead to an infinite loop.
+However, the underlying constraint solver in GSS can determine a solution that satisfies constraints without looping.
 
 {% highlight css %}
 

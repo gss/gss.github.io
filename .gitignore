@@ -2,3 +2,4 @@ _site/
 .DS_Store
 node_modules/
 _ignore/
+bower_components/
