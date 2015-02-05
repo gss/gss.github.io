@@ -263,7 +263,7 @@ div {
 <a href="http://codepen.io/cbchouinard/pen/yyXPyK" target="_blank">Live example.</a>
 
 
-If you want to select and element from the GSS root element, you need to do the following:
+`$` combinator makes selectors in ruleset body apply to the root of a document ignoring the nesting:
 
 {% highlight css %}
 div {
@@ -271,7 +271,10 @@ div {
 }
 {% endhighlight %}
 
-If you want to refer to an element within the parent's child elements, you can use the `^` pseudo selector:
+`^` combinator makes selectors in ruleset body apply to the elements selected by the parent ruleset:
+
+In this following example '^' will move up to the current `.container` element and will search its descendants
+for an element with `elm` id. <a href="http://codepen.io/cbchouinard/pen/yyXPej" target="_blank">Live example.</a>
 
 {% highlight css %}
 
@@ -284,40 +287,66 @@ If you want to refer to an element within the parent's child elements, you can u
 {% endhighlight %}
 
 
-In this example '^' will move up to the current `.container` element and will search its child elements
-for a `#elm` element. <a href="http://codepen.io/cbchouinard/pen/yyXPej" target="_blank">Live example.</a>
-
 ## Properties
-All the previous examples constrained CSS properties like `width` or `line-height`. But you can also
-constrain custom properties that are not recognized by CSS but that you can use in your GSS constraints.
+
+All the previous examples constrained CSS properties like `width` or `line-height`. It is possible to
+constrain custom properties that are not recognized by CSS, but can used in GSS constraints over known CSS properties.
+
+`&` combinator refers to current element matching the ruleset selector. It is implied by the use of `width: ==` property notation.
+
+{% highlight css %}
+.container {
+  width: == #elm[width];
+}
+
+/* It is the same as: */
+
+.container {
+  &[width] == #elm[width];
+}
+
+{% endhighlight %}
+
+Properties on special combinators like `&`, `$` or `^` may omit square brackets:
+
+{% highlight css %}
+
+body {
+  .container {
+    &width == ^width;
+  }
+}
+
+{% endhighlight %}
+
 
 {% highlight css %}
 
 .post {
-  custom-property: == &[line-height] * 3;
+  custom-property: == &line-height * 3;
 }
 
-/* you can also declare custom properties using inline syntax as well */
+/* equals to */
+
 .post[custom-property] == .post[line-height] * 3;
 
 {% endhighlight %}
 
-This will automatically create a `[custom]` property for each element having a `.post` class. That custom element property
-will be constrained to be equal to three time the element's line-height property.
+This will automatically create a `custom-property` for each element having a `.post` class. The element's `custom-property` will be constrained to be thrice its own `line-height`.
 
-Don't forget this relationship is 2-way, so further constraining a
-post's [custom-properties] can affect its line-height, which can be remedied by taking advantage of the
-"Constraint Hierarchy" with [Strengths](#strengths).
+Because of the 2-way binding, changing either `custom-property` or `line-height` will affect the other property of the element.
 
 <a name="variables"></a>
-## Constraints Variables
-In addition to properties, GSS allows you to declare variables. You can access variables declared in parent rulesets
-or at the root of the stylesheet like this:
+## Variables
+
+Variables are special kind of properties that can be accessed from inner scopes. 
+
+In addition to properties, GSS allows you to declare variables. Variabled declared in outer scoped.
 
 {% highlight css %}
 
 <style text='text/gss'>
-varX = 100;
+varX == 100;
 
 .className {
   width: == varX;
