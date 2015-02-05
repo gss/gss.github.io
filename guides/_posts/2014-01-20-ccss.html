@@ -259,7 +259,7 @@ div {
 }
 {% endhighlight %}
 
-`<div>` elements will constrain their width to descendants having the class name `widget` but only if they have any.
+`<div>` elements will constrain their width to width of their descendants having the class name `widget`, if they have any.
 <a href="http://codepen.io/cbchouinard/pen/yyXPyK" target="_blank">Live example.</a>
 
 
@@ -289,10 +289,9 @@ for an element with `elm` id. <a href="http://codepen.io/cbchouinard/pen/yyXPej"
 
 ## Properties
 
-All the previous examples constrained CSS properties like `width` or `line-height`. It is possible to
-constrain custom properties that are not recognized by CSS, but can used in GSS constraints over known CSS properties.
+Properties are the variables local to the element. If there is a property in CSS defined with the same name, the computed value will be assigned to element as an inline style in pixels.
 
-`&` combinator refers to current element matching the ruleset selector. It is implied by the use of `width: ==` property notation.
+Like `$` and `^` combinators, `&` combinator refers to current element matching the ruleset selector. It is implied by the use of `width: ==` property notation.
 
 {% highlight css %}
 .container {
@@ -307,23 +306,13 @@ constrain custom properties that are not recognized by CSS, but can used in GSS 
 
 {% endhighlight %}
 
-Properties on special combinators like `&`, `$` or `^` may omit square brackets:
-
-{% highlight css %}
-
-body {
-  .container {
-    &width == ^width;
-  }
-}
-
-{% endhighlight %}
+It is possible to constrain custom properties that are not recognized by CSS, but can used in constraints over known CSS properties.
 
 
 {% highlight css %}
 
 .post {
-  custom-property: == &line-height * 3;
+  custom-property: == &[line-height] * 3;
 }
 
 /* equals to */
@@ -336,12 +325,88 @@ This will automatically create a `custom-property` for each element having a `.p
 
 Because of the 2-way binding, changing either `custom-property` or `line-height` will affect the other property of the element.
 
+
+Properties on special combinators like `&`, `$` or `^` may omit square brackets:
+
+{% highlight css %}
+
+body {
+  .container {
+    // equate width of a <body> element with width of elements having container class
+    &width == ^width; 
+  }
+}
+
+{% endhighlight %}
+
+
+<a name="scope"></a>
+## Scope
+
+Properties are attached to a specific element:
+  * In rulesets, it's an element that matches the selector
+  * In topmost level of a stylesheet, it's a `<link>` or `<style>` that defines the stylesheet. 
+  * In stylesheet element with `scoped` attribute, topmost variables are attached to the parent element of a stylesheet.
+
+Variables prefixed with `$` combinator are considered global, and can be shared by different stylesheets. 
+
+
+### Properties in stylesheet
+
+Properties defined at the top level of a stylesheet will be attached to the stylesheet element. Thus each stylesheet provides its own scope. Top level properties are not directly accessible from other stylesheets.
+
+{% highlight css %}
+<style type="text/gss">
+  varX: == 100;
+  varX: == #elm1[width];
+</style>
+
+<style type="text/gss">
+  varX: == 200;
+  varX: == #elm1[width];
+</style>
+{% endhighlight %}
+
+In this example, `#elm1` will have a width of 100px and `#elm2` will have a width of 200px.
+The two `varX` are in different scopes and are therefore indenpendent from each other.
+<a href="http://codepen.io/cbchouinard/pen/EaXmRp" target="_blank">Live example.</a>
+
+Global variables prefixed with `$`, are accessible accross stylesheets. In the previous example, using `$varX` instead of `varX` makes constraints operate on the same variable, making the widths of two elements equal. <a href="http://codepen.io/cbchouinard/pen/yyoxxm" target="_blank">Live example.</a> 
+
+Adding a `scoped` attribute to the stylesheet attaches top most properties to the parent element of a stylesheet. If two `scoped` stylesheets share the parent element, they will automatically share the topmost variables. 
+
+The same scoping logic applies to external GSS files.
+
+
+### Properties in rulesets
+
+Variables defined inside a ruleset define a property on each element that matches the ruleset selector.
+
+{% highlight css %}
+.someClass {
+  varX: == 100;
+  width: == &[varX];
+}
+
+.someOtherClass {
+  varX: == 100;
+  width: == &[varX];
+
+}
+{% endhighlight %}
+
+In this case, both rulesets define `varX` property for matching elements. If there's an element that matches both rulesets, it will have both constraints applied over a single property. This may lead to a conflict local to that element. 
+
+The latter constraint will win in case of conflict if element had both classes from the start. Otherwise the class that was added the latest will "win". Strengths can be used to define the importance of each constraint independent from order of changes. <a href="http://codepen.io/cbchouinard/pen/XJgRPq" target="_blank">Live example.</a>
+
+
 <a name="variables"></a>
-## Variables
+### Variables
 
-Variables are special kind of properties that can be accessed from inner scopes. 
+Variables are properties that dont have explicit scope and can be accessed from inner scopes.  This concept is known as lexical scoping. The scoping is determined by the source code, so it's *static* and does not change in runtime.
 
-In addition to properties, GSS allows you to declare variables. Variabled declared in outer scoped.
+We say that topmost scope that defines variable *captures* the variable, making variables in the inner scopes *hoisted*.
+
 
 {% highlight css %}
 
@@ -349,179 +414,80 @@ In addition to properties, GSS allows you to declare variables. Variabled declar
 varX == 100;
 
 .className {
-  width: == varX;
+  width: == varX;   // same as &width == ^varX
   varY == &[height];
 
   #div {
-    width: == varX;
+    width: == varX; // same as &width == ^^varX
   }
 }
 </script>
 
 {% endhighlight %}
 
-Variables are hoisted and can be access from child' scopes. You can learn more about variable's
-hoisting and scoping in [scope section](#scope).
+If a `varX` was defined as a property on the top level (e.g. `varX: == 100`), the variable would be captured at the `.className` level instead.  
 
-Variable can be declare with `[]`. There's no difference between the two syntaxes:
+
+The order of appearance or square brackets around variables have no effect over hoisting:
 
 {% highlight css %}
 
-[varX] == 100; /* equivalent to varX == 100; */
+div {
+  .rule {
+    [varX] == 200; /* hoisted to parent, same as ^varX*/
+  }
+
+  [varX] == 100; /* equivalent to varX == 100; */
 
 {% endhighlight %}
 
-### Variables in constructor
-When instantiating GSS, you can provide global variable values to the constructor:
 
-{% highlight html %}
-
-<script src="/bower_components/gss/dist/gss.js"></script>
-<script type="text/javascript">
-  GSS.document = new GSS(document, {"some-width": 400, "some-height": 150});
-</script>
-
-<style type="text/gss">
-
-  section[width] == $some-width;
-  section[height] == $some-height;
-
-</style>
-
-{% endhighlight %}
-
-Since they are global variables, don't forget to access them with `$`. <a href="http://codepen.io/cbchouinard/pen/pvWMJV" target="_blank">Live example.</a>
-
-## CSS property name
-Now that we've seen properties and variables, you can do some interesting things by using CSS properties as variables. For example you
-can declare constraints on CSS properties of parent scope:
+Variables are properties in disguise. If a variable has a name of a CSS property, it will apply the style for its resolved scope element. This fact can be used to define declarative constraints based on the DOM structure.
 
 {% highlight css %}
 <style text='text/gss'>
 varX = 100;
 
-.className {
+.wrapper {
   width == varX;
 
-  #someElm {
-    width == &[height];
+  section {
+    width == &height;
   }
 }
 </script>
 
 {% endhighlight %}
 
-Since `width` in the `.className` ruleset is used as a variable and not a property, it is hoisted. Therefore,
-the constraint on the `width` declared in `#someElm` ruleset will affect the `.className` width and not the
-`#someElm` `width`.
+`width` variable in the `.wrapper` ruleset captures `width` variable within `section` ruleset. Therefore an element having `wrapper` class name will have its width equal to height of its descendant sections, if there are any.
 
-<a name="scope"></a>
-## Scope
-GSS will scope variables base on their top most location. A variable can be scoped
-within a style element, within a gss style file, within a ruleset or globally for the entire document.
-
-{% highlight css %}
-  .selector {
-    width: == 100;
-  }
-{% endhighlight %}
-
-In the following example, `varX` used within `.selector` will be hoisted since it is declare in a parent scope.
-The order doesn't matter, GSS will search for the top most variable declaration.
-
-{% highlight css %}
-  .selector {
-    width: == varX;
-  }
-
-  varX == 100;
-{% endhighlight %}
-
-#### Style sheet or GSS file
-When declaring a variable at the root of a `style` block, the variable will be scoped to that `style` block.
-Which means, you'll not have access to that variable from other `style` block. In the following example, `varX`
-variables are independant from each other since they belong in two seperate scope.
-
-{% highlight css %}
-<style type="text/gss">
-  varX == 100;
-  #elm1[width] == varX;
-</style>
-
-<style type="text/gss">
-  varX == 200;
-  #elm2[width] == varX;
-</style>
-{% endhighlight %}
-
-In this example, `#elm1` will have a width of 100px and `#elm2` will have a width of 200px.
-The two `varX` are in distinct scope and are therefore indenpendant from each other.
-<a href="http://codepen.io/cbchouinard/pen/EaXmRp" target="_blank">Live example.</a>
-
-Global variable, accessed with `$`, are accessible accross stylesheets. In the previous example, if we would have use a
-global variable for `varX` then the two constrained elements would have had the
-same width. <a href="http://codepen.io/cbchouinard/pen/yyoxxm" target="_blank">Live example.</a>
-
-The same scoping logic applies to external GSS files.
-
-#### Ruleset
-Variables defined inside a ruleset are scoped to the element(s) matching the ruleset's selector.
-
-{% highlight css %}
-.someClass {
-  varX == 100;
-  width: == varX;
-}
-
-.someOtherClass {
-  varX == 200;
-  width: == varX;
-}
-{% endhighlight %}
-
-In this example, each `varX` is scoped to the element(s) matching the ruleset's selector. Which means, a variable
-`varX` will be defined for each element matching the ruleset's selector. Therefore, if the same element matches both
-ruleset selectors, then varX for that element will be equal to the value specified in the later ruleset.
-<a href="http://codepen.io/cbchouinard/pen/XJgRPq" target="_blank">Live example.</a>
-
-### Hoisting
-When using a variable in GSS, before creating the variable, GSS will look on parent
-scopes to see if there's an existing variable with the same name.
-
-For example:
+Rulesets can be nested arbitarily deep, and the hoisting reference is computed for each variable individually. A variable that was not defined in any of its parent scopes, is considered local and is identical to property. 
 
 {% highlight css %}
 div {
-  varX == 40;
+  varX == 40; // captured varX 
 
   .someClass {
     width: == varX;
 
     .someNestedClass {
         varY == 45;
-        width: == varY;
+        width: == varY;  // captured varY
         top: == varX;
     }
 
     .someOtherNestedClass {
         varY == 60;
-        height: == varY;
+        height: == varY;  // captured varY
         width: == varX;
       }
   }
 }
 {% endhighlight %}
 
-In this case, `varX` used in the nested rulesets is hoisted from the `div` scope. Internally, GSS will go up the
-scope tree using the parent pseudo selector `^varX`, if no variable is found at that level, GSS will do `^^varX`
-and so on until it finds a variable or until it reach the root scope, at which point, if GSS didn't find a variable it
-will create a new one on the scope where it was declared.
+In this case, all nested rulesets will share `varX` variable through parent ruleset. Nested rulesets also define `varY` variables that are not hoisted and act like local properties. <a href="http://codepen.io/cbchouinard/pen/zxzwXJ" target="_blank">Live example.</a>
 
-`varY` is been declared in two sibling rulesets. In this case, two distinct variables will be created and scoped to their
-respective ruleset. <a href="http://codepen.io/cbchouinard/pen/zxzwXJ" target="_blank">Live example.</a>
-
-#### Properties are not hoisted
-Only variables are hoisted. Since properties aren't hoisted, they cannot be access from child scope.
+Only variables capture other variables within inner rulesets. Anything that has explicit scope is considered a property. Properties do not capture and are not hoisted. Examples would be `$global` variables and `&local` variables. `property: ==` notation is the cleanest way to define property in a ruleset:
 
 {% highlight css %}
 div {
@@ -543,9 +509,7 @@ div {
 }
 {% endhighlight %}
 
-#### Property and variable with the same name
-If you declare a property having the same name as a hoisted variable, you need to use the `&` selector to
-access the property otherwise you'll get the hoisted variable.
+It is possible to opt out of hoisting in the same way by prepending `&` to a variable name, making it a property. 
 
 {% highlight css %}
 div {
@@ -553,41 +517,53 @@ div {
 
   .className {
     varX: == 60;
-    width: == &[varX]; /*  60 since we are using the property varX */
+    width: == &varX; /*  60 since we are using the property varX */
   }
 }
 {% endhighlight %}
 
+### Suggested variables
 
-### Global variables
-Global variables can be define using the `$` symbol.
+Javascript code can provide numerical values that can be used in constraints. The easiest way to do it, is to pass an object with values to GSS constructor:
 
-{% highlight css %}
-$var1 == 100;
+{% highlight html %}
+
+<script src="/bower_components/gss/dist/gss.js"></script>
+<script type="text/javascript">
+  GSS.document = new GSS(document, {"some-width": 400, "some-height": 150});
+</script>
+
+<style type="text/gss">
+
+  section[width] == $some-width;
+  section[height] == $some-height;
+
+</style>
+
 {% endhighlight %}
 
-You can access globally scoped variables from everywhere using the global operator `$`. If you declare a variable at the
-root of a stylesheet without the `$` that variable will be accessible through hoisting but only for constraints within t
-hat stylesheet. By declaring it with `$`, you can access the variable from all `style` blocks or GSS files in the current page.
+Suggested variables are global so they should be accessed with `$` combinator. <a href="http://codepen.io/cbchouinard/pen/pvWMJV" target="_blank">Live example.</a>
 
+External variables are bound in one direction, so their values will not be affected by the solver. It is almost as if there were actual numbers in place of those variables. The difference is that these values can be updated dynamically without much effort on the solver side:
+
+{% highlight html %}
+  <script>
+    document.onmousemove = (e) {
+      GSS.document.solve({ // make mouse movement affect variables
+        "some-width": e.clientX,
+        "some-height": e.clientY
+      })
+    }
+  </script>
+{% endhighlight}
 
 
 <a name="position"></a>
-## Positions constraints
-Position in GSS will always be relative to the element in which you instantiated the GSS engine. For example,
-if you instantiate the GSS engine in the `html`, `head` or `body` element, then elements will be `absolute` positionned
-from `left = 0, top = 0`. It's also possible to [positioning element relative to a container element](#relativepositionning)
-as well see later.
+## Positioning
 
-GSS provide properties to quickly constrain the dimensions and positions of elements. For example, assuming the `body` is the root
-element for GSS, the `$[top-left]` property of the root element will be `x = left = 0, y = top = 0`.
+Elements are positioned relative to the scope element, so its top left corner is considered a (0, 0) point. GSS initialized upon `document`, `<html>`, `<body>` or `<head>` position against the `<html>` element. Global properties like `$left`, `$right`, `$scroll-top` and `$bottom` point to respective properties of `::window`. 
 
-If you're under constraining your elements, GSS might find a solution where negative coordinates are the solution. In that
-case you need to declare more constraints. For example, you could prevent that from happening by contraining the edges of the
-elements to the edge of `::window`.
-
-The following documentation assume the GSS engine was declared in the `body` element so we are positionning elements from the
-top-left corner of the page `left=0, top=0`.
+Cassowary is a general purpose solver, so it does not make any assumptions about the positioning or even geometry. If there's nothing that is bound to absolute values like zero or edges of the screen, the whole layout can be solved to be positioned off-screen. Negative `top` and `left` values is a common gotcha in *underconstrained* systems.
 
 ### Top
 
@@ -721,26 +697,14 @@ Place the vertical center of the element 100px from the top of the page.
 `center` is a 2d property shortcut for constraining both `center-x` and `center-y` at once.
 
 <a name="relativepositionning"></a>
-### Relatively positionned parents.
-
-GSS deals with relative parents in two distinct way. One being when the parent `position: relative` property
-is declared in a CSS ruleset, the other is when the `position: relative` is declared in the `style` attribute of
-the element.
-
-#### position: relative in ruleset
-Even if the elements your constraining are placed within an element having the CSS property `position: relative`,
-the constraints will calculate absolute position agains the top-left corner of the root element.
-
-If you look at the calculated values, you'll see that they account for their relative parent position but are
-positionned according to the top-left of the root element.
 
 
-#### position: relative in style attribute
-When you are dealing with a very large page composed of multiples elements, GSS needs to know the position and dimension of
-each element in order to find a solution to the constraints you've defined.
+### Relative positioning
 
-It is possible to localize computations within dedicated containers and rely on CSS to lay them out in the page.
-Sections with `position: relative` set in the `style` attribute will be solved separately, leading to better performance.
+Elements that have parents with `position: relative` declared in CSS stylesheet will compute their position ignoring that declaration. Visually the constraints will hold, but the actual `top` and `left` styles assigned for each element will account for the relative positioning.
+
+When `position
+
 
 {% highlight css %}
 
@@ -769,8 +733,8 @@ Sections with `position: relative` set in the `style` attribute will be solved s
 
 {% endhighlight %}
 
-In this example, the `top` and `left` are constrained to be zero wich is the top-left corner of the section
-element. By doing so, all position' constraints will be calculated relative to the section element.
+In this example, the `top` and `left` are constrained to be zero wich is the top-left corner of section
+elements. By doing so, all position' constraints will be calculated relative to the section element.
 
 With the `position: relative` declared in the `style` attribute, GSS will solve independently each sections which
 should results in better performance. <a href="http://codepen.io/cbchouinard/pen/pvwaNN" target="_blank">Live example.</a>
