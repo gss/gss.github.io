@@ -10,7 +10,7 @@ layout: post
 ## Selectors
 
 In order to apply constraints to elements, you first need to select and observe them from the DOM. GSS supports
-the following basic selectors. <a href="http://codepen.io/cbchouinard/pen/Eavbyd" target="_blank">Live example.</a>
+the following basic selectors. <a href="http://codepen.io/thegridgssdocs/pen/Eavbyd" target="_blank">Live example.</a>
 
 #### Elements
 
@@ -44,7 +44,7 @@ all elements that have the class `className`.
 <a name="combinators"></a>
 ## Combinators
 Combinators are used to combine basic selectors to allow more fine grained selection of elements.
- <a href="http://codepen.io/cbchouinard/pen/WbEXKd" target="_blank">Live example.</a>
+ <a href="http://codepen.io/thegridgssdocs/pen/WbEXKd" target="_blank">Live example.</a>
 
 The following combinators can be use in GSS:
 
@@ -193,7 +193,7 @@ div ~ * {
 
 For parent-child selector, the reverse combinator `!` allows you to reverse the selector relationship
 to child-parent. For sibling selectors, the reverse combinator `!` allows you to go up in the DOM for
-the selection. <a href="http://codepen.io/cbchouinard/pen/jELaRK" target="_blank">Live example.</a>
+the selection. <a href="http://codepen.io/thegridgssdocs/pen/jELaRK" target="_blank">Live example.</a>
 
 #### All parent elements
 
@@ -318,7 +318,7 @@ section {
 
 As we've seen previously, GSS will iterate over all selected elements to apply contraints.
 When using the `^` pseudo selector, you are asking GSS to refer to the parent ruleset element.
-<a href="http://codepen.io/cbchouinard/pen/JoyMpR" target="_blank">Live example.</a>
+<a href="http://codepen.io/thegridgssdocs/pen/JoyMpR" target="_blank">Live example.</a>
 
 You can chain pseudo parent selector. In the following, GSS will access the current `className` parent's parent which in
 this case would be a `section` element.
@@ -337,7 +337,7 @@ section {
 
 As previously mentionned it is important to understand that the parent pseudo selector will select
 an element according to the ruleset scope and not the DOM. As you can see in the next live example, the `div` are
-constrained against their ruleset parent element and not their DOM parent. <a href="http://codepen.io/cbchouinard/pen/JoyMpR" target="_blank">Live example.</a>
+constrained against their ruleset parent element and not their DOM parent. <a href="http://codepen.io/thegridgssdocs/pen/JoyMpR" target="_blank">Live example.</a>
 
 ### this selector &
 
@@ -378,7 +378,7 @@ Scrolling the page will not re-calculate constraints using the `::window` so you
 in relation to the `::window` pseudo selector.
 
 In the next example, the gray `div` will be centered with `::window` but as you can see scrolling don't have any
-effect on its position. <a href="http://codepen.io/cbchouinard/pen/jELKpr" target="_blank">Live example</a>
+effect on its position. <a href="http://codepen.io/thegridgssdocs/pen/jELKpr" target="_blank">Live example</a>
 
 
 ### Global scope selector $
@@ -397,7 +397,7 @@ element is the element in which you instantiate the GSS engine.
 ## Selector within rulesets
 Using selectors within rulesets is the equivalent of using the [descendant](#descendant) combinator. In the following example,
 a constraint on the `.className` element will only be define if that element has a descendant element with an id equal to `#elm`.
-<a href="http://codepen.io/cbchouinard/pen/yyXPyK" target="_blank">Live example.</a>
+<a href="http://codepen.io/thegridgssdocs/pen/yyXPyK" target="_blank">Live example.</a>
 
 {% highlight css %}
 
@@ -425,7 +425,7 @@ div {
 When using the parent `^` combinator, the selector will use the element selected in the parent ruleset to perform its search:
 
 In this following example '^' will move up to the current `.container` element and will search its descendants
-for an element with `elm` id. <a href="http://codepen.io/cbchouinard/pen/yyXPej" target="_blank">Live example.</a>
+for an element with `elm` id. <a href="http://codepen.io/thegridgssdocs/pen/yyXPej" target="_blank">Live example.</a>
 
 {% highlight css %}
 
@@ -441,7 +441,7 @@ for an element with `elm` id. <a href="http://codepen.io/cbchouinard/pen/yyXPej"
 <a name="selectorsplats"></a>
 ## Selector splat
 Selector splat enables you to select elements having a sequence number in their ID or class name.
-<a href="http://codepen.io/cbchouinard/pen/yyoWeN" target="_blank">Live example</a>
+<a href="http://codepen.io/thegridgssdocs/pen/yyoWeN" target="_blank">Live example</a>
 
 {% highlight css %}
 

@@ -47,7 +47,7 @@ The syntax for declaring a constraint is as follows:
 + `>=` defines an inequality constraint. You can declare inequality and equality constraint.
 + `16` is the numerical value for the constraint in pixels (the default [unit of measurement](/guides/references#unitofmeasurement) in GSS).
 
-<a href="http://codepen.io/cbchouinard/pen/OPmdVL" target="_blank">Live example</a>
+<a href="http://codepen.io/thegridgssdocs/pen/OPmdVL" target="_blank">Live example</a>
 
 <a name="constraintsaretwoway"></a>
 ### Constraints are two-way
@@ -88,7 +88,7 @@ Regular imperative programming approach focuses on the implementation instead, m
 
 <a name="mayormaynothold"></a>
 ### Constraints May or may not hold
-GSS will find the best solution that satisfies the defined constraints. It uses uses "soft" constraints,
+GSS will find the best solution that satisfies the defined constraints. It uses "soft" constraints,
 which means that it is preferred but not required that certain constraints be satisfied.
 
 For example:
@@ -102,7 +102,7 @@ For example:
 {% endhighlight %}
 
 `#GSS` and `#cassowary` elements are constrained to have width of 200px initially, and then the sum of those two is set to equal 350px. In this case, one of these
-two constraints will not hold. <a href="http://codepen.io/cbchouinard/pen/XJROdV" target="_blank">Live example.</a>
+two constraints will not hold. <a href="http://codepen.io/thegridgssdocs/pen/XJROdV" target="_blank">Live example.</a>
 
 <a name="strengths"></a>
 ## Strengths
@@ -132,7 +132,7 @@ There are 4 levels of built-in strength:
 
 
 In a [previous example](#mayormaynothold),
-strengths assigned to constraints allow individual `width` constraints to overcome the sum constraint: <a href="http://codepen.io/cbchouinard/pen/bNRbQg" target="_blank">Live example.</a>
+strengths assigned to constraints allow individual `width` constraints to overcome the sum constraint: <a href="http://codepen.io/thegridgssdocs/pen/bNRbQg" target="_blank">Live example.</a>
 
 #### !require strength
 `!require` is a special strength that guarantees the constraint will hold, otherwise everything breaks.
@@ -158,13 +158,13 @@ Generally speaking, later constraint declarations of the same strength are more 
 as we'll see in the following sections.
 
 In a [previous example](#mayormaynothold)  with conflicting strengths, altered order of constraints yields a
-different result. <a href="http://codepen.io/cbchouinard/pen/rawBRr" target="_blank">Live example.</a>
+different result. <a href="http://codepen.io/thegridgssdocs/pen/rawBRr" target="_blank">Live example.</a>
 
 <a name="lineararithmetic"></a>
 ## Linear Arithmetic
 
 Cassowary, which is the constraints solving algorithm used by GSS, can only compute "Linear Arithmetic" constraints. Simple math operations like `+`, `-`, `*` and `/` are all supported, but the expressions must be linear (of the form `y = mx + b`).  Basically, you can do everything except division and multiplication of two constrained variables.
-<a href="http://codepen.io/cbchouinard/pen/MYvOWO" target="_blank">Live example.</a>
+<a href="http://codepen.io/thegridgssdocs/pen/MYvOWO" target="_blank">Live example.</a>
 
 {% highlight css %}
 
@@ -223,43 +223,6 @@ div {
    background-color: green;
    width: <= 200;
 }
-{% endhighlight %}
-
-### Selectors within rulesets
-
-Selectors within ruleset body are scoped to the elements matching the ruleset selector. For example:
-
-{% highlight css %}
-div {
-  width: <= .widget[width];
-}
-{% endhighlight %}
-
-`<div>` elements will constrain their width to width of their descendants having the class name `widget`, if they have any.
-<a href="http://codepen.io/cbchouinard/pen/yyXPyK" target="_blank">Live example.</a>
-
-
-`$` combinator makes selectors in ruleset body apply to the root of a document ignoring the nesting:
-
-{% highlight css %}
-div {
-  width: <= ($ #elm)[width];
-}
-{% endhighlight %}
-
-`^` combinator makes selectors in ruleset body apply to the elements selected by the parent ruleset:
-
-In this following example '^' will move up to the current `.container` element and will search its descendants
-for an element with `elm` id. <a href="http://codepen.io/cbchouinard/pen/yyXPej" target="_blank">Live example.</a>
-
-{% highlight css %}
-
-.container {
-  div {
-    width: <= (^ #elm)[width];
-  }
-}
-
 {% endhighlight %}
 
 
@@ -349,9 +312,9 @@ Properties defined at the top level of a stylesheet will be attached to the styl
 
 In this example, `#elm1` will have a width of 100px and `#elm2` will have a width of 200px.
 The two `varX` are in different scopes and are therefore indenpendent from each other.
-<a href="http://codepen.io/cbchouinard/pen/EaXmRp" target="_blank">Live example.</a>
+<a href="http://codepen.io/thegridgssdocs/pen/EaXmRp" target="_blank">Live example.</a>
 
-Global variables prefixed with `$`, are accessible accross stylesheets. In the previous example, using `$varX` instead of `varX` makes constraints operate on the same variable, making the widths of two elements equal. <a href="http://codepen.io/cbchouinard/pen/yyoxxm" target="_blank">Live example.</a>
+Global variables prefixed with `$`, are accessible accross stylesheets. In the previous example, using `$varX` instead of `varX` makes constraints operate on the same variable, making the widths of two elements equal. <a href="http://codepen.io/thegridgssdocs/pen/yyoxxm" target="_blank">Live example.</a>
 
 Adding a `scoped` attribute to the stylesheet attaches top most properties to the parent element of a stylesheet. If two `scoped` stylesheets share the parent element, they will automatically share the topmost variables.
 
@@ -377,7 +340,7 @@ Variables defined inside a ruleset define a property on each element that matche
 
 In this case, both rulesets define `varX` property for matching elements. If there's an element that matches both rulesets, it will have both constraints applied over a single property. This may lead to a conflict local to that element.
 
-The latter constraint will win in case of conflict if element had both classes from the start. Otherwise the class that was added the latest will "win". Strengths can be used to define the importance of each constraint independent from order of changes. <a href="http://codepen.io/cbchouinard/pen/XJgRPq" target="_blank">Live example.</a>
+The latter constraint will win in case of conflict if element had both classes from the start. Otherwise the class that was added the latest will "win". Strengths can be used to define the importance of each constraint independent from order of changes. <a href="http://codepen.io/thegridgssdocs/pen/XJgRPq" target="_blank">Live example.</a>
 
 
 <a name="variables"></a>
@@ -465,7 +428,7 @@ div {
 }
 {% endhighlight %}
 
-In this case, all nested rulesets will share `varX` variable through parent ruleset. Nested rulesets also define `varY` variables that are not hoisted and act like local properties. <a href="http://codepen.io/cbchouinard/pen/zxzwXJ" target="_blank">Live example.</a>
+In this case, all nested rulesets will share `varX` variable through parent ruleset. Nested rulesets also define `varY` variables that are not hoisted and act like local properties. <a href="http://codepen.io/thegridgssdocs/pen/zxzwXJ" target="_blank">Live example.</a>
 
 Only variables capture other variables within inner rulesets. Anything that has explicit scope is considered a property. Properties do not capture and are not hoisted. Examples would be `$global` variables and `&local` variables. `property: ==` notation is the cleanest way to define property in a ruleset:
 
@@ -522,7 +485,7 @@ Javascript code can provide numerical values that can be used in constraints. Th
 
 {% endhighlight %}
 
-Suggested variables are global so they should be accessed with `$` combinator. <a href="http://codepen.io/cbchouinard/pen/pvWMJV" target="_blank">Live example.</a>
+Suggested variables are global so they should be accessed with `$` combinator. <a href="http://codepen.io/thegridgssdocs/pen/pvWMJV" target="_blank">Live example.</a>
 
 External variables are bound in one direction, so their values will not be affected by the solver. It is almost as if there were actual numbers in place of those variables. The difference is that these values can be updated dynamically without much effort on the solver side:
 
@@ -563,7 +526,7 @@ without the need for a DOM container element.
 {% endhighlight %}
 
 As you can see from the previous example, we are constraining `#elmA` and `#elmB` against the virtual element.
-<a href="http://codepen.io/cbchouinard/pen/WbOWgB" target="_blank">Live example.</a>
+<a href="http://codepen.io/thegridgssdocs/pen/WbOWgB" target="_blank">Live example.</a>
 
 In regards of constraining dimensions and positions, virtuals are no different from DOM element in the sens that you can
 declare constraints on them as shown previously. The main difference is that since they don't exist in the DOM, they are
@@ -624,11 +587,11 @@ virtuals you can do the following:
 
 {% endhighlight %}
 
-Using those virtual boxes, you can now constrain DOM elements against those four boxes. <a href="http://codepen.io/cbchouinard/pen/VYzOPx" target="_blank">Live example.</a>
+Using those virtual boxes, you can now constrain DOM elements against those four boxes. <a href="http://codepen.io/thegridgssdocs/pen/VYzOPx" target="_blank">Live example.</a>
 
 
 ## Read next
-GSS provides conditionnal statements to allow you to do responsive design. Read our [@if @else guide](/guides/ifelse) to learn more.
+GSS provides conditionnal statements to allow you to do responsive design. Read our [conditionals guide](/guides/ifelse) to learn more.
 
 With only CCSS constraints at your disposal, constraining common layout scenarios quickly becomes tedious. Read our
 [VFL guide](/guides/ifelse) to learn how to more efficiently constrain your layout.
