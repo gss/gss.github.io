@@ -6,14 +6,6 @@ color: b
 layout: post
 ---
 
-<ul class="large-list cols-2">
-  <li><a href="#selectors">Selectors</li>
-  <li><a href="#combinators">Combinators</a></li>
-  <li><a href="#pseudoselectors">Pseudo selectors</a></li>
-  <li><a href="#selectorsplats">Selector splats</a></li>
-  <li><a href="#pluralbinding">Plural binding</a></li>
-</ul>
-
 <a name="selectors"></a>
 ## Selectors
 
@@ -322,11 +314,6 @@ section {
   }
 }
 
-/* Alternative syntax */
-.className {
-  width: == ::parent[width];
-}
-
 {% endhighlight %}
 
 As we've seen previously, GSS will iterate over all selected elements to apply contraints.
@@ -410,6 +397,7 @@ element is the element in which you instantiate the GSS engine.
 ## Selector within rulesets
 Using selectors within rulesets is the equivalent of using the [descendant](#descendant) combinator. In the following example,
 a constraint on the `.className` element will only be define if that element has a descendant element with an id equal to `#elm`.
+<a href="http://codepen.io/cbchouinard/pen/yyXPyK" target="_blank">Live example.</a>
 
 {% highlight css %}
 
@@ -420,6 +408,32 @@ a constraint on the `.className` element will only be define if that element has
 /* is the equivalent of */
 
 .className[line-height] == (.className #elm)[line-height];
+
+{% endhighlight %}
+
+### Global combinator $
+When using the `$` combinator, the selector will search elements from the root of the document ignoring the nesting of rulesets:
+
+{% highlight css %}
+div {
+  width: <= ($ #elm)[width];
+}
+{% endhighlight %}
+
+
+### Parent combinator ^
+When using the parent `^` combinator, the selector will use the element selected in the parent ruleset to perform its search:
+
+In this following example '^' will move up to the current `.container` element and will search its descendants
+for an element with `elm` id. <a href="http://codepen.io/cbchouinard/pen/yyXPej" target="_blank">Live example.</a>
+
+{% highlight css %}
+
+.container {
+  div {
+    width: <= (^ #elm)[width];
+  }
+}
 
 {% endhighlight %}
 
@@ -589,4 +603,4 @@ Learn how to use [CCSS constraints](/guides/ccss)
 GSS provides conditionnal statements to allow you to do responsive design. Read our [@if @else guide](/guides/ifelse) to learn more.
 
 With only CCSS constraints at your disposal, constraining common layout scenarios quickly becomes tedious. Read our
-[VFL guide](/guides/ifelse) to learn how to more efficiently constraint your layout.
+[VFL guide](/guides/ifelse) to learn how to more efficiently constrain your layout.

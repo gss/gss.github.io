@@ -6,16 +6,6 @@ color: b
 layout: post
 ---
 
-<ul class="large-list cols-2">
-  <li><a href="#basicconstraint">Constraints, the basics</li>
-  <li><a href="#selectors">Selectors</a></li>
-  <li><a href="#rulesets">Rulesets</a></li>
-  <li><a href="#scope">Scope</a></li>
-  <li><a href="#position">Positionning elements</a></li>
-  <li><a href="#virtuals">Virtuals</a></li>
-</ul>
-
-
 Soon after the W3C introduced Cascading Style Sheets, [Greg Badros](http://www.badros.com/greg/), the author of the Cassowary Constraint
 Solver & [recently retired Facebook VP](http://allthingsd.com/20130920/facebook-engineering-and-products-vp-greg-badros-to-leave-company/),
 proposed [Constraint CSS (CCSS)](http://www.cs.washington.edu/research/constraints/web/ccss-uwtr.pdf) as a general solution for CSS layout.
@@ -27,6 +17,7 @@ with [float-based](http://www.sitepoint.com/give-floats-the-flick-in-css-layouts
 > "We should contemplate how very, very far behind the web platform is in making it delightful to build the sorts of things that are work-a-day in native environments." <a href="http://infrequently.org/2012/02/misdirection/">Alex Russell</a>
 
 The foundation of GSS is a modernized implementation of CCSS.  From CCSS primitives other, more exotic layout API's can and are accomplished.
+
 
 <a name="basicconstraint"></a>
 ## Constraints, the basics
@@ -54,7 +45,7 @@ The syntax for declaring a constraint is as follows:
 + `[]` is the property accessor syntax.
 + `line-height` is the property for which a value will be calculated by GSS.
 + `>=` defines an inequality constraint. You can declare inequality and equality constraint.
-+ `16` is the numerical value for the constraint in pixels (the default unit of measurement in GSS).
++ `16` is the numerical value for the constraint in pixels (the default [unit of measurement](/guides/references#unitofmeasurement) in GSS).
 
 <a href="http://codepen.io/cbchouinard/pen/OPmdVL" target="_blank">Live example</a>
 
@@ -91,7 +82,7 @@ y >= 10;
 x and y have a constraint to be equal, so x and y will be 100.
 
 Constraints are incrementally added to a `solver`, then the solver computes a feasible & optimal solution to all the constraints.
-Constraint programming focuses on intentions, not implementation. This makes constraint solver a perfect fit for empowering declarative languages like CSS. 
+Constraint programming focuses on intentions, not implementation. This makes constraint solver a perfect fit for empowering declarative languages like CSS.
 
 Regular imperative programming approach focuses on the implementation instead, making programmer solve the problems.
 
@@ -183,25 +174,10 @@ Cassowary, which is the constraints solving algorithm used by GSS, can only comp
 
 {% endhighlight %}
 
-## Units of measurement
-The default unit of measurements is pixel. GSS also supports the following units:
-
-{% highlight css %}
-em /* use the font size of the element */
-rem /* use the font size of the html element */
-vh /* viewport height */
-vw /* viewport width */
-vmax /* the greatest value between vh or vw */
-vmin /* the lowest value between vh or vw */
-cm /* centimeter */
-mm /* millimeter */
-in /* inches */
-{% endhighlight %}
-
 <a name="selectors"></a>
 ## Selectors
 
-Selector is a query over a tree of HTML elements. They determine which elements are affected by the constraint. 
+Selector is a query over a tree of HTML elements. They determine which elements are affected by the constraint.
 
 {% highlight css %}
 // elements with tag name div within element with #something id
@@ -288,8 +264,12 @@ for an element with `elm` id. <a href="http://codepen.io/cbchouinard/pen/yyXPej"
 
 
 ## Properties
+Properties are variables belonging to an element. All previous examples constrained CSS properties like `width` or `line-height`.
+It is possible to constrain custom properties that are not recognized by CSS, but can be used in GSS constraints over known
+CSS properties.
 
-Properties are the variables local to the element. If there is a property in CSS defined with the same name, the computed value will be assigned to element as an inline style in pixels.
+When using a property known by CSS, the GSS computed value for that property will be assigned as an inline style in pixels
+to the element.
 
 Like `$` and `^` combinators, `&` combinator refers to current element matching the ruleset selector. It is implied by the use of `width: ==` property notation.
 
@@ -333,7 +313,7 @@ Properties on special combinators like `&`, `$` or `^` may omit square brackets:
 body {
   .container {
     // equate width of a <body> element with width of elements having container class
-    &width == ^width; 
+    &width == ^width;
   }
 }
 
@@ -345,10 +325,10 @@ body {
 
 Properties are attached to a specific element:
   * In rulesets, it's an element that matches the selector
-  * In topmost level of a stylesheet, it's a `<link>` or `<style>` that defines the stylesheet. 
+  * In topmost level of a stylesheet, it's a `<link>` or `<style>` that defines the stylesheet.
   * In stylesheet element with `scoped` attribute, topmost variables are attached to the parent element of a stylesheet.
 
-Variables prefixed with `$` combinator are considered global, and can be shared by different stylesheets. 
+Variables prefixed with `$` combinator are considered global, and can be shared by different stylesheets.
 
 
 ### Properties in stylesheet
@@ -371,9 +351,9 @@ In this example, `#elm1` will have a width of 100px and `#elm2` will have a widt
 The two `varX` are in different scopes and are therefore indenpendent from each other.
 <a href="http://codepen.io/cbchouinard/pen/EaXmRp" target="_blank">Live example.</a>
 
-Global variables prefixed with `$`, are accessible accross stylesheets. In the previous example, using `$varX` instead of `varX` makes constraints operate on the same variable, making the widths of two elements equal. <a href="http://codepen.io/cbchouinard/pen/yyoxxm" target="_blank">Live example.</a> 
+Global variables prefixed with `$`, are accessible accross stylesheets. In the previous example, using `$varX` instead of `varX` makes constraints operate on the same variable, making the widths of two elements equal. <a href="http://codepen.io/cbchouinard/pen/yyoxxm" target="_blank">Live example.</a>
 
-Adding a `scoped` attribute to the stylesheet attaches top most properties to the parent element of a stylesheet. If two `scoped` stylesheets share the parent element, they will automatically share the topmost variables. 
+Adding a `scoped` attribute to the stylesheet attaches top most properties to the parent element of a stylesheet. If two `scoped` stylesheets share the parent element, they will automatically share the topmost variables.
 
 The same scoping logic applies to external GSS files.
 
@@ -395,13 +375,13 @@ Variables defined inside a ruleset define a property on each element that matche
 }
 {% endhighlight %}
 
-In this case, both rulesets define `varX` property for matching elements. If there's an element that matches both rulesets, it will have both constraints applied over a single property. This may lead to a conflict local to that element. 
+In this case, both rulesets define `varX` property for matching elements. If there's an element that matches both rulesets, it will have both constraints applied over a single property. This may lead to a conflict local to that element.
 
 The latter constraint will win in case of conflict if element had both classes from the start. Otherwise the class that was added the latest will "win". Strengths can be used to define the importance of each constraint independent from order of changes. <a href="http://codepen.io/cbchouinard/pen/XJgRPq" target="_blank">Live example.</a>
 
 
 <a name="variables"></a>
-### Variables
+## Variables
 
 Variables are properties that dont have explicit scope and can be accessed from inner scopes.  This concept is known as lexical scoping. The scoping is determined by the source code, so it's *static* and does not change in runtime.
 
@@ -425,7 +405,7 @@ varX == 100;
 
 {% endhighlight %}
 
-If a `varX` was defined as a property on the top level (e.g. `varX: == 100`), the variable would be captured at the `.className` level instead.  
+If a `varX` was defined as a property on the top level (e.g. `varX: == 100`), the variable would be captured at the `.className` level instead.
 
 
 The order of appearance or square brackets around variables have no effect over hoisting:
@@ -461,11 +441,11 @@ varX = 100;
 
 `width` variable in the `.wrapper` ruleset captures `width` variable within `section` ruleset. Therefore an element having `wrapper` class name will have its width equal to height of its descendant sections, if there are any.
 
-Rulesets can be nested arbitarily deep, and the hoisting reference is computed for each variable individually. A variable that was not defined in any of its parent scopes, is considered local and is identical to property. 
+Rulesets can be nested arbitarily deep, and the hoisting reference is computed for each variable individually. A variable that was not defined in any of its parent scopes, is considered local and is identical to property.
 
 {% highlight css %}
 div {
-  varX == 40; // captured varX 
+  varX == 40; // captured varX
 
   .someClass {
     width: == varX;
@@ -509,7 +489,7 @@ div {
 }
 {% endhighlight %}
 
-It is possible to opt out of hoisting in the same way by prepending `&` to a variable name, making it a property. 
+It is possible to opt out of hoisting in the same way by prepending `&` to a variable name, making it a property.
 
 {% highlight css %}
 div {
@@ -555,234 +535,14 @@ External variables are bound in one direction, so their values will not be affec
       })
     }
   </script>
-{% endhighlight}
+{% endhighlight %}
 
 
 <a name="position"></a>
-## Positioning
+## Position and dimension
 
-Elements are positioned relative to the scope element, so its top left corner is considered a (0, 0) point. GSS initialized upon `document`, `<html>`, `<body>` or `<head>` position against the `<html>` element. Global properties like `$left`, `$right`, `$scroll-top` and `$bottom` point to respective properties of `::window`. 
-
-Cassowary is a general purpose solver, so it does not make any assumptions about the positioning or even geometry. If there's nothing that is bound to absolute values like zero or edges of the screen, the whole layout can be solved to be positioned off-screen. Negative `top` and `left` values is a common gotcha in *underconstrained* systems.
-
-### Top
-
-{% highlight css %}
-
-#someElm[top] == 20;
-
-/* equivalent to : */
-#someElm[y] == 20;
-
-{% endhighlight %}
-
-Place the top of the element 20px from the top of the page.
-
-### Bottom
-
-{% highlight css %}
-
-#someElm[bottom] == 100;
-
-/* equivalent to : */
-#someElm[bottom] == #someElm[top] + #someElm[height];
-
-{% endhighlight %}
-
-Place the bottom of the element 100px from the top of the page.
-
-### Left
-
-{% highlight css %}
-
-#someElm[left] == 20;
-
-/* equivalent to : */
-#someElm[x] == 20;
-
-{% endhighlight %}
-
-Place the left of the element 20px from the left of the page.
-
-### Right
-
-{% highlight css %}
-
-#someElm[right] == 100;
-
-/* equivalent to : */
-#someElm[rigth] == #someElm[left] + #someElm[width];
-
-{% endhighlight %}
-
-Place the right of the element 100px from the left of the page.
-
-### position
-
-{% highlight css %}
-#someElm[position] == 100;
-
-/* equivalent to : */
-#someElm[top] == 100;
-#somElm[left] == 100;
-
-{% endhighlight %}
-
-### top-left, top-right
-
-{% highlight css %}
-#someElm[top-left] == 100;
-#otherElm[top-right] == 200;
-
-/* equivalent to : */
-#someElm[top] == 100;
-#someElm[left] == 100;
-#otherElm[top] == 200;
-#otherElm[right] == 200;
-
-{% endhighlight %}
-
-Position the `#someElm` top-left corner to be at 100px from the top-left of the page.
-Same thing for `#otherElm` excepts its the top-right corner that's been position 200px
-from the top-left of the page.
-
-### bottom-left, bottom-right
-
-{% highlight css %}
-#someElm[bottom-left] == 100;
-#otherElm[bottom-right] == 200;
-{% endhighlight %}
-
-Position the `#someElm` bottom-left corner to be at 100px from the top-left of the page.
-Same thing for `#otherElm`, excepts its the bottom-right corner that's been position 200px
-from the top-left of the page.
-
-### center-x, cx
-
-{% highlight css %}
-#someElm[center-x] == 100;
-
-/* you can also use the condense syntax: */
-#someElm[cx] == 100;
-
-/* center-x will expand in the following constraints */
-#someElm[left] + #someElm[width] / 2 == 100;
-
-{% endhighlight %}
-
-Horizontally place the horizontal center of the element at 100px from the left of the page.
-
-### center-y, cy
-
-{% highlight css %}
-
-#someElm[center-y] == 100;
-
-/* you can also use the condense syntax: */
-#someElm[cy] == 100;
-
-/* center-y will expand in the following constraints */
-#someElm[top] + #someElm[height] / 2 == 100;
-
-{% endhighlight %}
-
-Place the vertical center of the element 100px from the top of the page.
-
-### Center
-
-{% highlight css %}
-#someElm[center] == 100;
-{% endhighlight %}
-
-`center` is a 2d property shortcut for constraining both `center-x` and `center-y` at once.
-
-<a name="relativepositionning"></a>
-
-
-### Relative positioning
-
-Elements that have parents with `position: relative` declared in CSS stylesheet will compute their position ignoring that declaration. Visually the constraints will hold, but the actual `top` and `left` styles assigned for each element will account for the relative positioning.
-
-When `position
-
-
-{% highlight css %}
-
-<section class="relative-container" style="position: relative">
-  <div class="container"></div>
-</section>
-
-<section class="relative-container" id="section-two" style="position: relative">
-  <div class="container"></div>
-</section>
-
-<style type="text/gss">
-
-.relative-container {
-  top: == 0;
-  left: == 0;
-
-  .container {
-    @v |-(&)-| in(^) gap(10);
-    height: == 100;
-    width: == 100;
-  }
-}
-
-</style>
-
-{% endhighlight %}
-
-In this example, the `top` and `left` are constrained to be zero wich is the top-left corner of section
-elements. By doing so, all position' constraints will be calculated relative to the section element.
-
-With the `position: relative` declared in the `style` attribute, GSS will solve independently each sections which
-should results in better performance. <a href="http://codepen.io/cbchouinard/pen/pvwaNN" target="_blank">Live example.</a>
-
-## Dimensions
-GSS provides property to constrain the dimension of an element. We've already saw the `width` and `height`.
-GSS provides syntax sugar called 2d properties to constrain both height and width of an element as a single property.
-
-{% highlight css %}
-
-.selectorA {
-  size: == 200;
-}
-
-{% endhighlight %}
-
-## Intrinsic values
-When you want to constrain the position of an element GSS needs to know the dimension of the element. For example how could
-GSS position an element using the bottom-right property without knowing the height and width of that element.
-
-One way to solve this, would be to constrain the dimension of the element. But what if it had text in it? You'll then need to know the
-exact width and height require to display the text. What if that text is dynamic? The element might also be styled using CSS and you
-want to get the dimensions of that styling.
-
-In most cases, the constraints will provide those values indirectly regardless of the element's contents. It is possible to make
-GSS measure content the values coming from DOM or CSS - be it text, or blocks styled with css.
-
-GSS provides the `intrinsic-` properties which defers to CSS the dimension styling of the element and instruct GSS to measure
-the elements using that styling.
-
-{% highlight css %}
-
-  .selectorA {
-    width: == &[intrinsic-width];
-    height: == &[intrinsic-height];
-  }
-
-  .selectorB {
-    size: == &[intrinsic-size];
-  }
-
-{% endhighlight %}
-
-Once an intrinsic property is used on an element, GSS will evaluate other constraints you defined on the same property but the
-calculated value will not be assign to the property because `intrinsic` property makes the property read-only.
-
-For example, if we add a `width` constraint on `.selectorA`, that constraint will be
-evaluated by GSS but not applied to the element since `intrinsic-*` have precendence over all other constraints.
+Consult our [layout guide](/guides/layout) to learn more about positioning and dimensioning elements. Having a good
+understanding of layout constraints will help you appreciate the next section about virtuals.
 
 <a name="virtuals"></a>
 ## Virtuals
