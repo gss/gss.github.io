@@ -110,15 +110,14 @@ For example:
 {% endhighlight %}
 
 In the previous example, we're asking GSS to give the `#GSS` and `#cassowary` elements a width of 200px and we
-later constraint the sum of these two elements to be equal to 350px. In this case, one of these
-two constraint will not hold. <a href="http://codepen.io/cbchouinard/pen/XJROdV" target="_blank">Live example.</a>
+later constrain the sum of these two elements to be equal to 350px. In this case, one of these
+two constraints will not hold. <a href="http://codepen.io/cbchouinard/pen/XJROdV" target="_blank">Live example.</a>
 
 As we'll see next, you can influence the constraints solving by given more information to GSS about your intents.
 
 <a name="strengths"></a>
 ## Strengths
-Strengths allow you to guide GSS in your layout intention by giving the GSS constraints solver more details about which
-constraints you prioritize.
+Strengths allow you to guide GSS in your layout intention by giving the solver more details about which constraints you prioritize.
 
 Stronger constraints completely overcome weaker ones - this is the phenomena of the [Constraint Hierarchy](http://www.cs.washington.edu/research/constraints/theory/hierarchies-92.html).  Strengths are declared in the same fashion of CSS's `!important`:
 
@@ -178,7 +177,8 @@ different result. <a href="http://codepen.io/cbchouinard/pen/rawBRr" target="_bl
 
 Cassowary, which is the constraints solving algorithm used by GSS, only allows for "Linear Arithmetic" constraints, you can do simple
 math operations like `+`, `-`, `*` and `/`, but all expressions must be linear (of the form `y = mx + b`).  Basically, you can do
-most things except multiply or divide two constraint variables.  <a href="http://codepen.io/cbchouinard/pen/MYvOWO" target="_blank">Live example.</a>
+most things except multiply or divide two constraint variables.
+<a href="http://codepen.io/cbchouinard/pen/MYvOWO" target="_blank">Live example.</a>
 
 {% highlight css %}
 
@@ -234,7 +234,7 @@ Within a ruleset, constraints are defined on properties using the same syntax as
 Rulesets can be nested:
 
 {% highlight css %}
-Section > article {
+section > article {
    .someclass {
        width: == 100;
     }
@@ -260,10 +260,10 @@ div {
 {% endhighlight %}
 
 In this example, GSS will iterate over each `div` found and will search for an element with `id='elm'` in the current `div`
-descendant elements. Its important to understand that constraints will be define independantly for each selected `div`.
+descendant elements. Its important to understand that constraints will be defined independantly for each selected `div`.
 
 For example, if there are two `div` selected and the first one has a child `#elm`
-element but not the other, the first `div` will have a constraint declare but not the second one.
+element but not the other, the first `div` will have a constraint declared but not the second one.
 <a href="http://codepen.io/cbchouinard/pen/yyXPyK" target="_blank">Live example.</a>
 
 If you want to select and element from the GSS root element, you need to do the following:
@@ -274,7 +274,7 @@ div {
 }
 {% endhighlight %}
 
-If you want to select an element within the parent's child elements, you can use the `^` pseudo selector:
+If you want to refer to an element within the parent's child elements, you can use the `^` pseudo selector:
 
 {% highlight css %}
 
@@ -286,12 +286,13 @@ If you want to select an element within the parent's child elements, you can use
 
 {% endhighlight %}
 
-In this example `(^ #elm)` will search for an `id=elm` element contained in the current `.container` parent's
-element. <a href="http://codepen.io/cbchouinard/pen/yyXPej" target="_blank">Live example.</a>
+
+In this example '^' will move up to the current `.container` element and will search its child elements
+for a `#elm` element. <a href="http://codepen.io/cbchouinard/pen/yyXPej" target="_blank">Live example.</a>
 
 ## Properties
 All the previous examples constrained CSS properties like `width` or `line-height`. But you can also
-constraint non-CSS property using GSS.
+constrain non-CSS property using GSS.
 
 {% highlight css %}
 
@@ -304,8 +305,8 @@ constraint non-CSS property using GSS.
 
 {% endhighlight %}
 
-This will automatically create a `[custom-properties]` property for each element having a `.post` class. That property
-will be constrained to be equal to three time the line-height property.
+This will automatically create a `[custom]` property for each element having a `.post` class. That custom element property
+will be constrained to be equal to three time the element's line-height property.
 
 Don't forget this relationship is 2-way, so further constraining a
 post's [custom-properties] can affect its line-height, which can be remedied by taking advantage of the
@@ -335,6 +336,24 @@ varX = 100;
 
 Variables are hoisted and can be access from child' scopes. You can learn more about variable's hoisting and scoping in [scope section](#scope).
 
+### Variable constants
+When instantiating GSS, you can provide some variables constants values to the constructor:
+
+
+{% highlight css %}
+
+<script src="/bower_components/gss/dist/gss.js"></script>
+<script type="text/javascript">
+ GSS.document = new GSS(document, {"some-gap": 20, "outer-radius": 20});
+</script>
+
+<style type="text/gss">
+  
+</style>
+
+{% endhighlight %}
+
+In this example, I have two constraint variables “gap” and “outer-radius” in my GSS that I can initialize with the GSS constructor.
 
 ## CSS property name
 Now that we've seen properties and variables, you can do some interesting things by using CSS properties as variables. For example you
@@ -411,8 +430,9 @@ In this example, `#elm1` will have a width of 100px and `#elm2` will have a widt
 The two `varX` are in distinct scope and are therefore indenpendant from each other.
 <a href="http://codepen.io/cbchouinard/pen/EaXmRp" target="_blank">Live example.</a>
 
-If we would have use a global variable for `varX` then the two constrained elements would have
-had the same width. <a href="http://codepen.io/cbchouinard/pen/yyoxxm" target="_blank">Live example.</a>
+Global variable, accessed with `$`, are accessible accross stylesheets. In the previous example, if we would have use a
+global variable for `varX` then the two constrained elements would have had the
+same width. <a href="http://codepen.io/cbchouinard/pen/yyoxxm" target="_blank">Live example.</a>
 
 The same scoping logic applies to GSS files.
 
@@ -653,7 +673,7 @@ Place the vertical center of the element 100px from the top of the page.
 #someElm[center] == 100;
 {% endhighlight %}
 
-`center` is a 2d property shortcut for doing constraining both `center-x` and `center-y` at once.
+`center` is a 2d property shortcut for constraining both `center-x` and `center-y` at once.
 
 <a name="relativepositionning"></a>
 ### Relatively positionned parents.
@@ -691,8 +711,8 @@ evaluation.
 <style type="text/gss">
 
 .relative-container {
-  x: == 0;
-  y: == 0;
+  top: == 0;
+  left: == 0;
 
   .container {
     @v |-(&)-| in(^) gap(10);
@@ -705,14 +725,14 @@ evaluation.
 
 {% endhighlight %}
 
-In this example, we are constraining `x` and `y` to be zero wich is the top-left corner of the section
-element. By doing so, all position constraints will be calculated relative to the section element.
+In this example, the `top` and `left` are constrained to be zero wich is the top-left corner of the section
+element. By doing so, all position' constraints will be calculated relative to the section element.
 
 With the `position: relative` declared in the `style` attribute, GSS will solve independently each sections which
 should results in better performance. <a href="http://codepen.io/cbchouinard/pen/pvwaNN" target="_blank">Live example.</a>
 
 ## Dimensions
-GSS provides property to constraints the dimension of an element. We've already saw the `width` and `height`. You can use the
+GSS provides property to constrain the dimension of an element. We've already saw the `width` and `height`. You can use the
 2D dimension property to set them both the width and the height at the same time:
 
 {% highlight css %}
@@ -724,7 +744,7 @@ GSS provides property to constraints the dimension of an element. We've already 
 {% endhighlight %}
 
 ## Intrinsic values
-When you want to constraint the position of an element GSS needs to know the dimension of the element. For example how could
+When you want to constrain the position of an element GSS needs to know the dimension of the element. For example how could
 GSS position an element using the bottom-right property without knowing the height and width of that element.
 
 One way to solve this, would be to constrain the dimension of the element. But what if it had text in it? You'll then need to know the
@@ -747,13 +767,13 @@ GSS provides the `intrinsic-` properties which defers to CSS the dimension styli
 {% endhighlight %}
 
 Once an intrinsic constraint is declared on a property, GSS will evaluate other constraints you define on the same property but will
-not apply the calculated value to the element. For example, if we add a `width` constraint on `.selectorA`, that constraint will be
+not apply the calculated value to that element. For example, if we add a `width` constraint on `.selectorA`, that constraint will be
 evaluated by GSS but not applied to the element since `intrinsic-*` have precendence over all other constraints.
 
 <a name="virtuals"></a>
 ## Virtuals
 Virtuals are boxes you define in GSS that don't exists in the DOM but against which you can constraint DOM element. Virtual are a
-practical way to apply constraints a group of element without the need to add a container element to the DOM.
+practical way to constrain a group of element without the need for a DOM container element.
 
 {% highlight css %}
 

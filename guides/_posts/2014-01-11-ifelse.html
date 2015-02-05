@@ -72,14 +72,14 @@ When the width of the section element goes below 400px, the article elements wil
 constrained by the @if block, otherwise by the @else block.
 
 ### Constraint evaluation within conditionals
-In order to determine if a condition holds, GSS needs to evaluate every constraint outside of that conditional before evaluating if it is met.
-This includes constraints appearing after the conditional declaration.
+In order to determine if a conditional holds, GSS needs to evaluate every constraints outside of the conditional before evaluating if it is met.
+This includes constraints appearing after the conditional's declaration.
 
-As explained in the [GSS constraints guide](/guide/constraints), the order of constraint declaration can affect the
+As explained in the [GSS constraints guide](/guide/constraints), the constraint declaration order can affect the
 resulting solution.
 
-In the following example, the constraint within the conditional will be added to the solver after the constraints outside of it.
-This causes the constraint within the conditional to overcome the other constraints of equal strength when the conditional evaluates as true.
+In the following example, if the conditional is true, the constraint within it will be added to the solver after the outer constraints.
+This causes the constraint within the conditional to overcome the constraints of equal strength when the conditional evaluates as true.
 
 {% highlight css %}
 
