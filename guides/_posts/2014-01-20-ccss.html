@@ -508,9 +508,9 @@ Consult our [layout guide](/guides/layout) to learn more about positioning and d
 understanding of layout constraints will help you appreciate the next section about virtuals.
 
 <a name="virtuals"></a>
+
 ## Virtuals
-Virtuals are rectangles you define in GSS that don't have a representation in the DOM. You can contrain DOM element
-and other virtuals against the dimension and position of virtuals. Virtual are a practical way to constrain a group of element
+Virtuals are rectangles defined in GSS that don't have a representation in the DOM tree. However regular elements can be constrained against dimensions and positions of virtuals. It makes virtuals a practical way to constrain a group of elements
 without the need for a DOM container element.
 
 {% highlight css %}
@@ -525,32 +525,41 @@ without the need for a DOM container element.
 
 {% endhighlight %}
 
-As you can see from the previous example, we are constraining `#elmA` and `#elmB` against the virtual element.
+In the example, both `#elmA` and `#elmB` elements are positioned against different corners of the virtual rectangle.
 <a href="http://codepen.io/thegridgssdocs/pen/WbOWgB" target="_blank">Live example.</a>
 
-In regards of constraining dimensions and positions, virtuals are no different from DOM element in the sens that you can
-declare constraints on them as shown previously. The main difference is that since they don't exist in the DOM, they are
-not stylable with CSS. Doing the following will have no effect:
+Since virtuals don't exist in the DOM, applied styles have no visual effect:
 
 {% highlight css %}
 
 "area" {
-  /* Styling virtuals have no effect since they don't exist in the DOM */
+  // Styling virtuals have no effect since they don't exist in the DOM
   background-color: blue;
+
+  // Properties can be constrained, by they will not be used or inherited
+  line-height: == 20;
 }
+
+// DOM elements properties can be constrained against properties of virtuals
+div[line-height] == "area"[line-height];
 
 {% endhighlight %}
 
 ### Virtual hoisting
-Virtuals follow the same scoping rules as variables. You can do the following:
+Virtuals are in fact variables for rectangles. This is why virtuals follow the same [scoping rules](#variables) as variables. Hoisting logic applies to virtuals without explicit scope. Explicitly scoped virtuals are not hoisted and do not capture.
 
 {% highlight css %}
 
 .className {
+  // "area" virtual is captured, and can be accessed from inner rulesets
   "area"[size] == 200;
 
   #someElm > div {
-    width: == "area"[width]; /* "area" will be hoisted from the .className scope */
+    // "area" virtual will be hoisted to element matching parent ruleset
+    width: == "area"[width];
+
+    // "subarea" virtual has explicit local scope and will be attached to nested divs
+    &"subarea"[width] == 200;
   }
 }
 
@@ -558,8 +567,7 @@ Virtuals follow the same scoping rules as variables. You can do the following:
 
 
 ### Virtual splat
-Virtual splats allow you to create a grid of virtuals. For example, if you want to split the viewport in four equally dimensioned
-virtuals you can do the following:
+Virtual splats allow you to create a grid of virtuals. For example, if you want to split the viewport into four equally sized rectangles you can do the following:
 
 {% highlight css %}
 
@@ -578,17 +586,12 @@ virtuals you can do the following:
   right: == &:next[left];
 }
 
-"area1", "area3" {
-  top: == &:previous[bottom];
-}
-"area2", "area4" {
-  top: == &:previous[bottom];
-}
+"area1"[bottom] == "area3"[top];
+"area2"[bottom] == "area4"[top];
 
 {% endhighlight %}
 
-Using those virtual boxes, you can now constrain DOM elements against those four boxes. <a href="http://codepen.io/thegridgssdocs/pen/VYzOPx" target="_blank">Live example.</a>
-
+Now any DOM element can be constrained against those four boxes. <a href="http://codepen.io/thegridgssdocs/pen/VYzOPx" target="_blank">Live example.</a>
 
 ## Read next
 GSS provides conditionnal statements to allow you to do responsive design. Read our [conditionals guide](/guides/ifelse) to learn more.
