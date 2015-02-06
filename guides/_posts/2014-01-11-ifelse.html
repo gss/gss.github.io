@@ -1,24 +1,37 @@
 ---
 uid: ifelse
-title: if else blocks
+title: Conditionals
 subtitle: Responsive to any prop w/o Media Queries
 color: b
 layout: post
 ---
 
-The age of "Responsive Web Design" is upon us and it's mandate for designs that elegantly adapt to the user's viewing context has made web dev "hard, really hard, actually" as Mr Jeff Croft [lamented](http://jeffcroft.com/blog/2012/mar/02/implementing-responsive-design/).  Conceptualizing Responsive layouts is difficult enough, but implementing such layouts with [CSS Media Queries](https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Media_queries) is an awkward affair because as Ian Taylor [illuminated](http://ianstormtaylor.com/media-queries-are-a-hack/), Media Queries are a hack.  
+The age of "Responsive Web Design" is upon us and it's mandate for designs that elegantly adapt to the user's viewing context has made
+web dev "hard, really hard, actually" as Mr Jeff Croft [lamented](http://jeffcroft.com/blog/2012/mar/02/implementing-responsive-design/).
+Conceptualizing Responsive layouts is difficult enough, but implementing such layouts with
+[CSS Media Queries](https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Media_queries) is an awkward affair
+because as Ian Taylor [illuminated](http://ianstormtaylor.com/media-queries-are-a-hack/), Media Queries are a hack.
 
 ## Element Queries
 
-Media Queries allow layouts to adapt to the size of the viewport, but if you want to adapt to anything else, tough luck.  W3C members have received an [onslaught](http://www.xanthir.com/b4PR0) of requests for "Element Queries" - because web designers are desperate to achieve higher levels of adaptiveness with their layouts.  The idea with Element Queries is simple - individual elements can be responsive to their own size, which would allow for richer designs & more modular Style Sheets.  While web developers ponder [work-arounds](http://filamentgroup.com/lab/element_query_workarounds/) for lack of Element Queries, [the W3C decided](http://www.xanthir.com/b4PR0) to avoid the issue all together.
+Media Queries allow layouts to adapt to the size of the viewport, but if you want to adapt to anything else, tough luck.
+W3C members have received an [onslaught](http://www.xanthir.com/b4PR0) of requests for "Element Queries" - because web designers
+are desperate to achieve higher levels of adaptiveness with their layouts.  The idea with Element Queries is simple - individual elements
+can be responsive to their own size, which would allow for richer designs & more modular Style Sheets. W3C have
+[start discussion](http://responsiveimagescg.github.io/eq-usecases/) about element queries but as this point they still don't have official
+endorsement of element queries.
 
-Yet, even with the hypothetical Element Query, elements could only be adaptive to their size.  Why not allow elements to be adaptive to any property like `col-count` or even to a custom variable?
+Yet, even with the hypothetical Element Query, elements could only be adaptive to their size.  Why not allow elements to be adaptive to any property
+like `col-count` or even to a custom variable?
 
 ## Arbitrary Property Conditionals
 
-Which brings us to `@if` and `@else` directives.  Think of them as a more expressive replacement for Media Queries and the much desired Element Query, that allow CSS rules to be adaptive to any arbitrary property or custom constraint variable.
+Which brings us to `@if` and `@else` directives.  Think of them as a more expressive replacement for Media Queries and the
+much desired Element Query, that allow CSS rules to be adaptive to any arbitrary property or custom constraint variable.
+<a href="http://codepen.io/thegridgssdocs/pen/emEaQR" target="_blank">Live example.</a>
 
-Instead of continuing the tradition of the Query types; `min-width`, `max-width`, `min-height` & `max-height`; for every available CSS property, `@if` `@else` directives use the conditional operators; `<`, `<=`, `>`, `>=`, `!=`, `==`, `or`, and `and`.
+Instead of continuing the tradition of the Query types; `min-width`, `max-width`, `min-height` & `max-height`; for every
+available CSS property, `@if` `@else` directives use the conditional operators: `<`, `<=`, `>`, `>=`, `!=`, `==`, `or`, and `and`.
 
 As an example, if we wanted a set of CSS rules to kick when the screen is less than 960px:
 
@@ -36,73 +49,72 @@ As an example, if we wanted a set of CSS rules to kick when the screen is less t
 
 {% endhighlight %}
 
-But, any property can be used within an `@if`, `@else` conditional.  So, if you want a layout to be responsive to a panel's width:
+But, any property can be used within an `@if`, `@else` conditional.  So, if you want a layout to be responsive to a section's width:
 
 {% highlight css %}
 
-/* GSS: */
-@if #panel[width] >= 800 {
-  /* ... */
-}
-@else #panel[width] >= 500 {
-  /* ... */
-}
-@else {
-  /* ... */
+section {
+  article {
+    @if ^[width] <= 400 {
+      width: == ^[width];
+      height: == ^[height] / 2;
+    }
+    @else  {
+      width: == ^[width] / 2;
+      height: == ^[height];
+    }
+  }
 }
 
-/* Not possible with Media Queries */
 {% endhighlight %}
 
+When the width of the section element goes below 400px, the article elements will be
+constrained by the @if block, otherwise by the @else block.
 
+### Constraint evaluation within conditionals
+In order to determine if a conditional holds, GSS needs to evaluate every constraints outside of the conditional before evaluating if it is met.
+This includes constraints appearing after the conditional's declaration.
+
+As explained in the [GSS constraints guide](/guide/constraints), the constraint declaration order can affect the
+resulting solution.
+
+In the following example, if the conditional is true, the constraint within it will be added to the solver after the outer constraints.
+This causes the constraint within the conditional to overcome the constraints of equal strength when the conditional evaluates as true.
 
 {% highlight css %}
 
-@if #panel[width] >= 500 {
-  @horizontal .item;  
-  #button {
-    font-size: == 18;
-  }
+#elm[width] == ::window[width];
+
+@if elm[width] < 400 {
+  #elm[height] == 300;
 }
-@else {
-  @vertical .item;
-  #button {
-    font-size: == 14;
-  }
-}
+
+#elm[height] == 500;
+
 {% endhighlight %}
 
+In this example, if the `width` of the screen is smaller than 400px, the `height` of the element will be constrained to 300px even
+though there's a `height` constraint defined after the condition.
 
+### Condition looping
+As described in the [GSS constraints guide](/guide/constraints), constraints are two-way. This should be carefully considered when using
+conditionals. Although GSS has been designed to detect and prevent cases when looping could occur, complex nesting of conditionals can
+still cause infinite loops.
+
+For example, since the conditional below changes a variable that is being checked, it would appear that it will lead to an infinite loop.
+However, the underlying constraint solver in GSS can determine a solution that satisfies constraints without looping.
 
 {% highlight css %}
-#box1[width] == 9;
-#box2[width] == 19;
 
-/* with ::this pseudo selector */ 
-.box {
-  @if ::[width] < 10 {
-    height: == 10;
-  }
-  @else {
-    height: == 20;
-  }
+#elm[width] == 800;
+.someElm[width] == #elm[width];
+
+@if #elm[width] <= 400 {
+  .someElm[width] == 600;
 }
+
 {% endhighlight %}
 
-
-{% highlight css %}
-[calories] == 500;
-
-/* with custom constraint variable */ 
-@if [calories] >= 960 {
-  #boo[hunger] == 1;
-}
-@else {
-  #boo[hunger] == 1000; 
-}
-
-/* #boo[hunger] will be 1000 */ 
-{% endhighlight %}
-
-
-WIP, more coming soon...
+## Read next
+With only CCSS constraints at your disposal, constraining common layout scenarios quickly becomes tedious. Read our
+[VFL guide](/guides/vfl) to learn how to more efficiently constraint your layout.

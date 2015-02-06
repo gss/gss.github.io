@@ -1,19 +1,32 @@
 ---
-uid: c_101
+uid: CCSS
 title: Constraint CSS
 subtitle: lay it out like it's 1999
 color: b
 layout: post
 ---
-Soon after the W3C introduced Cascading Style Sheets, [Greg Badros](http://www.badros.com/greg/), the author of the Cassowary Constraint Solver & [recently retired Facebook VP](http://allthingsd.com/20130920/facebook-engineering-and-products-vp-greg-badros-to-leave-company/), proposed [Constraint CSS (CCSS)](http://www.cs.washington.edu/research/constraints/web/ccss-uwtr.pdf) as a general solution for CSS layout.  Back in '99 Badros demonstrated *responsive* layouts with CCSS that today's designers still can't reproduce without grinding out piles of JavaScript.  For more than a decade, no one seemed to take notice outside academia... Until Apple implemented Cassowary & Greg's pioneering concepts in its new AutoLayout engine with the launch of OS X Lion. Despite the evolutionary leap for app developers, web designer's have had to settle with [float-based](http://www.sitepoint.com/give-floats-the-flick-in-css-layouts/) & table-based layouts that have remained unimproved to this day.  
+
+Soon after the W3C introduced Cascading Style Sheets, [Greg Badros](http://www.badros.com/greg/), the author of the Cassowary Constraint
+Solver & [recently retired Facebook VP](http://allthingsd.com/20130920/facebook-engineering-and-products-vp-greg-badros-to-leave-company/),
+proposed [Constraint CSS (CCSS)](http://www.cs.washington.edu/research/constraints/web/ccss-uwtr.pdf) as a general solution for CSS layout.
+Back in '99 Badros demonstrated *responsive* layouts with CCSS that today's designers still can't reproduce without grinding out piles of JavaScript.
+For more than a decade, no one seemed to take notice outside of academia until Apple implemented Cassowary & Greg's pioneering concepts in its new
+AutoLayout engine with the launch of OS X Lion. Despite the evolutionary leap for app developers, web designer's have had to settle
+with [float-based](http://www.sitepoint.com/give-floats-the-flick-in-css-layouts/) & table-based layouts that have remained unimproved to this day.
 
 > "We should contemplate how very, very far behind the web platform is in making it delightful to build the sorts of things that are work-a-day in native environments." <a href="http://infrequently.org/2012/02/misdirection/">Alex Russell</a>
 
-The foundation of GSS is a modernized implementation of CCSS.  From CCSS primitives other, more exotic layout API's can and are accomplished.
+The foundation of GSS is a modernized implementation of CCSS on which we build more exotic layout API's can and are accomplished.
 
+
+<a name="basicconstraint"></a>
 ## Constraints, the basics
 
-Constraints express relationships between variables that may or may not hold.  You can constrain any numerical style property of an element, not just its position & size.  For example, if I want all paragraph tags to have line-height greater than 16px and less than 1/12th the size of the window:
+Constraints express [relationships between variables](#constraintsaretwoway) that [may or may not hold](#mayormaynothold).
+Any numeric property of an element can be constrained, not just position & size.
+
+In the following example, all paragraph tags are constrained to have line-height greater than 16px and
+less than 1/12th the size of the window:
 
 {% highlight css %}
 
@@ -22,56 +35,23 @@ p[line-height] <= ::window[height] / 12;
 
 {% endhighlight %}
 
-or, we could write it as a single chained statement:
+### Constraint declaration
 
-{% highlight css %}
+The syntax for declaring a constraint is as follows:
 
-16 <= p[line-height] <= ::window[height] / 12;
+`p[line-height] >= 16;`
 
-{% endhighlight %}
++ `p` is the selector. This constraint will apply to every `p` tag in the page.
++ `[]` is the property accessor syntax.
++ `line-height` is the property for which a value will be calculated by GSS.
++ `>=` defines an inequality constraint.
++ `16` is the numerical value for the constraint in pixels (the default [unit of measurement](/guides/references#unitofmeasurement) in GSS).
 
-or, we could express the same constraints within a CSS ruleset alongside old-school CSS like so:
+<a href="http://codepen.io/thegridgssdocs/pen/OPmdVL" target="_blank">Live example</a>
 
-{% highlight css %}
-
-p {
-  color: purple;
-  line-height: >= 16;
-  line-height: <= ::window[height] / 12;  
-}
-
-{% endhighlight %}
-
-of course, you can nest rules too:
-
-{% highlight css %}
-
-.content {
-  
-  margin-right: == ::parent[margin-right] * -1;
-  
-  p, blockquote {
-    color: purple;
-    line-height: >= 16;
-    line-height: <= ::window[height] / 12;  
-  }
-}
-
-{% endhighlight %}
-
-Numbers are treated as pixel values except for properties like:
-
-{% highlight css %}
-
-.sprite {
-  z-index: >= #bg[z-index] >= 50;
-}
-
-{% endhighlight %}
-
-## Constraints are 2-way
-
-Do not confuse an equality constraint with your everyday variable assignment.  For example, in a vanilla programming paradigm:
+<a name="constraintsaretwoway"></a>
+### Constraints are two-way
+Do not confuse an equality constraint with your everyday variable assignment. For example, in a vanilla programming paradigm:
 
 {% highlight javascript %}
 
@@ -85,7 +65,7 @@ x = 100;
 
 {% endhighlight %}
 
-x will be 100, and y will be 10.  With constraint programming, equality constraints are two-way, so:
+x will be 100, and y will be 10.  With constraint programming, equality constraints are two-way:
 
 {% highlight javascript %}
 
@@ -99,132 +79,42 @@ y >= 10;
 
 {% endhighlight %}
 
-x and y have a constraint to be equal, so x and y will be 100.  
+x and y have a constraint to be equal, so x and y will be 100.
 
-Constraints are incrementally added to a `solver`, then the solver computes a feasible & optimal solution to all the constraints.  With constraint programming you input the *what* you want to happen, not *how* it will happen. With procedural programming, you focus on the *how*.  This makes constraints a perfect fit for empowering declarative languages like CSS.
+Constraints are incrementally added to a solver, then the solver computes a feasible & optimal solution to all the constraints.
+Constraint programming focuses on intentions, not implementation. This makes constraints a perfect fit for empowering declarative
+languages like CSS.
 
-## Custom Constraint Variables
+Regular imperative programming approach focuses on the implementation instead, making programmer solve the problems.
 
-A custom constraint variable can be created by simply using it in a constraint.
+<a name="mayormaynothold"></a>
+### Constraints May or may not hold
+GSS will find the best solution that satisfies the defined constraints. It uses "soft" constraints,
+which means that it is preferred but not required that certain constraints be satisfied.
 
-{% highlight css %}
-
-.post {
-  width: == 6 * [col-size];
-}
-
-{% endhighlight %}
-
-This automatically defines the constraint variable `[col-size]` that can be re-used in other constraints.  
-
-## Custom Element Constraint Variables
-
-You can create a custom variable for an element by, again, simply using it:
+For example:
 
 {% highlight css %}
 
-.post[col-size] == .post[line-height] * 3;
+#gss[width] == 200;
+#cassowary[width] == 200;
+#gss[width] + #cassowary[width] == 350;
 
 {% endhighlight %}
 
-This will automatically create a `[col-size]` variable for each element with the class post, and constrain it to be the same as 3 times that post's line-height.  Don't forget this relationship is 2-way, so further constraining a post's [col-size] can affect its line-height, which can be remedied using by taking advantage of the "Constraint Hierarchy" with [Strengths](#strengths) or [Stays](#stays).
+`#GSS` and `#cassowary` elements are constrained to have width of 200px initially, and then the sum of those two is set to equal 350px. In this case, one of these
+two constraints will not hold. <a href="http://codepen.io/thegridgssdocs/pen/XJROdV" target="_blank">Live example.</a>
 
-## Global Scope
+<a name="strengths"></a>
+## Strengths
 
-Constraint variables are defined in a global scope, as is right in the constraint-based world.  So, all uses of `[col-size]` below refer to the same constraint variable.
-
-{% highlight css %}
-
-/* the !require strength ensures this constraint will hold */
-[col-size] == ::window[width] / 12 !require; 
-
-.menu {
-  width: == [col-size];
-}
-
-.post {
-  width: == 6 * [col-size];  
-  h1 {
-    padding-left: == [col-size];
-  }
-}
-
-{% endhighlight %}
-
-
-## Hardware Accelerated Layout Variables
-
-By default, GSS uses Matrix3D transforms to hardware accelerate the browsers that can.  The following position properties are treated specially:
-
-- `x` or `left`
-- `y` or `top`
-- `right`
-- `bottom`
-- `center-x`
-- `center-y`
-
-
-## Special Pseudo Selectors
-
-- `::window`
-- `::` or `::this`
-- `::parent`
-
-The this and parent selectors can only be used in a nested ruleset, as with:
-
-{% highlight css %}
-
-.box {
-  width: == ::parent[width];
-  line-height: == ::[width] / 12;  /* same as ::this[width] */
-}
-
-{% endhighlight %}
-
-**PRO TIP:** parent selectors can be used to "bridge" variables in interesting ways.  Also a recommended practice is to prefix custom element variables with `$` to avoid confusion with native CSS properties.  A contrived example:
-
-{% highlight css %}
-#product {
-  
-  $col-width: == ::[width] / 12 !require;
-  $col-left: == ::[left] + ::[$col-width];
-  
-  .price {
-    left:  == ::parent[$col-left];
-    width: == ::parent[$col-width];
-  }
-  
-  .description {
-    left: == ::parent[$col-left] + ::parent[$col-width];
-  }
-}
-{% endhighlight %}
-
-
-## Intrinsic Properties
-
-What if we want an paragraph's height to be the *intrinsic* height of its text content?  We use an `intrinsic` property!
-
-{% highlight css %}
-/* all paragraphs will have a height equal to its text-height */
-
-p {
-  height: == ::[intrinsic-height];
-}
-{% endhighlight %}
-
-
-When you add `intrinsic-` before a property, GSS will try to measure that property from the DOM every time it needs to solve for new values, as when a paragraph text-content changes or when the window size changes & you used `::window` somewhere.  GSS uses a deferred run loop to avoid serial DOM read / writes, but reading the DOM can always cost perf.
-
-**PRO TIP:** minimize use of intrinsic properties.  For example, best to hardcode image width & height in equality constraints if can be known ahead of time.
-
-## Strengths <a name="strengths"></a>
+It is possible to influence the solution by prioritizing the constraints with strengths.
 
 Stronger constraints completely overcome weaker ones - this is the phenomena of the [Constraint Hierarchy](http://www.cs.washington.edu/research/constraints/theory/hierarchies-92.html).  Strengths are declared in the same fashion of CSS's `!important`:
 
 {% highlight css %}
 
-/* Stronger constraints completely overcome weaker ones */
+/* Stronger constraints are more important */
 
 #light[years] == 100 !weak;
 #light[years] == 200 !medium;
@@ -237,116 +127,491 @@ Stronger constraints completely overcome weaker ones - this is the phenomena of 
 There are 4 levels of built-in strength:
 
 - `!weak`
-- `!medium`
+- `!medium` (default)
 - `!strong`
 - `!require`
 
-All constraints have a strength.  `!weak` is the default for all constraints.
 
+In a [previous example](#mayormaynothold),
+strengths assigned to constraints allow individual `width` constraints to overcome the sum constraint: <a href="http://codepen.io/thegridgssdocs/pen/bNRbQg" target="_blank">Live example.</a>
+
+#### !require strength
 `!require` is a special strength that guarantees the constraint will hold, otherwise everything breaks.
 
-**Pro Tip** Use `!require` carefully & sparingly.  `!require`'s quickly lead to systems where all required constraints cannot be satisfied.
+**Pro Tip** Use `!require` carefully & sparingly. `!require`'s quickly lead to systems where
+all required constraints cannot be satisfied in which case the GSS engine will throw an error.
 
-
-## Weights
-
-Constraints of the same strength can be made relatively stronger or weaker with weights, like so:
+For example, the following GSS constraints will be unsolvable and thus throw an error:
 
 {% highlight css %}
 
-/* Constraints of the same strength... */
-
-#planet[weight] == 600 !medium1000; 
-#planet[weight] == 30 !medium;
-#planet[weight] == 10 !medium;
-#planet[weight] == 20 !medium;
-
-/* #planet[weight] will be 600 */
+#gss[width] == 200 !require;
+#cassowary[width] == 200 !require;
+#gss[width] + #cassowary[width] == 350 !require;
 
 {% endhighlight %}
 
-`#planet[weight]` will be 600.  The first constraint has an additional weight of `1000` used in calculating its potential error, making not satisfying it more costly.
+We're asking GSS to find a solution where the widths of the #gss and #cassowary element must be 200px
+and their sum must be 350px which is impossible.
 
+### Constraints order
+Generally speaking, later constraint declarations of the same strength are more powerful than earlier ones. There are exceptions to this behavior,
+as we'll see in the following sections.
 
-## Ambiguity
+In a [previous example](#mayormaynothold)  with conflicting strengths, altered order of constraints yields a
+different result. <a href="http://codepen.io/thegridgssdocs/pen/rawBRr" target="_blank">Live example.</a>
 
-`bottom` & `right` are expressions of position & size, which can lead to ambiguous constraints like:
-
-{% highlight css %}
-
-#box[right] == ::window[right];
-
-/* this is too ambiguous without constraining #box[width] or #box[left] */
-
-{% endhighlight %}
-
-Should the box move its position to the right or stretch its width to make its right edge flush with the window?  A critical best practice is to *fully constrain* an element, in other words, you should adequately specify an element's position & size.  If an element is under-constrained you will have unpredictable results. 
-
-
-## Stays <a name="stays"></a>
-
-Ambiguity can be largely overcome by declaring more constraints, but what about situations like:
-
-{% highlight css %}
-
-#box[left]  >= 100;
-#box[width] >= 100;
-#box[right] == ::window[right];
-
-/* the #box's width will stretch */
-
-{% endhighlight %}
-
-Will the `#box` move or stretch to satisfy the last constraint?  Again, the earlier constraint statements are more powerful than later ones, so the box's width would stretch.  You can control this by either changing the order in which the constraints are declared or by using a `stay` like so:
-
-{% highlight css %}
-#box[left]  >= 100;
-#box[width] >= 100;
-@stay(#box[width]);
-#box[right] == ::window[right];
-
-/* the #box's position will move */
-{% endhighlight %}
-
-
-Many `stay`s can be declared at once with `@stay([var1],[var2],[var3])`.
-
-
-## Minimized Total Error
-
-For constraints at the same strength, GSS tries to minimize the degree to which all constraints are not satisfied.  Internally, Cassowary finds what's called a "locally-error-better", "weighted-sum-better" solution to constraints.  As an example,
-
-{% highlight css %}
-
-/* Constraints of the same strength... */
-
-#laser[amo] == 1 !strong;
-#laser[amo] == 2 !strong;
-#laser[amo] == 3 !strong;
-
-/* #laser[amo] will be 2 */
-
-{% endhighlight %}
-
-`#laser[amo]` will be 2 because that minimizes the total degree to which all constraints would not be satisfied, or the total of each constraint's "error".  
-
-**When `#laser[amo]` is 2**; the first constraint has error of 1, the second has an error of 0 & the third has error of 1, **total error = 2**.  
-
-**If `#laser[amo]` was 3**; the first constraint has error of 0, the second with 1 & the third with 2, **total error = 3**.  
-
-The total error is always minimized.
-
-
+<a name="lineararithmetic"></a>
 ## Linear Arithmetic
 
-Cassowary only allows for "Linear Arithmetic" constraints, you can do simple math operations like `+`, `-`, `*` and `/`, but all expressions must be linear (of the form `y = mx + b`).  Basically, you can do most things except multiply or divide two constraint variables.  
+Cassowary, which is the constraints solving algorithm used by GSS, can only compute "Linear Arithmetic" constraints. Simple math operations like `+`, `-`, `*` and `/` are all supported, but the expressions must be linear (of the form `y = mx + b`).  Basically, you can do everything except division and multiplication of two constrained variables.
+<a href="http://codepen.io/thegridgssdocs/pen/MYvOWO" target="_blank">Live example.</a>
 
 {% highlight css %}
 
 /* this is not linear & will throw an error */
 
-#box1[width] / #box1[height] == #box2[width] / #2box[height];
+#box1[width] / #box2[height] == varX;
 
 {% endhighlight %}
 
-I wish we could go non-linear, but we can't because math.
+<a name="selectors"></a>
+## Selectors
+
+Selectors are queries over a tree of HTML elements. They determine which elements are affected by the constraint.
+
+{% highlight css %}
+// elements with tag name div within element with #something id
+(#something div)[width] == 100;
+{% endhighlight %}
+
+Please reference the [GSS Selectors Guide](/guides/selectors) for a complete list of selector and more useful information on how to use them. \*
+
+\* Note that this guide is refering to [rulesets](rulesets) which are covered next.
+
+<a name="rulesets"></a>
+## Rulesets
+
+Rulesets allow multiple constraints to be defined over a single selector
+
+{% highlight css %}
+  .selector {
+    width: == 100;
+  }
+{% endhighlight %}
+
+Within a ruleset, constraints are defined on properties using the same syntax as CSS using colon `:` followed by a equality sign.
+
+Rulesets can be nested:
+
+{% highlight css %}
+section > article {
+   .someclass {
+       width: == 100;
+    }
+}
+
+/* is equals to */
+
+(section > article .someclass)[width] == 100;
+
+{% endhighlight %}
+
+CSS properties can be used in GSS rulesets:
+
+{% highlight css %}
+div {
+   background-color: green;
+   width: <= 200;
+}
+{% endhighlight %}
+
+
+## Properties
+Properties are variables belonging to an element. All previous examples constrained CSS properties like `width` or `line-height`.
+It is possible to constrain custom properties that are not recognized by CSS, but can be used in GSS constraints over known
+CSS properties.
+
+When using a property known by CSS, the GSS computed value for that property will be assigned as an inline style in pixels
+to the element.
+
+The `&` combinator refers to current element matching the ruleset selector. It is implied by the use of `width: ==` property notation.
+
+{% highlight css %}
+.container {
+  width: == #elm[width];
+}
+
+/* is equals to */
+
+.container {
+  &[width] == #elm[width];
+}
+
+{% endhighlight %}
+
+It is possible to constrain custom properties, that are not recognized by CSS, that can be used in constraints over known CSS properties.
+
+
+{% highlight css %}
+
+.post {
+  custom-property: == &[line-height] * 3;
+}
+
+/* is equals to */
+
+.post[custom-property] == .post[line-height] * 3;
+
+{% endhighlight %}
+
+This will automatically create a `custom-property` for each element having a `.post` class. The element's `custom-property`
+will be constrained to be tree time its own `line-height`.
+
+Because of the 2-way binding, changing either `custom-property` or `line-height` will affect the other property of the element.
+
+Properties on special combinators like `&`, `$` or `^` may omit square brackets:
+
+{% highlight css %}
+
+body {
+  .container {
+    /* equate width of a <body> element with width of elements having container class */
+    &width == ^width;
+  }
+}
+
+{% endhighlight %}
+
+
+<a name="scope"></a>
+## Scope
+
+Properties are attached to a specific element:
+
+- In rulesets, it's an element that matches the selector
+- In topmost level of a stylesheet, it's a `<link>` or `<style>` that defines the stylesheet.
+- In a stylesheet element with the `scoped` attribute, topmost properties are attached to the parent element of a stylesheet.
+
+Variables prefixed with `$` combinator are considered global, and can be shared accross different stylesheets.
+
+
+### Properties in stylesheets
+Properties defined at the top level of a stylesheet will be attached to the stylesheet element. Thus each stylesheet
+provides its own scope. Top level properties are not directly accessible from other stylesheets.
+
+{% highlight css %}
+<style type="text/gss">
+  varX: == 100;
+  varX: == #elm1[width];
+</style>
+
+<style type="text/gss">
+  varX: == 200;
+  varX: == #elm2[width];
+</style>
+{% endhighlight %}
+
+In this example, `#elm1` will have a width of 100px and `#elm2` will have a width of 200px.
+The two `varX` are in different scopes and are therefore indenpendent from each other.
+<a href="http://codepen.io/thegridgssdocs/pen/EaXmRp" target="_blank">Live example.</a>
+
+Global variables prefixed with `$`, are accessible accross stylesheets. In the previous example, using `$varX`
+instead of `varX` makes constraints operate on the same variable, making the widths of two elements equal.
+<a href="http://codepen.io/thegridgssdocs/pen/yyoxxm" target="_blank">Live example.</a>
+
+Adding a `scoped` attribute to the stylesheet attaches top most properties to the parent element of a stylesheet. If two `scoped` stylesheets share the parent element, they will automatically share the topmost variables.
+
+The same scoping logic applies to external GSS files.
+
+
+### Properties in rulesets
+
+Variables defined inside a ruleset define a property on each element that matches the ruleset selector.
+
+{% highlight css %}
+.someClass {
+  varX: == 100;
+  width: == &[varX];
+}
+
+.someOtherClass {
+  varX: == 100;
+  width: == &[varX];
+
+}
+{% endhighlight %}
+
+In this case, both rulesets define `varX` property for matching elements. If there's an element that matches both rulesets,
+it will have both constraints applied over a single property. This may lead to a conflict specific to that element.
+
+The latter constraint will win in case of conflict if an element has both classes from the start. Otherwise the class that
+was added last will overcome previous ones. Strengths can be used to define the importance of each constraint independent from order
+of changes. <a href="http://codepen.io/thegridgssdocs/pen/XJgRPq" target="_blank">Live example.</a>
+
+
+<a name="variables"></a>
+## Variables
+Variables are properties that dont have explicit scope and can be accessed from inner scopes.  This concept is known as lexical
+scoping. The scoping is determined by the source code, so it's *static* and does not change in runtime.
+
+We say that topmost scope that defines variable *captures* the variable, making variables in the inner scopes *hoisted*.
+
+{% highlight css %}
+
+<style text='text/gss'>
+varX == 100;
+
+.className {
+  width: == varX;   /* same as &width == ^varX */
+  varY == &[height];
+
+  #div {
+    width: == varX; /* same as &width == ^^varX */
+  }
+}
+</script>
+
+{% endhighlight %}
+
+If a `varX` was defined as a property on the top level (e.g. `varX: == 100`), the variable would be captured
+at the `.className` level instead.
+
+
+The order of appearance or square brackets around variables have no effect over hoisting:
+
+{% highlight css %}
+
+div {
+  .rule {
+    [varX] == 200; /* hoisted to parent, same as ^varX*/
+  }
+
+  [varX] == 100; /* equivalent to varX == 100; */
+
+{% endhighlight %}
+
+
+Variables are properties in disguise. If a variable has a name of a CSS property, it will apply the style for
+its resolved scope element. This can be used to define declarative constraints based on the DOM structure.
+
+{% highlight css %}
+<style text='text/gss'>
+varX = 100;
+
+.wrapper {
+  width == varX;
+
+  section {
+    width == &height;
+  }
+}
+</script>
+
+{% endhighlight %}
+
+The `width` variable in the `.wrapper` ruleset captures the `width` variable within `section` ruleset. Therefore an element having
+`wrapper` class name will have its width equal to height of its descendant sections, if there are any.
+
+Rulesets can be nested arbitrarily deep, and the hoisting reference is computed for each variable individually. A variable that was
+not defined in any of its parent scopes, is considered local and is identical to property.
+
+{% highlight css %}
+div {
+  varX == 40; // captured varX
+
+  .someClass {
+    width: == varX;
+
+    .someNestedClass {
+        varY == 45;
+        width: == varY;  // captured varY
+        top: == varX;
+    }
+
+    .someOtherNestedClass {
+        varY == 60;
+        height: == varY;  // captured varY
+        width: == varX;
+      }
+  }
+}
+{% endhighlight %}
+
+In this case, all nested rulesets will share the `varX` variable through the parent ruleset. Nested rulesets also define `varY` variables
+that are not hoisted and act like local properties. <a href="http://codepen.io/thegridgssdocs/pen/zxzwXJ" target="_blank">Live example.</a>
+
+Only variables capture other variables in nested rulesets. Anything that has explicit scope is considered a property. Properties do
+not capture and are not hoisted. Examples would be `$global` variables and `&local` variables. `property: ==` notation is the cleanest
+way to define property in a ruleset:
+
+{% highlight css %}
+div {
+  varX: == 40; /* property constraint */
+  varY == 45; /* variable constraint */
+
+  .someClass {
+    /* varX is not hoisted here since on the parent scope varX is a property. */
+    /* A new variable varX is there created and scoped to .someClass */
+    width: == varX;
+
+    .someNestedClass {
+      /* varY is hoisted from the div scope since it's scoped at that level */
+      width: == varY;
+      /* varX here is the .someClass varX scoped variable */
+      top: == varX;
+    }
+  }
+}
+{% endhighlight %}
+
+It is possible to opt out of hoisting in the same way by prefixing `&` to a variable name, making it a property.
+
+{% highlight css %}
+div {
+  varX == 50;
+
+  .className {
+    varX: == 60;
+    width: == &varX; /*  60 since we are using the property varX */
+  }
+}
+{% endhighlight %}
+
+### Suggested variables
+Javascript code can provide numerical values that can be used in constraints. The best way to do this is to pass an
+object with values to the GSS constructor:
+
+{% highlight html %}
+
+<script src="/bower_components/gss/dist/gss.js"></script>
+<script type="text/javascript">
+  GSS.document = new GSS(document, {"some-width": 400, "some-height": 150});
+</script>
+
+<style type="text/gss">
+
+  section[width] == $some-width;
+  section[height] == $some-height;
+
+</style>
+
+{% endhighlight %}
+
+Suggested variables are global so they should be accessed with the `$` combinator. <a href="http://codepen.io/thegridgssdocs/pen/pvWMJV" target="_blank">Live example.</a>
+
+External variables are bound in one direction, so their values will not be affected by the solver. It is almost as if there were
+actual numbers in place of those variables. The difference is that these values can be updated dynamically without much effort on
+the solver side:
+
+{% highlight html %}
+  <script>
+    document.onmousemove = (e) {
+      GSS.document.solve({ // make mouse movement affect variables
+        "some-width": e.clientX,
+        "some-height": e.clientY
+      })
+    }
+  </script>
+{% endhighlight %}
+
+
+<a name="position"></a>
+## Position and dimension
+
+Consult our [layout guide](/guides/layout) to learn more about positioning and dimensioning elements. Having a good
+understanding of layout constraints will help you appreciate the next section about virtuals.
+
+<a name="virtuals"></a>
+
+## Virtuals
+Virtuals are rectangles defined in GSS that don't have a representation in the DOM tree. However regular elements can be constrained
+against dimensions and positions of virtuals. It makes virtuals a practical way to constrain a group of elements
+without the need for a DOM container element.
+
+{% highlight css %}
+
+  "area" {
+    size: == ::window[size] / 2;
+    center: == ::window[center];
+  }
+
+  #elmA[top-left] == "area"[top-left];
+  #elmB[bottom-right] == "area"[top-right];
+
+{% endhighlight %}
+
+In the example, both `#elmA` and `#elmB` elements are positioned against different corners of the virtual rectangle.
+<a href="http://codepen.io/thegridgssdocs/pen/WbOWgB" target="_blank">Live example.</a>
+
+Since virtuals don't exist in the DOM, applied styles have no visual effect:
+
+{% highlight css %}
+
+"area" {
+  /* Styling virtuals have no effect since they don't exist in the DOM */
+  background-color: blue;
+
+  /* Properties can be constrained, by they will not be used or inherited */
+  line-height: == 20;
+}
+
+// DOM elements properties can be constrained against properties of virtuals
+div[line-height] == "area"[line-height];
+
+{% endhighlight %}
+
+### Virtual hoisting
+Virtuals are in fact variables for rectangles. This is why virtuals follow the same [scoping rules](#variables) as variables. Hoisting logic applies to virtuals without explicit scope. Explicitly scoped virtuals are not hoisted and do not capture.
+
+{% highlight css %}
+
+.className {
+  /* "area" virtual is captured, and can be accessed from inner rulesets */
+  "area"[size] == 200;
+
+  #someElm > div {
+    /* "area" virtual will be hoisted to element matching parent ruleset */
+    width: == "area"[width];
+
+    /* "subarea" virtual has explicit local scope and will be attached to nested divs */
+    &"subarea"[width] == 200;
+  }
+}
+
+{% endhighlight %}
+
+
+### Virtual splat
+Virtual splats allow you to create a grid of virtuals. For example, if you want to split the viewport into four equally sized
+rectangles you can do the following:
+
+{% highlight css %}
+
+
+"area1...4" {
+  width: == ::window[width] / 2;
+  height: == ::window[height] / 2;
+}
+
+"area1...2" {
+  top: == 0;
+  right: == &:next[left];
+}
+
+"area3...4" {
+  right: == &:next[left];
+}
+
+"area1"[bottom] == "area3"[top];
+"area2"[bottom] == "area4"[top];
+
+{% endhighlight %}
+
+Now any DOM element can be constrained against those four boxes. <a href="http://codepen.io/thegridgssdocs/pen/VYzOPx" target="_blank">Live example.</a>
+
+## Read next
+GSS provides conditional statements for responsive design. Read our [conditionals guide](/guides/ifelse) to learn more.
+
+With only CCSS at your disposal, constraining common layout scenarios quickly becomes tedious. Read our
+[VFL guide](/guides/vfl) to learn how to more efficiently constrain your layout.

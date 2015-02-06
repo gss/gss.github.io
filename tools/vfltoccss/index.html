@@ -1,0 +1,104 @@
+<html>
+<head>
+	<title>VFL to CCSS</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+	<style type="text/css">
+     	html:not(.gss-ready) { opacity: 0; }
+	</style>
+	<noscript>
+	  <style type="text/css"> html:not(.gss-ready) { opacity: 1; }
+	  </style>
+	</noscript>
+
+	<h1>VFL to CCSS viewer</h1>
+	<p>Visualize the CCSS generated from VFL expressions.</p>
+
+	<textarea id="vflin" rows="10" cols="50" placeholder="Type your VFL here">@h |-(#someElm)-10-(.className)-| in(::window) outer-gap(25)</textarea>
+	<textarea id="ccssout" rows="10" cols="50" placeholder="Compiled CCSS"></textarea>
+	<button id="compile" onclick="parseVfltoCcss()">Compile to CCSS</button>
+
+	<style type="text/gss">
+
+		h1 {
+			left: == ($ #vflin)[left];
+			size: == &[intrinsic-size];
+		}
+
+		p {
+			left: == ($ h1)[left];
+			size: == &[intrinsic-size];
+		}
+
+		textarea {
+			center-y: == ::window[center-y];
+			height: == ::window[height] / 2;
+		}
+
+		#compile[width] == #compile[intrinsic-width];
+
+		[textareagap] == 50;
+		@h |-(textarea)-...-| in(::window) gap([textareagap]) {
+			&[width] == ^[textareawidth];
+		};
+
+		@v (h1)-10-(p)-35-(#vflin);
+		@v (#ccssout)-(#compile) gap(20);
+		@h (#compile)| in(#vflin);
+
+	</style>
+
+	<script src="vfl-compiler-bundle.js"></script>
+	<script src="https://s3-us-west-2.amazonaws.com/cdn.thegrid.io/gss/v2.0.0/v2.0.0/gss.js"></script>
+
+	<script type="text/javascript">
+  		window.engine = new GSS(document);
+	</script>
+
+	<script type="text/javascript">
+
+		function parseVfltoCcss()
+		{
+			var inputVfl = document.getElementById('vflin').value;
+			console.log(inputVfl);
+
+			try {
+				var ccss = VFL.parse(inputVfl);
+				var outputccss = document.getElementById('ccssout');
+				outputccss.value = ccss.statements.join(";\n") + ";";
+			}
+			catch (e)
+			{
+				console.log(e);
+				 document.getElementById('ccssout').value = e;
+			}
+		}
+
+
+		document.querySelector("textarea").addEventListener('keydown',function(e) {
+		    if(e.keyCode === 9) { // tab was pressed
+		        // get caret position/selection
+		        var start = this.selectionStart;
+		        var end = this.selectionEnd;
+
+		        var target = e.target;
+		        var value = target.value;
+
+		        // set textarea value to: text before caret + tab + text after caret
+		        target.value = value.substring(0, start)
+		                    + "\t"
+		                    + value.substring(end);
+
+		        // put caret at right position again (add one for the tab)
+		        this.selectionStart = this.selectionEnd = start + 1;
+
+		        // prevent the focus lose
+		        e.preventDefault();
+		    }
+		},false);
+	</script>
+
+</body>
+</html>

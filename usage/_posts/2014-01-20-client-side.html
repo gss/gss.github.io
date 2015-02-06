@@ -5,12 +5,7 @@ layout: default
 color: b
 ---
 
-<strong>WARNING:</strong> This site is currently under heavy development, but left open to garner feedback and start the conversation.  Please direct bugs or suggestions to the issues list on <a style="font-weight:bold;" href="https://github.com/gss/">one of our repos</a>
-</blockquote>
-
 ## Installation
-
-GSS will go parallel with [Web Workers](http://www.html5rocks.com/en/tutorials/workers/basics/) when the browser supports it.  Thus, you need two JS files to get started; `gss.js` & it's helpful `worker.js`.  Use the `GSS_CONFIG` object to set worker URL.
 
 If you download via Bower:
 
@@ -21,17 +16,22 @@ $ bower install gss
 Use the following:
 
 {% highlight html %}
-<script>
-  GSS_CONFIG = {
-    worker: "../bower_components/gss/dist/worker.js"
-  }
+<script src="/bower_components/gss/dist/gss.js"></script>
+<script type="text/javascript">
+  window.engine = new GSS(document);
 </script>
-<script src="../bower_components/gss/dist/gss.js"></script>
 {% endhighlight %}
 
 Otherwise, [download version {{site.version}}](https://github.com/gss/engine/archive/{{ site.version }}.zip) or clone the [github repo](https://github.com/gss/engine).
 
-**IMPORTANT** worker URL must be configured!
+### CDN
+Get GSS from our CDN:
+
+<a href="https://s3-us-west-2.amazonaws.com/cdn.thegrid.io/gss/v2.0.0/v2.0.0/gss.js" style="font-size: 16px">https://s3-us-west-2.amazonaws.com/cdn.thegrid.io/gss/v2.0.0/v2.0.0/gss.js</a>
+
+#### Minify version
+<a class="smallLink" href="https://s3-us-west-2.amazonaws.com/cdn.thegrid.io/gss/v2.0.0/v2.0.0/gss.min.js" style="font-size: 16px">https://s3-us-west-2.amazonaws.com/cdn.thegrid.io/gss/v2.0.0/v2.0.0/gss.min.js</a>
+
 
 ## Usage
 
@@ -50,62 +50,3 @@ Likewise, inline GSS works with a simple `type="text/gss"`:
 
 </style>
 {% endhighlight %}
-
-
-## Configuration
-
-Options can be given on the following global object before the `<script src="gss.js"></script>`:
-
-{% highlight html %}
-<script>
-GSS_CONFIG = {
-
-  // Web Worker
-  // URL to worker must be set!
-  worker: '../dist/worker.js',
-  useWorker: !!window.Worker,
-
-  // Cassowary defaults
-  defaultStrength: 'weak', // 'weak', 'medium', 'strong', 'required'
-  defaultWeight: 0,
-
-  // FOUC prevention
-  // adds "gss-ready" and removes "gss-not-ready" classes on html tag
-  readyClass: true,
-
-  // Fractional pixels values
-  // bad for text, good for accuracy
-  fractionalPixels: true,
-
-  // Scrollbar size offset
-  verticalScroll: true,
-  horizontalScroll: false,
-
-  // Mutation Observer
-  observe: true,
-  observerOptions: {
-    subtree: true,
-    childList: true,
-    attributes: true,
-    characterData: true
-  },
-
-  // Callback to process variables before setting DOM
-  processBeforeSet: null, // function
-
-  // ::window resize debounce time
-  resizeDebounce: 32, // (ms)
-
-  // Logging
-  debug: false,
-  warn: false,
-  perf: false
-
-};
-</script>
-<script src="gss.js"></script>
-{% endhighlight %}
-
-
-
-

@@ -1,0 +1,22 @@
+{
+  "name": "ccss-ast-viewer",
+  "version": "1.0.0",
+  "description": "View the generated AST from CCSS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gss/ccss-ast-viewer.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gss/ccss-ast-viewer/issues"
+  },
+  "homepage": "https://github.com/gss/ccss-ast-viewer",
+  "dependencies": {
+    "ccss-compiler": "^1.1.3"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "vfl-ccss-viewer",
+  "version": "1.0.0",
+  "description": "View the generated ccss of the vfl-compiler",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Carl Chouinard",
+  "license": "ISC",
+  "dependencies": {
+    "vfl-compiler": "^1.1.3"
+  },
+  "devDependencies": {}
+}

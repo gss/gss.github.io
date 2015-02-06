@@ -1,0 +1,39 @@
+---
+uid: tools
+title: GSS tools
+subtitle: take a look at what is going on under the hood
+color: b
+layout: post
+---
+
+## Log
+GSS provides a logging tool so you can see what constraints are currently been evaluated by the GSS engine.
+
+<img src="/assets/images/GSSLog.png" width="100%"  />
+
+Simply add `?log=1` to your URL: `http://somewebsite.com/gsspage.html?log=1`
+
+The logger will group all constraints related to each other. In the image above, we have
+43 constraints. They are grouped in two collection of 22 and 21 constraits.
+Grouping is done when constraints are using the same property or variable.
+
+If an element as an ID, the log will display the ID as $idName.
+
+### alt-click
+If you alt-click an element, the logger will display the constraints related to the clicked element.
+
+### alt-command-click
+On a Mac computer, you can do alt-command-click to visualize virtuals.
+Support for Windows is coming soon.
+
+## VFL to CCSS Viewer
+This tool allows you to see the CCSS generated from VFL. Note that we currently do not support the viewing of
+VFL rulesets.
+
+<a href="/tools/vfltoccss/index.html" target="_blank">VFL to CCSS viewer</a>
+
+## CCSS to AST
+GSS engine internally works with an <a href="http://en.wikipedia.org/wiki/Abstract_syntax_tree" target="_blank">AST</a>. This tool
+allows you to visualize the generated AST.
+
+<a href="/tools/ccsstoast/index.html" target="_blank">CCSS to AST viewer</a>

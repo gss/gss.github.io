@@ -12,7 +12,8 @@ layout: post
 }
 </style>
 
-With only inequality constraints at your disposal, constraining common layout scenarios quickly becomes tedious.  To horizontally align 4 buttons within a panel with a gap of 10px requires something like:
+With only inequality constraints at your disposal, constraining common layout scenarios quickly becomes tedious.  To horizontally align
+4 buttons within a panel with a gap of 10px requires something like:
 
 {% highlight css %}
 #panel[left] + 10 == #button1[left];
@@ -22,30 +23,33 @@ With only inequality constraints at your disposal, constraining common layout sc
 #panel[right] - 10 == #button4[right];
 {% endhighlight %}
 
-Not to mention the obligatory size & vertical constraints needed to fully specify the panel and buttons - ugh...  
+Not to mention the obligatory size & vertical constraints needed to fully specify the panel and buttons - ugh...
 
-This is where Grid-flavored VFL comes in.  The brains at Apple came up with VFL as a more programatic way to install constraints in Cocoa AutoLayout.  The idea is rather simple, the syntax should visually depict the layout.  GSS takes the good parts of VFL and makes it more suitable for CSS, throws in some sugar and drops the cruft.  So the above example of 4 buttons in a panel becomes:
+This is where Grid-flavored VFL comes in.  The brains at Apple came up with VFL as a more programatic way to install
+constraints in Cocoa AutoLayout.  The idea is rather simple, the syntax should visually depict the layout.  GSS takes the good
+parts of VFL and makes it more suitable for CSS, throws in some sugar and drops the cruft.  So the above example of 4 buttons
+in a panel becomes:
 
 {% highlight css %}
-@horizontal |-[#button1]-[#button2]-[#button3]-[#button4]-| in(#panel) gap(10);
+@h |-(#button1)-(#button2)-(#button3)-(#button4)-| in(#panel) gap(10);
 
 /* which is the same as */
 
-@horizontal |-10-[#button1]-10-[#button2]-10-[#button3]-10-[#button4]-10-| in(#panel);
+@h |-10-(#button1)-10-(#button2)-10-(#button3)-10-(#button4)-10-| in(#panel);
 
 /* which is the same, assuming we're using button tags, as */
 
-@horizontal button in(#panel) gap(10);
+@h |(button)...| in(#panel) gap(10);
 {% endhighlight %}
 
-
+<a name="basics"></a>
 <h2>Basics</h2>
 
-Horizontal layouts can be created with the CSS directive `@h`, `@horizontal` or `@-gss-horizontal`.  
+Horizontal layouts can be created with the CSS directive `@h`.
 
-Vertical layouts with the CSS directive `@v`, `@vertical` or `@-gss-vertical`.
+Vertical layouts with the CSS directive `@v`.
 
-An element is queried within square brackets, `[ Selector ]`, and a `connection` between elements is represented using a hyphen (or two hyphens separated by a number to represent the number of pixels apart the views should be).  Similarly, a `cushion` between elements is made with a tilda.
+An element is queried within parenthesis, `( Selector )`, and a `connection` between elements is represented using a hyphen (or two hyphens separated by a number to represent the number of pixels apart the views should be).  Similarly, a `cushion` between elements is made with a tilda.
 
 Internally, GSS compiles VFL into CCSS (in)equality constraints, so after each VFL example the compiled CCSS is included.
 
@@ -54,20 +58,20 @@ Internally, GSS compiles VFL into CCSS (in)equality constraints, so after each V
 
 <h2>Connections</h2>
 
-Two elements can be horizontally connected without any gap:
+Two elements can be horizontally connected without any gap. <a href="http://codepen.io/thegridgssdocs/pen/pvrXRW" target="_blank">Live example.</a>
 
 <img class="vfl-small-img" src="../../assets/images/vfl/flushViews.png" width="99" height="20" alt="FlushViews">
 
 {% highlight css %}
 /* VFL */
-@h [#maroon][#blue];
+@h (#maroon)(#blue);
 
 /* Equivalent CCSS */
 #maroon[right] == #blue[left];
 {% endhighlight %}
 
 
-
+<a name="connectiongaps"></a>
 <h2>Connection Gaps</h2>
 
 To align elements with a gap, use a hyphen and `gap( Number | Constraint Variable | Element Property )`:
@@ -76,41 +80,41 @@ To align elements with a gap, use a hyphen and `gap( Number | Constraint Variabl
 
 {% highlight css %}
 /* VFL */
-@horizontal [#button]-[#textField] gap(8);
+@h (#button)-(#textField) gap(8);
 /* or */
-@horizontal [#button]-8-[#textField];
+@h (#button)-8-(#textField);
 
 /* Equivalent CCSS */
 #button[right] + 8 == #textField[left];
 {% endhighlight %}
 
-If no `gap()` is defined, but a hyphen is used to make a connection then a `standard gap` variable is created,
+If no `gap()` is defined, but a hyphen is used to make a connection then a `standard gap` variable is created.
 
 {% highlight css %}
 /* VFL */
-@horizontal [#button]-[#textField];
-@vertical [#button]-[#textField];
+@h (#button)-(#textField);
+@v (#button)-(#textField);
 
 /* Equivalent CCSS */
-#button[right] + [hgap] == #textField[left];
-#button[bottom] + [vgap] == #textField[top];
+#button[right] + hgap == #textField[left];
+#button[bottom] + vgap == #textField[top];
 {% endhighlight %}
 
-The `[hgap]` & `[vgap]` variables can be used like normal variables, and again like all constraint variables are globally scoped.
+The `hgap` & `vgap` variables can be used like normal variables and are declared in the current scope.
 
-User defined variables can be used for gaps as well:
+User defined variables can be used for gaps as well. <a href="http://codepen.io/thegridgssdocs/pen/PwKrjN" target="_blank">Live example.</a>
 
 {% highlight css %}
 /* VFL */
-@horizontal [#box1]-[#box2] gap([col-gap]);
+@h (#box1)-(#box2) gap(col-gap);
 
 /* Equivalent CCSS */
-#box1[right] + [col-gap] == #box2[left];
+#box1[right] + col-gap == #box2[left];
 {% endhighlight %}
 
 {% highlight css %}
 /* VFL */
-@horizontal [#b1]-100-[#b2]-[#b3]-[#b4] gap(#box1[width]);
+@h (#b1)-100-(#b2)-(#b3)-(#b4) gap(#box1[width]);
 
 /* Equivalent CCSS */
 #b1[right] + 100 == #b2[left];
@@ -121,72 +125,74 @@ User defined variables can be used for gaps as well:
 
 <h2>Containment within an Element</h2>
 
-For alignment contained within an element, surround a VFL alignment with `|`'s and use `in( Selector )`:
+To align the whole VFL declaration within a specific element, a combination of `in(#selector)` and vertical `|` pipes can be used.
+
+The pipes determine the edges of the element. In `@h` VFL blocks leading and trailing pipes signify left and right edges of the containing element. In `@v` declarations it's top and bottom edges respectively.  <a href="http://codepen.io/cbchouinard/pen/emEwRr" target="_blank">Live example.</a>
+
+Binding to both edges of the element is a safest bet, as it makes a two-way relation between element and its contents. The use case of binding to only one edges would be layouts growing in one direction without expanding the containing element, like scrollable content.
+
 
 <img class="vfl-small-img" src="../../assets/images/vfl/connectionToSuperview.png" width="152" height="32" alt="ConnectionToSuperview">
 
 {% highlight css %}
 /* VFL */
-@h |-50-[#purple-box]-50-| in(#container);
+@h |-50-(#purple-box)-50-| in(#container);
 
 /* Equivalent CCSS */
 #container[left] + 50 == #purple-box[left];
 #container[right] - 50 == #purple-box[right];
 {% endhighlight %}
 
-The default containing element selector is `::this`.  The above example can be written:
+If there's no `in(selector)` provided, the edges will point to the current element within ruleset. Using `in(&)` would have the same effect.
+
+The above example can be written:
 
 {% highlight css %}
 /* VFL */
 #container {
-  @h |-50-[#box]-50-|;
+  @h |-50-(#purple-box)-50-|;
 }
 
-/* Equivalent CCSS */
-#container {
-  ::[left] + 50 == #purple-box[left];
-  ::[right] - 50 == #purple-box[right];
-}
 {% endhighlight %}
-
 
 
 <h2>Outer-Gaps</h2>
 
-You can specify the gaps to a containing element using `outer-gap( Number | Constraint Variable | Element Property )`, which overrides `gap()` if specified:
+The variable provided in `gap()` declaration is used for all gaps between elements in VFL declaration. The `outer-gap()` function can be used to set a different variable for gaps between the containing element and first and last contained elements.
 
 {% highlight css %}
 /* VFL */
 #container {
-  @h |-[#a]-[#b]-[#c]-|
+  @h |-(#a)-(#b)-(#c)-|
     gap(8) outer-gap(16);
 }
 
 /* Equivalent VFL */
-@horizontal |-16-[#a]-8-[#b]-8-[#c]-16-| in(#container);
+@h |-16-(#a)-8-(#b)-8-(#c)-16-| in(#container);
 {% endhighlight %}
 
-
+<a name="points"></a>
 <h2>Alignment to Points</h2>
 
-Elements can be aligned relative to arbitrary positioned points using `< Number | Constraint Variable | Element Property >`
+Elements can be aligned relative to arbitrary positioned points of the document using angle bracket syntax. The points
+can be either numbers or variables. <a href="http://codepen.io/thegridgssdocs/pen/bNrPvW" target="_blank">Live example.</a>
 
 To horizontally align two buttons, each 8px from the center of the window:
 
 {% highlight css %}
 /* VFL */
-@h [#btn1]-<::window[center-x]>-[#btn2] gap(8);
+@h (#btn1)-<::window[center-x]>-(#btn2) gap(8);
 
 /* Equivalent CCSS */
 #btn1[right] + 8 == ::window[center-x];
 ::window[center-x] + 8 == #btn2[left];
 {% endhighlight %}
 
-Alignments can be positioned within points:
+Elements can be positioned between points:
 
 {% highlight css %}
 /* VFL */
-@h <#wall[center-x]>-[#poster]-[#clock]-<::window[right]> gap(7);
+@h <#wall[center-x]>-(#poster)-(#clock)-<::window[right])> gap(7);
 
 /* Equivalent CCSS */
 #wall[center-x] + 7 == #poster[left];
@@ -198,7 +204,7 @@ Numbers, variables and arithmetic can be used:
 
 {% highlight css %}
 /* VFL */
-@v <100>[#box]<[row2]>;
+@v <100>(#box)<[row2]>;
 
 /* Equivalent CCSS */
 100 == #box[top];
@@ -209,9 +215,9 @@ Consecutive points are not constrained to each-other:
 
 {% highlight css %}
 /* VFL */
-@h [#btn1]-<#col3[left]> 
-           <#col4[right]>-[#btn2] 
-  gap(8); 
+@h (#btn1)-<#col3[left]>
+           <#col4[right]>-(#btn2)
+  gap(8);
 
 /* Equivalent CCSS */
 #btn1[right] + 8 == #col3[left];
@@ -219,31 +225,14 @@ Consecutive points are not constrained to each-other:
 {% endhighlight %}
 
 
-<h2>Implicit Connections</h2>
-
-Align group elements matching a selector:
-
-{% highlight css %}
-
-@v .section;
-
-@h .menu-item 
-  in(#menu)
-  gap(16)
-  outer-gap(32);
-
-{% endhighlight %}
-
-**WARNING:** only relatively simple selectors without spaces currently work.
-
-
-<h2>Cushions</h2>
-
-Cushions are similar to connections, only they use inequality instead of equality constraints. 
+<a name="cushions"></a>
+## Cushions
+Cushions are expandable connection gaps. They use inequality instead of equality constraints.
+<a href="http://codepen.io/thegridgssdocs/pen/JoyQBq" target="_blank">Live example.</a>
 
 {% highlight css %}
 /* VFL */
-@horizontal [#box1]~[#box2];
+@h (#box1)~(#box2);
 
 /* Equivalent CCSS */
 #box1[right] <= #box2[left];
@@ -251,7 +240,7 @@ Cushions are similar to connections, only they use inequality instead of equalit
 
 {% highlight css %}
 /* VFL */
-@vertical [#box1]~100~[#box2];
+@v (#box1)~100~(#box2);
 
 /* Equivalent CCSS */
 #box1[bottom] + 100 <= #box2[top];
@@ -259,8 +248,8 @@ Cushions are similar to connections, only they use inequality instead of equalit
 
 {% highlight css %}
 /* VFL */
-@horizontal [#box1]~-~[#box2];
-@vertical [#box3]~-~[#box4];
+@h (#box1)~-~(#box2);
+@v (#box3)~-~(#box4);
 
 /* Equivalent CCSS */
 #box1[right] + [hgap] <= #box2[left];
@@ -268,15 +257,18 @@ Cushions are similar to connections, only they use inequality instead of equalit
 {% endhighlight %}
 
 
+<a name="sizepredicates"></a>
 <h2>Size Predicates</h2>
 
 Size Predicates allow elements to be sized in the dimension parallel with the alignment.
+<a href="http://codepen.io/thegridgssdocs/pen/wBqLQe" target="_blank">Live example.</a>
+
 
 <img class="vfl-small-img" src="../../assets/images/vfl/priority.png" width="102" height="40" alt="Priority">
 
 {% highlight css %}
 /* VFL */
-@horizontal [#button(100)];
+@h (#button(==100));
 
 /* Equivalent CCSS */
 #button[width] == 100;
@@ -286,9 +278,9 @@ Size Predicates allow elements to be sized in the dimension parallel with the al
 
 {% highlight css %}
 /* VFL */
-@horizontal [#button1(==#button2)];
+@h (#button1(==#button2));
 /* or */
-@horizontal [#button1(==#button2[width])];
+@h (#button1(==#button2[width]));
 
 /* Equivalent CCSS */
 #button1[width] == #button2[width];
@@ -300,125 +292,155 @@ Multiple size predicates:
 
 {% highlight css %}
 /* VFL */
-@horizontal [#flexibleButton(>= 70, <= 100))];
+@h (#flexibleButton(>= 70, <= 100));
 
 /* Equivalent CCSS */
 #flexibleButton[width] >= 70;
 #flexibleButton[width] <= 100;
 {% endhighlight %}
 
-<img class="vfl-small-img" src="../../assets/images/vfl/completeLayout.png" width="315" height="27" alt="CompleteLayout">
+
+## VFL Selectors
+
+VFL expressions can use any [complex selectors](/guides/selectors):
 
 {% highlight css %}
-/* VFL */
-@horizontal |-24-[#find]-[#findNext]-[#findField(>=30)]-24-| in(#popup);
-
-/* Equivalent CCSS */
-#popup[left] + 24 == #find[left];
-#find[right] + [hgap] == #findNext[left];
-#findField[width] >= 30;
-#findNext[right] + [hgap] == #findField[left];
-#findField[right] + 24 == #popup[right];
+@v | (.featured > article ~ .title) | in(#elm > .class .class2"virtual")
 {% endhighlight %}
 
+<a name="vflsplats"></a>
+## VFL Splat
+When a selector in a VFL expression finds more than one element, not all elements will be constrained if the
+number of elements within each selector's expression are not equal. This is due to [plural binding](/guides/selectors/#pluralbinding).
+<a href="http://codepen.io/thegridgssdocs/pen/vEJqbG" target="_blank">Live example.</a>
 
+In this example, the last two article elements will not be constrained since there is no section element to bind to.
+As can be seen in the generated CCSS, the elements are constrained using plural binding.
 
-<h2>VFL Chains</h2>
+{% highlight html %}
 
-Chains are a powerful mechanism to take each element within an VFL alignment (excluding a containment element & points) and construct a chained constraint statement against a property of each element.  
+<section></section>
+<article></article>
+<article></article>
+<article></article>
+<footer></footer>
 
-Chains take the form `chain-{Property}({Head Operator} {Expression} {TailOperator})`.  
+<style type="text/gss">
 
-The `Head Operator`, `Expression` and `Tail Operator` are optional.
+  /* the last two articles will not be constraints because of plural binding */
+  @h |-(section)-(article)-(footer)-| in(::window);
 
-The `Head Operator` is assumed to be `==`.
-If no `Expression` is given than the elements properties are chained together.
+  /* this generates the following CCSS */
+  ::window[left] + [hgap] == section[left];
+  section[right] + [hgap] == article[left]; /* plural binding */
+  article[right] + [hgap] == footer[left]; /* plural binding */
+  footer[right] + [hgap] == ::window[right];
 
-If unspecified, the `Tail Operator` is inferred from the `Head Operator`.
+</style>
 
-For example,
-
-{% highlight css %}
-/* VFL */
-@h [#b1][#b2][#b3][#b4] chain-height chain-width(250);
-
-/* or, more explicitly */
-@h [#b1][#b2][#b3][#b4] chain-height(==) chain-width(== 250 ==);
-
-/* Equivalent CCSS */
-#b1[right] == #b2[left];
-#b2[right] == #b3[left];
-#b3[right] == #b4[left];
-#b1[height] == #b2[height] == #b3[height];
-#b1[width] == 250 == #b2[width] == 250 == #b3[width];
 {% endhighlight %}
 
+If the number of selected elements matches, the position of the elements within each collection of selected
+elements will overlap since you're basically constraining the whole collection to the same values. <a href="http://codepen.io/thegridgssdocs/pen/yyodWx" target="_blank">Live example.</a>
 
-{% highlight css %}
-/* VFL */
-@vertical |-8-[#b1][#b2]-8-| 
-  in(#panel) 
-  chain-center-x(::window[centerX]) 
-  chain-width(>= 50);
-  
-/* or, more explicitly */
-@vertical |-8-[#b1][#b2]-8-| 
-  in(#panel) 
-  chain-center-x(== ::window[centerX] ==) 
-  chain-width(>= 50 <=);
+{% highlight html %}
 
-/* Equivalent CCSS */
-#panel[top] + 8 == #b1[top];
-#b1[bottom] == #b2[top];
-#b2[bottom] + 8 == ::window[bottom];
-#b1[centerX] == #panel[center-x] == #b2[center-x];
-#b1[width] >= 50 <= #b2[width];
+<section></section>
+<section></section>
+<section></section>
+<article></article>
+<article></article>
+<article></article>
+<footer></footer>
+
+<style type="text/gss">
+
+/* the 3 sections will all have the same horizontal position as the 3 articles. */
+@h |-(section)-(article)-(footer)-| in(::window);
+
+</style>
+
 {% endhighlight %}
 
+Splats will iterate over the collection of selected elements and position elements
+next to each other. <a href="http://codepen.io/thegridgssdocs/pen/ogerrX" target="_blank">Live example.</a>
 
+{% highlight html %}
 
-<h2>VFL Strength & Weight</h2>
+<section></section>
+<section></section>
+<article></article>
+<article></article>
+<article></article>
+<div></div>
+<div></div>
 
-As established with CCSS, Strength & Weight can be used in VFL statements using `!{Strength}{Weight}` at the end of a statement.  Strengths can be `weak`, `medium`, `strong` & `require`.  Weights are positive integers.  As a rule of thumb, use Strengths first & foremost & resort to weights as a last resort.
+<style type="text/gss">
 
-Alignment Strength & Weight:
+/* not constrained using plural binding */
+@h |-(section)-10-...-(article)-20-...-(div)...-| in(::window);
 
-<img class="vfl-small-img" src="../../assets/images/vfl/verticalLayout.png" width="96" height="54" alt="VerticalLayout">
+</style>
 
-{% highlight css %}
-/* VFL */
-@vertical [#topfield]-10-[#bottomfield] !strong100;
-
-/* Equivalent CCSS */
-#topfiled[bottom] + 10 == #bottomfield[top] !strong100;
 {% endhighlight %}
 
-Size Predicates have their own Strength & Weight:
+In the previous example, the two sections will be positioned next to each other with a gap of 10px. The
+three articles will be positioned next to each other with a gap of 20px. Finally the two divs will be right next to each
+other without any gap.
+
+<a name="virtuals"></a>
+## Virtual elements with VFL
+[Virtual elements](/guides/constraints/#virtuals) can be created and/or positioned using VFL expressions.
+
+You can position a virtual element the same as any other element:
+
+{% highlight css %}
+
+/* horizontally align two virtuals with a gap of 10px between them */
+@h |-("area1")-10-("area2")-| in(::window);
+
+{% endhighlight %}
+
+<a name="rulesets"></a>
+## VFL rulesets
+
+You can use a VFL expression as a selector in [rulesets](/guides/ccss/#rulesets). It will create a collection of all
+elements positioned by the VFL declaration, not including the containing element. Properties defined in
+the body of the ruleset will be applied to each of those elements.
+
+In the following example, each element width is bound to the same variable, making them equal width:
+
+{% highlight css %}
+
+shared-width >= 100;
+
+@h |-(section)-10-...-(article)-20-...-(div)...-| in(::window) {
+  width: == shared-width;
+}
+
+{% endhighlight %}
+
+## VFL Strengths
+
+[Strength](/guides/ccss#strengths) used in VFL will be applied to all constraints generated by the statement:
 
 {% highlight css %}
 /* VFL */
-@vertical [#box1(>= [row-height] !require, == 20 !strong)][#box2][#box3] !medium;
+@v (#topfield)-10-(#bottomfield) !strong;
+
+/* Equivalent CCSS */
+#topfiled[bottom] + 10 == #bottomfield[top] !strong;
+{% endhighlight %}
+
+Size Predicates may have their own strength:
+
+{% highlight css %}
+/* VFL */
+@v (#box1(>= [row-height] !require, == 20 !strong))(#box2)(#box3) !medium;
 
 /* Equivalent CCSS */
 #box1[height] == 20 !strong;
 #box1[height] >= [row-height] !require;
 #box1[bottom] == #box2[top] !medium;
 #box2[bottom] == #box3[top] !medium;
-{% endhighlight %}
-
-Chains have their own Strength & Weight:
-
-{% highlight css %}
-/* VFL */
-@vertical [#b1][#b2][#b3][#b4] 
-  chain-width(==!weak10) 
-  chain-height(<=150>=!required) 
-  !medium;
-
-/* Equivalent CCSS */
-#b1[bottom] == #b2[top] !medium;
-#b2[bottom] == #b3[top] !medium;
-#b3[bottom] == #b4[top] !medium;
-#b1[width] == #b2[width] == #b3[width] == #b4[width] !weak10;
-#b1[height] <= 150 >= #b2[height] <= 150 >= #b3[height] <= 150 >= #b4[height] !required;
 {% endhighlight %}

@@ -1,0 +1,247 @@
+---
+uid: Layout
+title: Position and dimension
+subtitle: lay it out like it's 1999
+color: b
+layout: post
+---
+
+<a name="position"></a>
+## Positioning
+
+Elements are positioned relative to the scope element, so its top left corner is considered a (0, 0) point. GSS initialized upon `document`, `<html>`, `<body>` or `<head>` position against the `<html>` element. Global properties like `$left`, `$right`, `$scroll-top` and `$bottom` point to respective properties of `::window`.
+
+Cassowary is a general purpose solver, so it does not make any assumptions about the positioning or even geometry. If there's nothing that is bound to absolute values like zero or edges of the screen, the whole layout can be solved to be positioned off-screen. Negative `top` and `left` values is a common gotcha in *underconstrained* systems.
+
+### Top
+
+{% highlight css %}
+
+#someElm[top] == 20;
+
+/* equivalent to : */
+#someElm[y] == 20;
+
+{% endhighlight %}
+
+Place the top of the element 20px from the top of the page.
+
+### Bottom
+
+{% highlight css %}
+
+#someElm[bottom] == 100;
+
+/* equivalent to : */
+#someElm[bottom] == #someElm[top] + #someElm[height];
+
+{% endhighlight %}
+
+Place the bottom of the element 100px from the top of the page.
+
+### Left
+
+{% highlight css %}
+
+#someElm[left] == 20;
+
+/* equivalent to : */
+#someElm[x] == 20;
+
+{% endhighlight %}
+
+Place the left of the element 20px from the left of the page.
+
+### Right
+
+{% highlight css %}
+
+#someElm[right] == 100;
+
+/* equivalent to : */
+#someElm[rigth] == #someElm[left] + #someElm[width];
+
+{% endhighlight %}
+
+Place the right of the element 100px from the left of the page.
+
+### position
+
+{% highlight css %}
+#someElm[position] == 100;
+
+/* equivalent to : */
+#someElm[top] == 100;
+#somElm[left] == 100;
+
+{% endhighlight %}
+
+### top-left, top-right
+
+{% highlight css %}
+#someElm[top-left] == 100;
+#otherElm[top-right] == 200;
+
+/* equivalent to : */
+#someElm[top] == 100;
+#someElm[left] == 100;
+#otherElm[top] == 200;
+#otherElm[right] == 200;
+
+{% endhighlight %}
+
+Position the `#someElm` top-left corner to be at 100px from the top-left of the page.
+Same thing for `#otherElm` excepts its the top-right corner that's been position 200px
+from the top-left of the page.
+
+### bottom-left, bottom-right
+
+{% highlight css %}
+#someElm[bottom-left] == 100;
+#otherElm[bottom-right] == 200;
+{% endhighlight %}
+
+Position the `#someElm` bottom-left corner to be at 100px from the top-left of the page.
+Same thing for `#otherElm`, excepts its the bottom-right corner that's been position 200px
+from the top-left of the page.
+
+### center-x, cx
+
+{% highlight css %}
+#someElm[center-x] == 100;
+
+/* you can also use the condense syntax: */
+#someElm[cx] == 100;
+
+/* center-x will expand in the following constraints */
+#someElm[left] + #someElm[width] / 2 == 100;
+
+{% endhighlight %}
+
+Horizontally place the horizontal center of the element at 100px from the left of the page.
+
+### center-y, cy
+
+{% highlight css %}
+
+#someElm[center-y] == 100;
+
+/* you can also use the condense syntax: */
+#someElm[cy] == 100;
+
+/* center-y will expand in the following constraints */
+#someElm[top] + #someElm[height] / 2 == 100;
+
+{% endhighlight %}
+
+Place the vertical center of the element 100px from the top of the page.
+
+### Center
+
+{% highlight css %}
+#someElm[center] == 100;
+{% endhighlight %}
+
+`center` is a 2d property shortcut for constraining both `center-x` and `center-y` at once.
+
+<a name="relativepositionning"></a>
+
+
+### Relative positioning
+
+Elements that have parents with `position: relative` declared in CSS stylesheet will compute their position ignoring that declaration.
+
+Cassowary won't know about relative parents. Visually you won't tell the difference. But the actual `top` and `left` styles assigned for each element will account for the relative positioning.
+
+When `position: relative` is set on the element within a `style` attribute of the element, all its descendants will be positioned as if that relative parent was at the top-left corner of the screen.
+
+
+{% highlight css %}
+
+<section class="container" style="position: relative">
+  <div class="content"></div>
+</section>
+
+<section class="container" id="section-two" style="position: relative">
+  <div class="content"></div>
+</section>
+
+<style type="text/gss">
+
+.container {
+  top: == 0;
+  left: == 0;
+
+  .content {
+    top: == ^top;
+    bottom: == ^bottom;
+    height: == 100;
+    width: == 100;
+  }
+}
+
+</style>
+
+{% endhighlight %}
+
+In this example, each element having `container` class will have its `top` and `left` properties constrained to zero. But since the containers have explicit `position: relative` set, they will push one another by the means of regular CSS page flow. Otherwise each container would be positioned at the same spot each overlaying the other.  <a href="http://codepen.io/cbchouinard/pen/pvwaNN" target="_blank">Live example.</a>
+
+By employing CSS to lay out big chunks of layout, we make each section solution independent. This leads to smaller individual constraint graphs and better overall performance.
+
+With the `position: relative` declared in the `style` attribute, GSS will solve independently each sections which
+should results in better performance. <a href="http://codepen.io/thegridgssdocs/pen/pvwaNN" target="_blank">Live example.</a>
+
+## Dimensions
+GSS provides property to constrain the dimension of an element. We've already saw the `width` and `height`.
+GSS provides syntax sugar called 2d properties to constrain both height and width of an element as a single property.
+
+{% highlight css %}
+
+.selectorA {
+  size: == 200;
+}
+
+{% endhighlight %}
+
+## Intrinsic values
+
+Positioning elements with `top` and `left` properties doesn't require GSS to know the dimensions of that elements. But `right` and `bottom` properties need to know about `width` and `height` of the element respectively. Properly constrained system will provide those values indirectly with no regard to elements contents.
+
+However it's often desirable to know the computed dimensions of specific elements which GSS has no control over - be it text, images or blocks styled with CSS. Measurements provide dynamic "islands" to the layout, which can be automatically recomputed, whenever measured things are updated from the outside. It also may act as a feedback to the solver, disallowing content to shrink too much or helping to decide if things fit.
+
+Prepending property with `intrinsic-` or `computed-` prefix makes GSS measure the values.
+
+Using `intrinsic` property is used on the element, makes the property to be *read-only*. Declaration of `intrinsic-width` [propertywill ensure that `width` style is never applied to that element. This allows dimensions to change and update naturally. Otherwise, the width would be computed and applied only the first time, making it static.
+
+`computed` properties can be used to measure styles regardless of their origin - either GSS constraints or CSS styles. Computed properties will not make styles *read-only*, unlike intrinsic properties.
+
+{% highlight css %}
+
+  // apply static width, measure height
+  // (height style will not be set)
+  .selectorA {
+    width: == 200;
+    height: == &intrinsic-height;
+  }
+
+  // only measure dimensions
+  // (height & width styles will not be set)
+  .selectorB {
+    width: == &intrinsic-width;
+    height: == &intrinsic-height;
+  }
+
+  // use dimension information to position elements
+  .selectorA[right] == .selectorB[left];
+
+{% endhighlight %}
+
+## Read next
+If you come from the CCSS guide [continue your learning of CCSS](/guides/ccss/#position)
+
+Learn how to use [CCSS constraints](/guides/ccss)
+
+GSS provides conditionnal statements to allow you to do responsive design. Read our [@if @else guide](/guides/ifelse) to learn more.
+
+With only CCSS constraints at your disposal, constraining common layout scenarios quickly becomes tedious. Read our
+[VFL guide](/guides/ifelse) to learn how to more efficiently constrain your layout.

@@ -1,7 +1,7 @@
 title: GSS
 permalink: /:categories/:title
 pygments: true
-version: "1.0.4-beta"
+version: "2.0.0"
 markdown: redcarpet
 exclude:
   - "README.md"
