@@ -10,13 +10,13 @@ Soon after the W3C introduced Cascading Style Sheets, [Greg Badros](http://www.b
 Solver & [recently retired Facebook VP](http://allthingsd.com/20130920/facebook-engineering-and-products-vp-greg-badros-to-leave-company/),
 proposed [Constraint CSS (CCSS)](http://www.cs.washington.edu/research/constraints/web/ccss-uwtr.pdf) as a general solution for CSS layout.
 Back in '99 Badros demonstrated *responsive* layouts with CCSS that today's designers still can't reproduce without grinding out piles of JavaScript.
-For more than a decade, no one seemed to take notice outside academia... Until Apple implemented Cassowary & Greg's pioneering concepts in its new
+For more than a decade, no one seemed to take notice outside of academia until Apple implemented Cassowary & Greg's pioneering concepts in its new
 AutoLayout engine with the launch of OS X Lion. Despite the evolutionary leap for app developers, web designer's have had to settle
 with [float-based](http://www.sitepoint.com/give-floats-the-flick-in-css-layouts/) & table-based layouts that have remained unimproved to this day.
 
 > "We should contemplate how very, very far behind the web platform is in making it delightful to build the sorts of things that are work-a-day in native environments." <a href="http://infrequently.org/2012/02/misdirection/">Alex Russell</a>
 
-The foundation of GSS is a modernized implementation of CCSS.  From CCSS primitives other, more exotic layout API's can and are accomplished.
+The foundation of GSS is a modernized implementation of CCSS on which we build more exotic layout API's can and are accomplished.
 
 
 <a name="basicconstraint"></a>
@@ -44,7 +44,7 @@ The syntax for declaring a constraint is as follows:
 + `p` is the selector. This constraint will apply to every `p` tag in the page.
 + `[]` is the property accessor syntax.
 + `line-height` is the property for which a value will be calculated by GSS.
-+ `>=` defines an inequality constraint. You can declare inequality and equality constraint.
++ `>=` defines an inequality constraint.
 + `16` is the numerical value for the constraint in pixels (the default [unit of measurement](/guides/references#unitofmeasurement) in GSS).
 
 <a href="http://codepen.io/thegridgssdocs/pen/OPmdVL" target="_blank">Live example</a>
@@ -65,7 +65,7 @@ x = 100;
 
 {% endhighlight %}
 
-x will be 100, and y will be 10.  With constraint programming, equality constraints are two-way, so:
+x will be 100, and y will be 10.  With constraint programming, equality constraints are two-way:
 
 {% highlight javascript %}
 
@@ -81,8 +81,9 @@ y >= 10;
 
 x and y have a constraint to be equal, so x and y will be 100.
 
-Constraints are incrementally added to a `solver`, then the solver computes a feasible & optimal solution to all the constraints.
-Constraint programming focuses on intentions, not implementation. This makes constraint solver a perfect fit for empowering declarative languages like CSS.
+Constraints are incrementally added to a solver, then the solver computes a feasible & optimal solution to all the constraints.
+Constraint programming focuses on intentions, not implementation. This makes constraints a perfect fit for empowering declarative
+languages like CSS.
 
 Regular imperative programming approach focuses on the implementation instead, making programmer solve the problems.
 
@@ -140,7 +141,7 @@ strengths assigned to constraints allow individual `width` constraints to overco
 **Pro Tip** Use `!require` carefully & sparingly. `!require`'s quickly lead to systems where
 all required constraints cannot be satisfied in which case the GSS engine will throw an error.
 
-For example, the following GSS constraints will be unsolvable and thus throw an exception:
+For example, the following GSS constraints will be unsolvable and thus throw an error:
 
 {% highlight css %}
 
@@ -177,15 +178,14 @@ Cassowary, which is the constraints solving algorithm used by GSS, can only comp
 <a name="selectors"></a>
 ## Selectors
 
-Selector is a query over a tree of HTML elements. They determine which elements are affected by the constraint.
+Selectors are queries over a tree of HTML elements. They determine which elements are affected by the constraint.
 
 {% highlight css %}
 // elements with tag name div within element with #something id
 (#something div)[width] == 100;
 {% endhighlight %}
 
-There are many kinds of selectors, so there is a dedicated guide for them. We invite you to read all of it since there are some useful
-information at the bottom: [GSS Selectors Guide](/guides/selectors) \*
+Please reference the [GSS Selectors Guide](/guides/selectors) for a complete list of selector and more useful information on how to use them. \*
 
 \* Note that this guide is refering to [rulesets](rulesets) which are covered next.
 
@@ -211,12 +211,13 @@ section > article {
     }
 }
 
-// is equivalent of
+/* is equals to */
+
 (section > article .someclass)[width] == 100;
 
 {% endhighlight %}
 
-CSS properties can be defined in the rulesets just like in CSS:
+CSS properties can be used in GSS rulesets:
 
 {% highlight css %}
 div {
@@ -234,14 +235,14 @@ CSS properties.
 When using a property known by CSS, the GSS computed value for that property will be assigned as an inline style in pixels
 to the element.
 
-Like `$` and `^` combinators, `&` combinator refers to current element matching the ruleset selector. It is implied by the use of `width: ==` property notation.
+The `&` combinator refers to current element matching the ruleset selector. It is implied by the use of `width: ==` property notation.
 
 {% highlight css %}
 .container {
   width: == #elm[width];
 }
 
-/* It is the same as: */
+/* is equals to */
 
 .container {
   &[width] == #elm[width];
@@ -249,7 +250,7 @@ Like `$` and `^` combinators, `&` combinator refers to current element matching 
 
 {% endhighlight %}
 
-It is possible to constrain custom properties that are not recognized by CSS, but can used in constraints over known CSS properties.
+It is possible to constrain custom properties, that are not recognized by CSS, that can be used in constraints over known CSS properties.
 
 
 {% highlight css %}
@@ -258,16 +259,16 @@ It is possible to constrain custom properties that are not recognized by CSS, bu
   custom-property: == &[line-height] * 3;
 }
 
-/* equals to */
+/* is equals to */
 
 .post[custom-property] == .post[line-height] * 3;
 
 {% endhighlight %}
 
-This will automatically create a `custom-property` for each element having a `.post` class. The element's `custom-property` will be constrained to be thrice its own `line-height`.
+This will automatically create a `custom-property` for each element having a `.post` class. The element's `custom-property`
+will be constrained to be tree time its own `line-height`.
 
 Because of the 2-way binding, changing either `custom-property` or `line-height` will affect the other property of the element.
-
 
 Properties on special combinators like `&`, `$` or `^` may omit square brackets:
 
@@ -275,7 +276,7 @@ Properties on special combinators like `&`, `$` or `^` may omit square brackets:
 
 body {
   .container {
-    // equate width of a <body> element with width of elements having container class
+    /* equate width of a <body> element with width of elements having container class */
     &width == ^width;
   }
 }
@@ -287,16 +288,17 @@ body {
 ## Scope
 
 Properties are attached to a specific element:
-  * In rulesets, it's an element that matches the selector
-  * In topmost level of a stylesheet, it's a `<link>` or `<style>` that defines the stylesheet.
-  * In stylesheet element with `scoped` attribute, topmost variables are attached to the parent element of a stylesheet.
 
-Variables prefixed with `$` combinator are considered global, and can be shared by different stylesheets.
+- In rulesets, it's an element that matches the selector
+- In topmost level of a stylesheet, it's a `<link>` or `<style>` that defines the stylesheet.
+- In a stylesheet element with the `scoped` attribute, topmost properties are attached to the parent element of a stylesheet.
+
+Variables prefixed with `$` combinator are considered global, and can be shared accross different stylesheets.
 
 
-### Properties in stylesheet
-
-Properties defined at the top level of a stylesheet will be attached to the stylesheet element. Thus each stylesheet provides its own scope. Top level properties are not directly accessible from other stylesheets.
+### Properties in stylesheets
+Properties defined at the top level of a stylesheet will be attached to the stylesheet element. Thus each stylesheet
+provides its own scope. Top level properties are not directly accessible from other stylesheets.
 
 {% highlight css %}
 <style type="text/gss">
@@ -306,7 +308,7 @@ Properties defined at the top level of a stylesheet will be attached to the styl
 
 <style type="text/gss">
   varX: == 200;
-  varX: == #elm1[width];
+  varX: == #elm2[width];
 </style>
 {% endhighlight %}
 
@@ -314,7 +316,9 @@ In this example, `#elm1` will have a width of 100px and `#elm2` will have a widt
 The two `varX` are in different scopes and are therefore indenpendent from each other.
 <a href="http://codepen.io/thegridgssdocs/pen/EaXmRp" target="_blank">Live example.</a>
 
-Global variables prefixed with `$`, are accessible accross stylesheets. In the previous example, using `$varX` instead of `varX` makes constraints operate on the same variable, making the widths of two elements equal. <a href="http://codepen.io/thegridgssdocs/pen/yyoxxm" target="_blank">Live example.</a>
+Global variables prefixed with `$`, are accessible accross stylesheets. In the previous example, using `$varX`
+instead of `varX` makes constraints operate on the same variable, making the widths of two elements equal.
+<a href="http://codepen.io/thegridgssdocs/pen/yyoxxm" target="_blank">Live example.</a>
 
 Adding a `scoped` attribute to the stylesheet attaches top most properties to the parent element of a stylesheet. If two `scoped` stylesheets share the parent element, they will automatically share the topmost variables.
 
@@ -338,18 +342,20 @@ Variables defined inside a ruleset define a property on each element that matche
 }
 {% endhighlight %}
 
-In this case, both rulesets define `varX` property for matching elements. If there's an element that matches both rulesets, it will have both constraints applied over a single property. This may lead to a conflict local to that element.
+In this case, both rulesets define `varX` property for matching elements. If there's an element that matches both rulesets,
+it will have both constraints applied over a single property. This may lead to a conflict specific to that element.
 
-The latter constraint will win in case of conflict if element had both classes from the start. Otherwise the class that was added the latest will "win". Strengths can be used to define the importance of each constraint independent from order of changes. <a href="http://codepen.io/thegridgssdocs/pen/XJgRPq" target="_blank">Live example.</a>
+The latter constraint will win in case of conflict if an element has both classes from the start. Otherwise the class that
+was added last will overcome previous ones. Strengths can be used to define the importance of each constraint independent from order
+of changes. <a href="http://codepen.io/thegridgssdocs/pen/XJgRPq" target="_blank">Live example.</a>
 
 
 <a name="variables"></a>
 ## Variables
-
-Variables are properties that dont have explicit scope and can be accessed from inner scopes.  This concept is known as lexical scoping. The scoping is determined by the source code, so it's *static* and does not change in runtime.
+Variables are properties that dont have explicit scope and can be accessed from inner scopes.  This concept is known as lexical
+scoping. The scoping is determined by the source code, so it's *static* and does not change in runtime.
 
 We say that topmost scope that defines variable *captures* the variable, making variables in the inner scopes *hoisted*.
-
 
 {% highlight css %}
 
@@ -357,18 +363,19 @@ We say that topmost scope that defines variable *captures* the variable, making 
 varX == 100;
 
 .className {
-  width: == varX;   // same as &width == ^varX
+  width: == varX;   /* same as &width == ^varX */
   varY == &[height];
 
   #div {
-    width: == varX; // same as &width == ^^varX
+    width: == varX; /* same as &width == ^^varX */
   }
 }
 </script>
 
 {% endhighlight %}
 
-If a `varX` was defined as a property on the top level (e.g. `varX: == 100`), the variable would be captured at the `.className` level instead.
+If a `varX` was defined as a property on the top level (e.g. `varX: == 100`), the variable would be captured
+at the `.className` level instead.
 
 
 The order of appearance or square brackets around variables have no effect over hoisting:
@@ -385,7 +392,8 @@ div {
 {% endhighlight %}
 
 
-Variables are properties in disguise. If a variable has a name of a CSS property, it will apply the style for its resolved scope element. This fact can be used to define declarative constraints based on the DOM structure.
+Variables are properties in disguise. If a variable has a name of a CSS property, it will apply the style for
+its resolved scope element. This can be used to define declarative constraints based on the DOM structure.
 
 {% highlight css %}
 <style text='text/gss'>
@@ -402,9 +410,11 @@ varX = 100;
 
 {% endhighlight %}
 
-`width` variable in the `.wrapper` ruleset captures `width` variable within `section` ruleset. Therefore an element having `wrapper` class name will have its width equal to height of its descendant sections, if there are any.
+The `width` variable in the `.wrapper` ruleset captures the `width` variable within `section` ruleset. Therefore an element having
+`wrapper` class name will have its width equal to height of its descendant sections, if there are any.
 
-Rulesets can be nested arbitarily deep, and the hoisting reference is computed for each variable individually. A variable that was not defined in any of its parent scopes, is considered local and is identical to property.
+Rulesets can be nested arbitrarily deep, and the hoisting reference is computed for each variable individually. A variable that was
+not defined in any of its parent scopes, is considered local and is identical to property.
 
 {% highlight css %}
 div {
@@ -428,9 +438,12 @@ div {
 }
 {% endhighlight %}
 
-In this case, all nested rulesets will share `varX` variable through parent ruleset. Nested rulesets also define `varY` variables that are not hoisted and act like local properties. <a href="http://codepen.io/thegridgssdocs/pen/zxzwXJ" target="_blank">Live example.</a>
+In this case, all nested rulesets will share the `varX` variable through the parent ruleset. Nested rulesets also define `varY` variables
+that are not hoisted and act like local properties. <a href="http://codepen.io/thegridgssdocs/pen/zxzwXJ" target="_blank">Live example.</a>
 
-Only variables capture other variables within inner rulesets. Anything that has explicit scope is considered a property. Properties do not capture and are not hoisted. Examples would be `$global` variables and `&local` variables. `property: ==` notation is the cleanest way to define property in a ruleset:
+Only variables capture other variables in nested rulesets. Anything that has explicit scope is considered a property. Properties do
+not capture and are not hoisted. Examples would be `$global` variables and `&local` variables. `property: ==` notation is the cleanest
+way to define property in a ruleset:
 
 {% highlight css %}
 div {
@@ -452,7 +465,7 @@ div {
 }
 {% endhighlight %}
 
-It is possible to opt out of hoisting in the same way by prepending `&` to a variable name, making it a property.
+It is possible to opt out of hoisting in the same way by prefixing `&` to a variable name, making it a property.
 
 {% highlight css %}
 div {
@@ -466,8 +479,8 @@ div {
 {% endhighlight %}
 
 ### Suggested variables
-
-Javascript code can provide numerical values that can be used in constraints. The easiest way to do it, is to pass an object with values to GSS constructor:
+Javascript code can provide numerical values that can be used in constraints. The best way to do this is to pass an
+object with values to the GSS constructor:
 
 {% highlight html %}
 
@@ -485,9 +498,11 @@ Javascript code can provide numerical values that can be used in constraints. Th
 
 {% endhighlight %}
 
-Suggested variables are global so they should be accessed with `$` combinator. <a href="http://codepen.io/thegridgssdocs/pen/pvWMJV" target="_blank">Live example.</a>
+Suggested variables are global so they should be accessed with the `$` combinator. <a href="http://codepen.io/thegridgssdocs/pen/pvWMJV" target="_blank">Live example.</a>
 
-External variables are bound in one direction, so their values will not be affected by the solver. It is almost as if there were actual numbers in place of those variables. The difference is that these values can be updated dynamically without much effort on the solver side:
+External variables are bound in one direction, so their values will not be affected by the solver. It is almost as if there were
+actual numbers in place of those variables. The difference is that these values can be updated dynamically without much effort on
+the solver side:
 
 {% highlight html %}
   <script>
@@ -510,7 +525,8 @@ understanding of layout constraints will help you appreciate the next section ab
 <a name="virtuals"></a>
 
 ## Virtuals
-Virtuals are rectangles defined in GSS that don't have a representation in the DOM tree. However regular elements can be constrained against dimensions and positions of virtuals. It makes virtuals a practical way to constrain a group of elements
+Virtuals are rectangles defined in GSS that don't have a representation in the DOM tree. However regular elements can be constrained
+against dimensions and positions of virtuals. It makes virtuals a practical way to constrain a group of elements
 without the need for a DOM container element.
 
 {% highlight css %}
@@ -533,10 +549,10 @@ Since virtuals don't exist in the DOM, applied styles have no visual effect:
 {% highlight css %}
 
 "area" {
-  // Styling virtuals have no effect since they don't exist in the DOM
+  /* Styling virtuals have no effect since they don't exist in the DOM */
   background-color: blue;
 
-  // Properties can be constrained, by they will not be used or inherited
+  /* Properties can be constrained, by they will not be used or inherited */
   line-height: == 20;
 }
 
@@ -551,14 +567,14 @@ Virtuals are in fact variables for rectangles. This is why virtuals follow the s
 {% highlight css %}
 
 .className {
-  // "area" virtual is captured, and can be accessed from inner rulesets
+  /* "area" virtual is captured, and can be accessed from inner rulesets */
   "area"[size] == 200;
 
   #someElm > div {
-    // "area" virtual will be hoisted to element matching parent ruleset
+    /* "area" virtual will be hoisted to element matching parent ruleset */
     width: == "area"[width];
 
-    // "subarea" virtual has explicit local scope and will be attached to nested divs
+    /* "subarea" virtual has explicit local scope and will be attached to nested divs */
     &"subarea"[width] == 200;
   }
 }
@@ -567,7 +583,8 @@ Virtuals are in fact variables for rectangles. This is why virtuals follow the s
 
 
 ### Virtual splat
-Virtual splats allow you to create a grid of virtuals. For example, if you want to split the viewport into four equally sized rectangles you can do the following:
+Virtual splats allow you to create a grid of virtuals. For example, if you want to split the viewport into four equally sized
+rectangles you can do the following:
 
 {% highlight css %}
 
@@ -594,7 +611,7 @@ Virtual splats allow you to create a grid of virtuals. For example, if you want 
 Now any DOM element can be constrained against those four boxes. <a href="http://codepen.io/thegridgssdocs/pen/VYzOPx" target="_blank">Live example.</a>
 
 ## Read next
-GSS provides conditionnal statements to allow you to do responsive design. Read our [conditionals guide](/guides/ifelse) to learn more.
+GSS provides conditional statements for responsive design. Read our [conditionals guide](/guides/ifelse) to learn more.
 
-With only CCSS constraints at your disposal, constraining common layout scenarios quickly becomes tedious. Read our
-[VFL guide](/guides/ifelse) to learn how to more efficiently constrain your layout.
+With only CCSS at your disposal, constraining common layout scenarios quickly becomes tedious. Read our
+[VFL guide](/guides/vfl) to learn how to more efficiently constrain your layout.
