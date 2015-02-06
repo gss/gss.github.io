@@ -39,7 +39,7 @@ in a panel becomes:
 
 /* which is the same, assuming we're using button tags, as */
 
-@h button in(#panel) gap(10);
+@h |(button)...| in(#panel) gap(10);
 {% endhighlight %}
 
 <a name="basics"></a>
@@ -49,7 +49,7 @@ Horizontal layouts can be created with the CSS directive `@h`.
 
 Vertical layouts with the CSS directive `@v`.
 
-An element is queried within square brackets, `[ Selector ]`, and a `connection` between elements is represented using a hyphen (or two hyphens separated by a number to represent the number of pixels apart the views should be).  Similarly, a `cushion` between elements is made with a tilda.
+An element is queried within parenthesis, `( Selector )`, and a `connection` between elements is represented using a hyphen (or two hyphens separated by a number to represent the number of pixels apart the views should be).  Similarly, a `cushion` between elements is made with a tilda.
 
 Internally, GSS compiles VFL into CCSS (in)equality constraints, so after each VFL example the compiled CCSS is included.
 
@@ -96,11 +96,11 @@ If no `gap()` is defined, but a hyphen is used to make a connection then a `stan
 @v (#button)-(#textField);
 
 /* Equivalent CCSS */
-#button(right) + hgap == #textField(left);
-#button(bottom) + vgap == #textField(top);
+#button[right] + hgap == #textField[left];
+#button[bottom] + vgap == #textField[top];
 {% endhighlight %}
 
-The `hgap` & `vgap` variables can be used like normal variables and are declare in the current scope.
+The `hgap` & `vgap` variables can be used like normal variables and are declared in the current scope.
 
 User defined variables can be used for gaps as well. <a href="http://codepen.io/cbchouinard/pen/PwKrjN" target="_blank">Live example.</a>
 
@@ -125,7 +125,12 @@ User defined variables can be used for gaps as well. <a href="http://codepen.io/
 
 <h2>Containment within an Element</h2>
 
-For alignment contained within an element, surround a VFL alignment with `|`'s and use `in( Selector )`. <a href="http://codepen.io/cbchouinard/pen/emEwRr" target="_blank">Live example.</a>
+To align the whole VFL declaration within a specific element, a combination of `in(#selector)` and vertical `|` pipes can be used.
+
+The pipes determine the edges of the element. In `@h` VFL blocks leading and trailing pipes signify left and right edges of the containing element. In `@v` declarations it's top and bottom edges respectively.  <a href="http://codepen.io/cbchouinard/pen/emEwRr" target="_blank">Live example.</a>
+
+Binding to both edges of the element is a safest bet, as it makes a two-way relation between element and its contents. The use case of binding to only one edges would be layouts growing in one direction without expanding the containing element, like scrollable content.
+
 
 <img class="vfl-small-img" src="../../assets/images/vfl/connectionToSuperview.png" width="152" height="32" alt="ConnectionToSuperview">
 
@@ -138,26 +143,22 @@ For alignment contained within an element, surround a VFL alignment with `|`'s a
 #container[right] - 50 == #purple-box[right];
 {% endhighlight %}
 
-The default containing element selector is `&`.
+If there's no `in(selector)` provided, the edges will point to the current element within ruleset. Using `in(&)` would have the same effect.
 
 The above example can be written:
 
 {% highlight css %}
 /* VFL */
 #container {
-  @h |-50-(#box)-50-|;
+  @h |-50-(#purple-box)-50-|;
 }
-
-/* Equivalent CCSS */
-#container[left] + 50 == #purple-box[left];
-#container[right] - 50 == #purple-box[right];
 
 {% endhighlight %}
 
 
 <h2>Outer-Gaps</h2>
 
-You can specify the gaps to a containing element using `outer-gap( Number | Constraint Variable | Element Property )`, which overrides `gap()` if specified:
+The variable provided in `gap()` declaration is used for all gaps between elements in VFL declaration. The `outer-gap()` function can be used to set a different variable for gaps between the containing element and first and last contained elements.
 
 {% highlight css %}
 /* VFL */
@@ -173,8 +174,7 @@ You can specify the gaps to a containing element using `outer-gap( Number | Cons
 <a name="points"></a>
 <h2>Alignment to Points</h2>
 
-Elements can be aligned relative to arbitrary positioned points using `< Number | Constraint Variable | Element Property >`
-<a href="http://codepen.io/cbchouinard/pen/bNrPvW" target="_blank">Live example.</a>
+Elements can be aligned relative to arbitrary positioned points of the document using angle bracket syntax. The points can be either numbers or variables. <a href="http://codepen.io/cbchouinard/pen/bNrPvW" target="_blank">Live example.</a>
 
 To horizontally align two buttons, each 8px from the center of the window:
 
@@ -187,7 +187,7 @@ To horizontally align two buttons, each 8px from the center of the window:
 ::window[center-x] + 8 == #btn2[left];
 {% endhighlight %}
 
-Alignments can be positioned within points:
+Elements can be positioned between points:
 
 {% highlight css %}
 /* VFL */
@@ -227,7 +227,7 @@ Consecutive points are not constrained to each-other:
 <a name="cushions"></a>
 ## Cushions
 
-Cushions are similar to connection gaps, only they use inequality instead of equality constraints.
+Cushions are expandable connection gaps. They use inequality instead of equality constraints.
 <a href="http://codepen.io/cbchouinard/pen/JoyQBq" target="_blank">Live example.</a>
 
 {% highlight css %}
@@ -301,8 +301,8 @@ Multiple size predicates:
 
 
 ## VFL Selectors
-Although all previous examples of VFL expressions only use basic selectors, [combinators](/guides/selectors) can also be used in VFL
-expressions like so:
+
+VFL expressions can use any [complex selectors](/guides/selectors):
 
 {% highlight css %}
 @v | (.featured > article ~ .title) | in(#elm > .class .class2"virtual")
@@ -404,43 +404,35 @@ You can position a virtual element the same as any other element:
 <a name="rulesets"></a>
 ## VFL rulesets
 
-You can use a VFL expression as the rule in a [rulesets](/guides/ccss/#rulesets) and it will
-behave in the same way as a selector rule. GSS will create a collection of all elements involved
-in the VFL expression and iterate over them.
+You can use a VFL expression as a selector in [rulesets](/guides/ccss/#rulesets). It will create a collection of all elements positioned by the VFL declaration, not including the containing element. Properties defined in the body of the ruleset will be applied to each of those elements.
 
-This allows you to do interesing things. For example, if you want all the elements of the VFL expression
-to have the same width you can do the following:
+In the following example, each element width is bound to the same variable, making them equal width:
 
 {% highlight css %}
 
+shared-width >= 100;
+
 @h |-(section)-10-...-(article)-20-...-(div)...-| in(::window) {
-      width: == :next[width];
+  width: == shared-width;
 }
 
 {% endhighlight %}
 
-You can do with rulesets the same things as VFL Chains but they offer an alternative way to chains elements
-within your VFL expression.
+## VFL Strengths
 
-## VFL Strength & Weight
-
-As established with CCSS, Strength & Weight can be used in VFL statements using `!{Strength}{Weight}` at the end of a statement.
-Strengths can be `weak`, `medium`, `strong` & `require`.  Weights are positive integers.  As a rule of thumb, use Strengths first
-& foremost & resort to weights as a last resort.
-
-Alignment Strength & Weight:
+[Strength](/guides/ccss#strengths) used in VFL will be applied to all constraints generated by the statement:
 
 <img class="vfl-small-img" src="../../assets/images/vfl/verticalLayout.png" width="96" height="54" alt="VerticalLayout">
 
 {% highlight css %}
 /* VFL */
-@v (#topfield)-10-(#bottomfield) !strong100;
+@v (#topfield)-10-(#bottomfield) !strong;
 
 /* Equivalent CCSS */
 #topfiled[bottom] + 10 == #bottomfield[top] !strong;
 {% endhighlight %}
 
-Size Predicates have their own Strength & Weight:
+Size Predicates may have their own strength:
 
 {% highlight css %}
 /* VFL */
