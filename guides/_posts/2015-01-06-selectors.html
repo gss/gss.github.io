@@ -540,16 +540,19 @@ div[width] == section[width];
 
 <a name="pluralbinding"></a>
 ## Plural binding
+
+When two selectors are used in a constraint, every element will be paired with element in another collection in order of appearance.
+
 Let's say you have the following DOM elements:
 
 {% highlight html %}
 
 <section id="s1"></section>
-<section id="s1"></section>
-<section id="s1"></section>
+<section id="s2"></section>
+<section id="s3"></section>
 
 <article id="a1"></article>
-<article id="a1"></article>
+<article id="a2"></article>
 
 {% endhighlight %}
 
@@ -572,7 +575,21 @@ Plural binding will give the equivalent of the following constraints:
 
 {% endhighlight %}
 
-As you can see here, no constraint will be declare on `#s3` since there wasn't any element to pair with.
+Section with `s3` id has no article to pair with, so its width will not be constrained.
+
+By following the same logic, using the same selector on both sides of a constraint, makes every element only pair with itself:
+
+{% highlight html %}
+
+section[width] == section[height];
+
+/* Is equivalent of */
+#s1[width] == #s1[height];
+#s2[width] == #s2[height];
+#s3[width] == #s3[height];
+
+{% endhighlight %}
+
 
 ### Two selectors per expression
 GSS limits to two the number of distinct selectors in a GSS expression. As for now the following is not supported:
@@ -581,14 +598,13 @@ GSS limits to two the number of distinct selectors in a GSS expression. As for n
     #div4[width] == #div1[width] + #div2[width] + #div3[width];
 {% endhighlight %}
 
-This limitation only applies for distinct selectors. For example the following is ok since we're using `div1` twice:
+This limitation only applies for distinct selectors. Example below works because `#div1` and `#div2` are re-used.
 
 {% highlight css %}
-    #div4[width] == #div1[width] + #div1[height] + #div3[width];
+    #div2[width] == #div1[top] + #div1[height] + #div2[height];
 {% endhighlight %}
 
-The support for more than three selectors in GSS expression will probably be added in a near future but in meantime you can
-do something like:
+The workaround would be to use an intermediate variable or [VFL expression](/guides/vfl):
 
 {% highlight css %}
 [tempSum] = #div1[width] + #div2[width];
