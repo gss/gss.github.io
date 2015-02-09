@@ -17,7 +17,7 @@ body {
 
 .fixed {
   position: fixed !important;
-  -webkit-backface-visibility: hidden;  
+  -webkit-backface-visibility: hidden;
 }
 
 .gss-not-ready body {
@@ -65,9 +65,9 @@ content: '';
 -moz-transform: scale(0.95);
 transform: scale(0.95);
 }
-p a:hover::before, .link:hover::before, 
-p a:hover::after,  .link:hover::after, 
-p a:focus::before, .link:focus::before, 
+p a:hover::before, .link:hover::before,
+p a:hover::after,  .link:hover::after,
+p a:focus::before, .link:focus::before,
 p a:focus::after,  .link:focus::after   {
 opacity: .3;
 -webkit-transform: scale(1.1);
@@ -97,7 +97,7 @@ h2 {
 }
 .subtitle {
   text-transform: uppercase;
-  letter-spacing: .16em;  
+  letter-spacing: .16em;
 }
 .content h2 {
   /*text-transform: uppercase;
@@ -121,7 +121,7 @@ blockquote {
   font-size: 1.2em;
   line-height: 1.6em;
 }
-ul, ol, li { 
+ul, ol, li {
   margin: 0;
 }
 
@@ -151,7 +151,7 @@ button, .button {
 
 a {
   color: inherit;
-  text-decoration: none;  
+  text-decoration: none;
 }
 
 p a {
@@ -162,7 +162,7 @@ p a {
 ============================================================= */
 
 ul.large-list a {
-  border-bottom: 2px solid hsla(282, 99%, 41%,.1);        
+  border-bottom: 2px solid hsla(282, 99%, 41%,.1);
 }
 .color-menu {
   background-color: hsla(282, 99%, 31%, .96);
@@ -182,24 +182,24 @@ button {
 button.transparent {
   background-color: transparent;
 }
-button:hover, a:hover button, 
+button:hover, a:hover button,
 .button:hover, a:hover .button,
 button.transparent:hover
  {
   border-color: hsl(282, 99%, 31%);
   background-color: hsl(282, 99%, 31%) !important;
-  color: hsl(58, 100%, 84%);  
+  color: hsl(58, 100%, 84%);
 }
 
 button.inverse {
   border-color: hsl(282, 99%, 31%);
   background-color: hsl(282, 99%, 31%);
-  color: hsl(58, 100%, 84%); 
+  color: hsl(58, 100%, 84%);
 }
 
 button.inverse:hover {
   color: hsl(282, 99%, 31%);
-  background-color: hsl(58, 100%, 84%) !important; 
+  background-color: hsl(58, 100%, 84%) !important;
 }
 
 .button-play {
@@ -236,25 +236,16 @@ hr {
 }
 
 .color-a { /* yellow bg */
-  background-color: hsl(58, 100%, 84%);  
+  background-color: hsl(58, 100%, 84%);
   color: hsl(282, 99%, 31%);
-} 
-
-.color-a #top-home-image {
-  background-image:      
-    url('../assets/images/pug-purple-on-yellow.jpg');
-  background-position: 
-    center center;
-  background-repeat: 
-    no-repeat;
-  background-size: 
-    contain;
 }
 
+
+
 .color-b { /* white bg */
-  background-color: hsl(58, 100%, 100%); 
+  background-color: hsl(58, 100%, 100%);
   color: hsl(282, 99%, 31%);
-} 
+}
 .color-b p, li {
   color: hsl(282, 0%, 30%);
 }
@@ -277,3 +268,27 @@ hr {
 }
 
 
+
+/* home-section.html styling */
+
+#top-home-section {
+  background-image:
+    url('../assets/images/Intro/intro-bg.jpg');
+  background-position:
+    center center;
+  background-repeat:
+    no-repeat;
+  background-size:
+    cover;
+}
+
+.color-a #top-home-image {
+  background-image:
+    url('../assets/images/Intro/CassowaryBird.png');
+  background-position:
+    center center;
+  background-repeat:
+    no-repeat;
+  background-size:
+    contain;
+}

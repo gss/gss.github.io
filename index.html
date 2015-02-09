@@ -3,97 +3,9 @@ title: CSS polyfills from the future
 layout: default
 ---
 
+{% include home-section.html %} 
 
-
-
-
-<section id="top-home-section" class="top-section color-a">
-
-  <style type="text/gss">
-
-  .top-button {
-    height: == ::[intrinsic-height] !require;
-    width: == ::[intrinsic-width] !require;
-    bottom: == ::[$bottom];
-  }
-
-  @horizontal |-[#top-button1]-[#top-button2]-| in(::window) gap([baseline] / 2) outer-gap([btnOuterGap]) chain-top;
-
-  [top-image-gap] == [baseline];
-  [top-image-gap] >= 0 !require;
-
-  #top-home-image {
-    width: <= 656 !require;
-    height: == ::[width] * 754/656 !require;
-    height: >= 400 !require;
-    center-x: == ::parent[center-x] !require;
-    @horizontal |~-~[::]~-~| in(::parent) gap([other-top-image-gap]) !require;
-    @vertical   |-[::] in(::parent) gap([top-image-gap]) !strong;
-  }
-  .top-section {
-    height: >= 0;
-  }
-  #top-home-section {
-    height: >= 500 !require;
-    height: >= ::window[height] - [baseline] !strong;
-  }
-
-  @vertical [#top-home-image]-[#top-title] gap([top-image-gap]) !require;
-
-  @vertical [#top-title]-[#top-subtitle]-[#top-text]-[#top-button1] gap([baseline]) !require;
-
-
-  @vertical [#top-button1]-| in(#top-home-section) gap([bottom-margin]) !require;
-
-  #top-title {
-    height: == ::[intrinsic-height] !require;
-    @horizontal |-[::]-| in(::parent) gap([col-size]);
-    padding-bottom: == [baseline];
-    font-size: == [title-font-size] * 1.3;
-  }
-
-  #top-subtitle {
-    height: == ::[intrinsic-height] !require;
-    left: == [content-left] !require;
-    right: == [content-right] !require;
-    text-align: center;
-    font-style: italic;
-  }
-
-  #top-text {
-    padding-bottom: == [baseline];
-  }
-
-  /*
-  .top-section {
-    top: == ::window[top];
-  }
-  */
-
-  #top-text {
-    height: == ::[intrinsic-height] !require;
-    left: == [content-left] !require;
-    right: == [content-right] !require;
-    padding-top: == [baseline];
-    text-align: center;
-    font-style: italic;
-  }
-
-  </style>
-
-  <div id="top-home-image"></div>
-
-  <h1 id="top-title">Grid Style Sheets</h1>
-  <h3 id="top-subtitle" class="large-font">GSS reimagines CSS layout & replaces the browser’s layout engine with one that harnesses the
-    Cassowary Constraint Solver — the same algorithm Apple uses to compute native layout.</h3>
-
-  <h3 id="top-text" class="large-font">Version 2.0 is out!</h3>
-
-  <a href="/usage" class="top-button button" id="top-button1">Install</a>
-  <a href="/guides/ccss" class="top-button button" id="top-button2">Get started</a>
-
-</section>
-
+<!--
 <section id="features-section" class="section color-b">
 
   <style type="text/gss">
@@ -202,4 +114,4 @@ layout: default
 {% endfor %}
 
 
-{% include made-with-love.html %}
+{% include made-with-love.html %} -->

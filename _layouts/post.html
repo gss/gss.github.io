@@ -1,18 +1,19 @@
-{% include head.html %}    
-    
-    <section class="section color-{{page.color}}" id="{{ page.uid }}">
-      {% if page.title %}
-      <header>
-        <h1>{{ page.title }}</h1>
-        <h2 class="subtitle">{{ page.subtitle }}</h2>
-      </header>
+{% include head.html %}
+  {% include grid-promo.html %}  
+
+  <section class="section color-{{page.color}}" id="{{ page.uid }}">
+    {% if page.title %}
+    <header>
+      <h1>{{ page.title }}</h1>
+      <h2 class="subtitle">{{ page.subtitle }}</h2>
+    </header>
+    {% endif %}
+    <div class="content">
+      {{ content | markdownify }}
+      {% if page.include %}
+        {% include {{page.include}} %}
       {% endif %}
-      <div class="content">
-        {{ content | markdownify }}
-        {% if page.include %}
-          {% include {{page.include}} %}
-        {% endif %}
-      </div>
-    </section>    
-    
+    </div>
+  </section>
+
 {% include tail.html %}
