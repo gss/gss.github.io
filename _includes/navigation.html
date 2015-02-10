@@ -29,9 +29,9 @@
       width: == &[intrinsic-width];
       height: == &[intrinsic-height];
       //center-x: == 0 - ::window[center-y] - &[width] / 2;
-      left: == ::window[left];
+      left: == -5 !require;
       center-y: == ::window[center-y] !strong;
-      top: == 100 !require;
+      top: == body[top] + ::window[height] / 2 !require;
     }
 
   </style>
@@ -43,11 +43,26 @@
       z-index: 100;
     }
 
-    #sidenav-menu-button-wrap {
-      -webkit-transform: rotate(-90deg);
-        -moz-transform: rotate(-90deg);
-             transform: rotate(-90deg);
+    /* menu */
+
+    @media (max-width: 899px) {
+      /*#sidenav-menu-button-wrap {
+        -webkit-transform: rotate(-90deg);
+          -moz-transform: rotate(-90deg);
+               transform: rotate(-90deg);
+      }*/
     }
+
+    @media (min-width: 900px) {
+      /*#sidenav-menu-button-wrap {
+        -webkit-transform: rotate(-90deg);
+          -moz-transform: rotate(-90deg);
+               transform: rotate(-90deg);
+      }*/
+    }
+
+
+
     .scrolled-down #nav {
       -webkit-transform: translateY(-72px);
       -moz-transform: translateY(-72px);
@@ -123,7 +138,7 @@
 
 <div id="sidenav" class="fixed trans">
   <div id="sidenav-menu-button-wrap" class="trans">
-    <button id="sidenav-menu-button" class="app-menu-trigger transparent">Menu</button>
+    <button id="sidenav-menu-button" class="app-menu-trigger">Menu</button>
   </div>
 </div>
 
