@@ -7,7 +7,6 @@
 
     #top-home-section {
 
-      top: == ::window[top];
       left: == ::window[left] !strong;
       x: == &[intrinsic-x];
       y: == &[intrinsic-y];
@@ -21,7 +20,6 @@
       btn-vgap == 20 !require;
       other-top-image-gap >= 0 !require;
       btn-outer-gap == 0;
-      $baseline >= 0 !require;
 
       .top-button {
         height: == &[intrinsic-height] !require;
@@ -29,15 +27,12 @@
       }
 
       #top-home-image {
-        width: <= 409 !require;
+        width: <= 325 !require;
         width: <= ::window[width] / 2 !strong;
         height: == &width * 450/409 !require;
-        /*height: >= 300 !require;*/
-        center-x: == ::window[center-x] !require;
         @h |-(&)-| in(^) gap(other-top-image-gap) !require;
         @v |-(&) in(^) gap(top-image-gap) !strong;
       }
-
 
       @v |-(#top-home-image)-(#top-title)-(#top-subtitle)-(#top-button-install)
           in(&) gap($baseline) outer-gap($baseline * 2) !strong;
@@ -48,15 +43,15 @@
         &top == :next[top];
       }
 
-
       #top-button-docs[center-x] == &[center-x];
-
 
       #top-title {
         height: == &[intrinsic-height] !require;
         @horizontal |-(&)-| in(^) gap($col-size);
         padding-bottom: == $baseline;
-        font-size: == $title-font-size * 1.3;
+        font-size: == $title-font-size;
+        padding: == 0;
+        color: #fdf9ad;
       }
 
       #top-subtitle {
@@ -65,15 +60,6 @@
         right: == $content-right !require;
         text-align: center;
         font-style: italic;
-      }
-
-      h1 {
-        font-size: == $title-font-size;
-        /*margin-bottom: == $baseline / 4;*/
-        color: #fdf9ad;
-      }
-
-      h3 {
         font-size: == $subtitle-font-size;
         color: #784e78;
       }
@@ -93,49 +79,3 @@
   <a href="/guides/ccss" class="top-button button" id="top-button-docs">Documentation</a>
 
 </section>
-
-
-  <!--
-  [top-image-gap] == [baseline];
-  [top-image-gap] >= 0 !require;
-
-
-  .top-section {
-    height: >= 0;
-  }
-  #top-home-section {
-    height: >= 500 !require;
-    height: >= ::window[height] - [baseline] !strong;
-  }
-
-  @vertical [#top-home-image]-[#top-title] gap([top-image-gap]) !require;
-
-  @vertical [#top-title]-[#top-subtitle]-[#top-text]-[#top-button1] gap([baseline]) !require;
-
-
-  @vertical [#top-button1]-| in(#top-home-section) gap([bottom-margin]) !require;
-
-  #top-title {
-    height: == ::[intrinsic-height] !require;
-    @horizontal |-[::]-| in(::parent) gap([col-size]);
-    padding-bottom: == [baseline];
-    font-size: == [title-font-size] * 1.3;
-  }
-
-  #top-subtitle {
-    height: == ::[intrinsic-height] !require;
-    left: == [content-left] !require;
-    right: == [content-right] !require;
-    text-align: center;
-    font-style: italic;
-  }
-
-  #top-text {
-    padding-bottom: == [baseline];
-  }*/
-
-  /*
-  .top-section {
-    top: == ::window[top];
-  }
-   -->

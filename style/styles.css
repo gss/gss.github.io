@@ -187,7 +187,7 @@ button:hover, a:hover button,
 button.transparent:hover
  {
   border-color: hsl(282, 99%, 31%);
-  background-color: hsl(282, 99%, 31%) !important;
+  background-color: hsl(282, 99%, 31%);
   color: hsl(58, 100%, 84%);
 }
 
@@ -282,7 +282,16 @@ hr {
     cover;
 }
 
-.color-a #top-home-image {
+#top-home-section .button {
+  color: #fdf9ad;
+  border-color: #784e78;
+}
+
+#top-home-section .button:hover {
+   background: #784e78 !important;
+}
+
+#top-home-section #top-home-image {
   background-image:
     url('../assets/images/Intro/CassowaryBird.png');
   background-position:
@@ -291,4 +300,23 @@ hr {
     no-repeat;
   background-size:
     contain;
+}
+
+
+/* home-demos.html styling */
+#home-demos {
+  background-color: hsl(58, 100%, 84%);
+  color: black;
+}
+
+
+#home-demos .button {
+  color: hsl(282, 99%, 31%);
+}
+
+#home-demos .button:hover
+ {
+  border-color: hsl(282, 99%, 31%);
+  background-color: hsl(282, 99%, 31%);
+  color: hsl(58, 100%, 84%);
 }

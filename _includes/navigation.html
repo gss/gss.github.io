@@ -7,7 +7,7 @@
       width: == 45.142;
       height: == 48;
     }
-    @if [Wwin] >= [breakpoint1] {
+    @if ::window[width] >= $breakpoint1 {
       #nav {
         .badge {
          top: == 0 - 4;
@@ -25,9 +25,9 @@
     }
     #sidenav-menu-button {
       margin-top: -5px !important;
-      width: == ::[intrinsic-width];
-      height: == ::[intrinsic-height];
-      center-x: == 0 - ::window[center-y] - ::[width] / 2;
+      width: == &[intrinsic-width];
+      height: == &[intrinsic-height];
+      center-x: == 0 - ::window[center-y] - &[width] / 2;
     }
 
   </style>
@@ -136,12 +136,12 @@
 
       ul {
         top: >=0 !require;
-        height: == ::[intrinsic-height];
+        height: == &[intrinsic-height];
         center-y: == ::window[center-y];
-        padding: == 2 * [baseline];
-        width: == ::[intrinsic-width];
-        left: == #hide-menu-button[right];
-        right: == ::parent[right] - #hide-menu-button[width];
+        padding: == 2 * $baseline;
+        width: == &[intrinsic-width];
+        left: == ($ #hide-menu-button)[right];
+        right: == ^[right] - ($ #hide-menu-button)[width];
 
         li {
         text-align: center;
@@ -150,10 +150,10 @@
     }
 
     #hide-menu-button {
-      width: == ::[intrinsic-width];
-      height: == ::[intrinsic-height];
-      center-y: == #menu[center-y];
-      left: == #menu[left];
+      width: == &[intrinsic-width];
+      height: == &[intrinsic-height];
+      center-y: == ($ #menu)[center-y];
+      left: == ($ #menu)[left];
     }
 
 

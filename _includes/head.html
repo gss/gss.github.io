@@ -31,11 +31,12 @@
 
     <style type="text/gss">
 
-    breakpoint1 == 900 !require;
+    $breakpoint1 == 900 !require;
     $content-right == ::window[center-x] + $max-p-width / 2 !require;
     $content-left == ::window[center-x] - $max-p-width / 2 !require;
+    $baseline >= 0 !require;
 
-    @if ::window[width] >= breakpoint1 {
+    @if ::window[width] >= $breakpoint1 {
       $baseline == 30 !require;
       $col-size == ::window[width] / 12 !strong;
       $col-size <= 72 !require;
