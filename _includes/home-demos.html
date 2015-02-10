@@ -1,7 +1,7 @@
 <section id="home-demos" class="top-section color-a" style="position: relative">
 
   <style type="text/gss">
-  #home-demos {
+    #home-demos {
 
     top: == ::window[top] !strong;
     left: == ::window[left] !strong;
@@ -14,7 +14,7 @@
 
     #demos-title {
       height: == &[intrinsic-height] !require;
-      @horizontal |-(&)-| in(^) gap($col-size);
+      @h |-(&)-| in(^) gap($col-size);
       font-size: == $title-font-size * 0.9;
       padding: == 0;
       color: hsl(282, 99%, 31%);
@@ -24,8 +24,6 @@
       height: == &[intrinsic-height] !require;
       left: == $content-left !require;
       right: == $content-right !require;
-      text-align: center;
-      font-style: italic;
       font-size: == $subtitle-font-size;
     }
 
@@ -42,7 +40,9 @@
       }
 
       .img-demo {
-        height: == 100;
+        height: >= 200 !strong;
+        width: == 340;
+        center-x: == ^center-x;
       }
     }
 

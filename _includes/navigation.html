@@ -23,11 +23,15 @@
         }
       }
     }
+
     #sidenav-menu-button {
       margin-top: -5px !important;
       width: == &[intrinsic-width];
       height: == &[intrinsic-height];
-      center-x: == 0 - ::window[center-y] - &[width] / 2;
+      //center-x: == 0 - ::window[center-y] - &[width] / 2;
+      left: == ::window[left];
+      center-y: == ::window[center-y] !strong;
+      top: == 100 !require;
     }
 
   </style>

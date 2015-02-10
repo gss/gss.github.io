@@ -320,3 +320,31 @@ hr {
   background-color: hsl(282, 99%, 31%);
   color: hsl(58, 100%, 84%);
 }
+
+#home-demos #demos-subtitle {
+  text-align: center;
+  font-style: italic;
+  text-transform: uppercase;
+}
+
+#home-demos #img-demo1 {
+    background-image:
+      url('../assets/images/Demos/Demo1Thumbnail.jpg');
+    background-position:
+      center center;
+    background-repeat:
+      no-repeat;
+    background-size:
+      contain;
+}
+
+#home-demos #img-demo2 {
+  background-image:
+    url('../assets/images/Demos/Demo2Thumbnail.jpg');
+  background-position:
+    center center;
+  background-repeat:
+    no-repeat;
+  background-size:
+    contain;
+}
