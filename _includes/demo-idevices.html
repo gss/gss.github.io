@@ -1,34 +1,103 @@
 
 
 <style type="text/gss">
+
+
   #ipad {
     width:  == 305;
     height: == 390;
   }
   #iphone {
     width:  == 120.581;
-    height: == 255.273;   
+    height: == 255.273;
   }
   #{{ post.uid }} {
-    @if [Wwin] >= [breakpoint1] {
+
+    top: == ::window[top] !strong;
+    left: == ::window[left] !strong;
+    x: == &[intrinsic-x];
+    y: == &[intrinsic-y];
+    width: == &[intrinsic-width];
+
+    height: >= 500 !require;
+    height: >= ::window[height] - $baseline !require;
+
+    top-margin == 30;
+    bottom-margin == 50;
+
+    header {
+      height: == &[intrinsic-height] !require;
+      top: == ^top + top-margin !strong;
+      @h |-(&)-| in(^) gap($col-size);
+      bottom: == ^title-bottom;
+
+      & > h1 {
+        height: == &[intrinsic-height] !require;
+        @h |-(&)-| in(^) gap($col-size);
+        padding-bottom: == $baseline;
+        font-size: == $title-font-size * 0.9;
+        padding: == 0;
+      }
+
+      & > h2 {
+        height: == &[intrinsic-height] !require;
+        center-x: == ^center-x;
+        font-size: == $subtitle-font-size;
+      }
+
       .content {
-        padding-right: == #ipad[width] + [col-size];
+        bottom: <= ^bottom - bottom-margin !medium;
+
+        font-size: == $content-font-size;
+        line-height: == $baseline;
+        top: == ^title-bottom + $baseline;
+        height: == &intrinsic-height;
+        width: <= $max-p-width;
+        center-x: == ^center-x !medium;
+        x: == &content-left;
+      }
+
+      somegap2 == 20 !strong;
+
+      @v |-(h1)-(h2)-| in(&) gap(somgap2);
+
+
+      .content h2 {
+        font-size: == $subtitle-font-size * 1.9;
+        padding: == $baseline;
+        margin-top: == $baseline * 2;
+      }
+
+      p, blockquote, pre, h2, ul, ol {
+        margin-bottom: == $baseline;
+      }
+
+    }
+
+    headergap == 40 !strong;
+    ogap == 80 !strong;
+    @v |-(header)-(.content)-| in(&) gap(headergap) outer-gap(ogap);
+
+    @if ::window[width] >= $breakpoint1 {
+      .content {
+        padding-right: == #ipad[width] + $col-size;
       }
       #ipad {
-        center-y: == ::parent[center-y];   
-        right: == ::parent[right];
+        center-y: == ^center-y;
+        right: == ^right;
       }
     }
     @else {
       .content {
         padding-right: == 0;
       }
-      bottom: == #ipad[bottom] + [baseline] * 5; 
+      bottom: == #ipad[bottom] + $baseline * 5;
       #ipad {
-        top: == ::parent[bottom] + [baseline];
-        center-x: == ::parent[center-x];
+        top: == ^bottom + $baseline;
+        center-x: == ^center-x;
       }
     }
+
   }
 </style>
 <style type="text/gss">
@@ -53,5 +122,3 @@
 	c5.877,0,10.639,4.761,10.639,10.636C70.93,243.421,66.168,248.182,60.291,248.182z M113.488,219.818H7.093V35.455h106.395V219.818z
 	"/>
 </svg>
-
-

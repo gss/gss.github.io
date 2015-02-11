@@ -7,6 +7,23 @@ layout: default
 
 {% include home-demos.html %}
 
+{% for post in site.categories.home %}
+  <section class="section color-{{post.color}}" id="{{ post.uid }}" style="position: relative">
+    {% if post.title %}
+    <header>
+      <h1><a name="{{ post.uid }}">{{ post.title }}</a></h1>
+      <h2 class="subtitle">{{ post.subtitle }}</h2>
+    </header>
+    {% endif %}
+    <div class="content">
+      {{ post.content | markdownify }}
+      {% if post.include %}
+        {% include {{post.include}} %}
+      {% endif %}
+    </div>
+  </section>
+{% endfor %}
+
 <!--
 <section id="features-section" class="section color-b">
 
@@ -98,22 +115,7 @@ layout: default
 
 </section>
 
-{% for post in site.categories.home %}
-  <section class="section color-{{post.color}}" id="{{ post.uid }}">
-    {% if post.title %}
-    <header>
-      <h1><a name="{{ post.uid }}">{{ post.title }}</a></h1>
-      <h2 class="subtitle">{{ post.subtitle }}</h2>
-    </header>
-    {% endif %}
-    <div class="content">
-      {{ post.content | markdownify }}
-      {% if post.include %}
-        {% include {{post.include}} %}
-      {% endif %}
-    </div>
-  </section>
-{% endfor %}
+
 
 
 {% include made-with-love.html %} -->

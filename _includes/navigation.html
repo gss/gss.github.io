@@ -1,41 +1,48 @@
 <!-- Top Nav -->
 
 <div id="nav" class="trans fixed">
+
   <style type="text/gss">
 
-    .badge {
-      width: == 45.142;
-      height: == 48;
-    }
-    @if ::window[width] >= $breakpoint1 {
-      #nav {
-        .badge {
-         top: == 0 - 4;
-         center-x: == ::window[center-x];
-        }
-      }
-    }
-    @else {
-      #nav {
-        .badge {
-         top: == 0 - 4;
-         right: == ::window[left];
-        }
-      }
-    }
+  body {
 
-    #sidenav-menu-button {
-      margin-top: -5px !important;
-      width: == &[intrinsic-width];
-      height: == &[intrinsic-height];
-      //center-x: == 0 - ::window[center-y] - &[width] / 2;
-      left: == -5 !require;
-      center-y: == ::window[center-y] !strong;
-      top: == body[top] + ::window[height] / 2 !require;
-    }
+      .badge {
+        width: == 45.142;
+        height: == 48;
+      }
+
+      @if ::window[width] >= $breakpoint1 {
+        #nav {
+          .badge {
+           top: == 0 - 4;
+           center-x: == ::window[center-x];
+          }
+        }
+      }
+      @else {
+        #nav {
+          .badge {
+           top: == 0 - 4;
+           right: == ::window[left];
+          }
+        }
+      }
+
+      #sidenav-menu-button {
+        margin-left: -23px !important;
+        width: == &[intrinsic-width];
+        height: == &[intrinsic-height];
+        //center-x: == 0 - ::window[center-y] - &[width] / 2;
+        left: == 0;
+        //center-y: == ::window[center-y] !strong;
+        top: == ::window[height] / 2 !require;
+      }
+
+  }
 
   </style>
   <style>
+
     #top-badge {
       display:none;
     }
@@ -43,25 +50,11 @@
       z-index: 100;
     }
 
-    /* menu */
-
-    @media (max-width: 899px) {
-      /*#sidenav-menu-button-wrap {
-        -webkit-transform: rotate(-90deg);
-          -moz-transform: rotate(-90deg);
-               transform: rotate(-90deg);
-      }*/
+    #sidenav-menu-button {
+      -webkit-transform: rotate(-90deg);
+        -moz-transform: rotate(-90deg);
+             transform: rotate(-90deg);
     }
-
-    @media (min-width: 900px) {
-      /*#sidenav-menu-button-wrap {
-        -webkit-transform: rotate(-90deg);
-          -moz-transform: rotate(-90deg);
-               transform: rotate(-90deg);
-      }*/
-    }
-
-
 
     .scrolled-down #nav {
       -webkit-transform: translateY(-72px);
@@ -136,11 +129,7 @@
   </a>
 </div>
 
-<div id="sidenav" class="fixed trans">
-  <div id="sidenav-menu-button-wrap" class="trans">
-    <button id="sidenav-menu-button" class="app-menu-trigger">Menu</button>
-  </div>
-</div>
+<button id="sidenav-menu-button" class="app-menu-trigger fixed">Menu</button>
 
 <div id="menu" class="color-menu trans fixed">
   <style type="text/gss">
@@ -163,7 +152,9 @@
         right: == ^[right] - ($ #hide-menu-button)[width];
 
         li {
-        text-align: center;
+          height: == &intrinsic-height;
+          text-align: center;
+          margin-bottom: $baseline / 2;
         }
       }
     }
