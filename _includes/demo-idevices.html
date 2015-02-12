@@ -2,7 +2,6 @@
 
 <style type="text/gss">
 
-
   #ipad {
     width:  == 305;
     height: == 390;
@@ -11,6 +10,7 @@
     width:  == 120.581;
     height: == 255.273;
   }
+
   #{{ post.uid }} {
 
     top: == ::window[top] !strong;
@@ -19,83 +19,91 @@
     y: == &[intrinsic-y];
     width: == &[intrinsic-width];
 
-    height: >= 500 !require;
-    height: >= ::window[height] - $baseline !require;
+    height: >= 600;
+    //height: >= ::window[height] - $baseline !strong;
 
     top-margin == 30;
     bottom-margin == 50;
 
     header {
-      height: == &[intrinsic-height] !require;
-      top: == ^top + top-margin !strong;
       @h |-(&)-| in(^) gap($col-size);
       bottom: == ^title-bottom;
 
-      & > h1 {
+      h1 {
         height: == &[intrinsic-height] !require;
-        @h |-(&)-| in(^) gap($col-size);
         padding-bottom: == $baseline;
         font-size: == $title-font-size * 0.9;
         padding: == 0;
+
+        a {
+          height: == &[intrinsic-height];
+          width: == &[intrinsic-width];
+        }
       }
 
-      & > h2 {
+      h2 {
         height: == &[intrinsic-height] !require;
         center-x: == ^center-x;
         font-size: == $subtitle-font-size;
       }
 
-      .content {
-        bottom: <= ^bottom - bottom-margin !medium;
 
-        font-size: == $content-font-size;
-        line-height: == $baseline;
-        top: == ^title-bottom + $baseline;
-        height: == &intrinsic-height;
-        width: <= $max-p-width;
-        center-x: == ^center-x !medium;
-        x: == &content-left;
-      }
+      header-out-gap == 30 !strong;
+      header-in-gap == 10 !strong;
 
-      somegap2 == 20 !strong;
-
-      @v |-(h1)-(h2)-| in(&) gap(somgap2);
-
-
-      .content h2 {
-        font-size: == $subtitle-font-size * 1.9;
-        padding: == $baseline;
-        margin-top: == $baseline * 2;
-      }
-
-      p, blockquote, pre, h2, ul, ol {
-        margin-bottom: == $baseline;
-      }
-
+      @v |-(h1)-(h2)-| in(&) gap(header-in-gap ) outer-gap(header-out-gap) !strong;
     }
 
-    headergap == 40 !strong;
-    ogap == 80 !strong;
-    @v |-(header)-(.content)-| in(&) gap(headergap) outer-gap(ogap);
-
-    @if ::window[width] >= $breakpoint1 {
-      .content {
-        padding-right: == #ipad[width] + $col-size;
-      }
-      #ipad {
-        center-y: == ^center-y;
-        right: == ^right;
-      }
+    .content {
+      bottom: <= ^bottom - bottom-margin !medium;
+      padding: == 0;
+      font-size: == $content-font-size;
+      line-height: == $baseline;
+      top: == ^title-bottom + $baseline;
+      height: == &[intrinsic-height] !require;
+      center-x: == ^center-x !medium;
+      x: == &content-left;
     }
-    @else {
-      .content {
-        padding-right: == 0;
+
+   .content h2 {
+      font-size: == $subtitle-font-size * 1.9;
+      padding: == $baseline;
+      margin-top: == $baseline * 2;
+    }
+
+    p, blockquote, pre, h2, ul, ol {
+      margin-bottom: == $baseline;
+    }
+
+    header-gap == 40 !strong;
+    o-gap == $baseline !strong;
+
+    @if ::window[width] >= $breakpoint1 * 0.8 {
+
+      header > h1 {
+        @h |-(&)-| in(^) gap($col-size);
       }
-      bottom: == #ipad[bottom] + $baseline * 5;
-      #ipad {
-        top: == ^bottom + $baseline;
-        center-x: == ^center-x;
+
+      (.content)[width] <= $max-p-width / 2;
+
+      #ipad[center-y] == .content[center-y] !strong;
+      device-out-gap == 0;
+      device-in-gap == 50 !strong;
+
+      @v |-(header)-(.content)-| in(&) gap($baseline / 2) outer-gap($baseline * 2) !strong;
+      @h |-(.content)-(#ipad)-| in(&) gap(device-in-gap) outer-gap(device-out-gap) !strong;
+
+    } @else {
+
+      header > h1 {
+        @h |-(&)-| in(^) gap($col-size / 2);
       }
+
+      (.content)[width] <= $max-p-width;
+
+      @v |-(header)-(.content)-(#ipad)-| in(&) gap($baseline / 2) outer-gap($baseline);
+      .content[center-x] == ^center-x;
+      #ipad[center-x] == .content[center-x];
     }
 
   }
@@ -122,3 +130,40 @@
 	c5.877,0,10.639,4.761,10.639,10.636C70.93,243.421,66.168,248.182,60.291,248.182z M113.488,219.818H7.093V35.455h106.395V219.818z
 	"/>
 </svg>
+
+
+<!--
+  <section class="section color-" id="" style="position: relative">
+
+    <header>
+      <h1><a name=" "> post.title</a></h1>
+      <h2 class="subtitle">post.subtitle </h2>
+    </header>
+
+    <div class="content">
+       post.content | markdownify
+
+    </div>
+  </section>
+
+
+  @if ::window[width] >= $breakpoint1 {
+    .content {
+      padding-right: == #ipad[width] + $col-size;
+    }
+    #ipad {
+      bottom: == (^ .content)[bottom] !strong;
+      left: == (^ .content)[right];
+    }
+  }
+  @else {
+    .content {
+      padding-right: == 0;
+    }
+    bottom: == #ipad[bottom] + $baseline * 5;
+    #ipad {
+      top: == ^bottom + $baseline;
+      center-x: == ^center-x;
+    }
+  }
+-->

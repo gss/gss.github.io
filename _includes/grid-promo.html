@@ -1,83 +1,64 @@
 
-<section id="the-grid-promo">
+<section id="the-grid-promo" style="position: relative">
   <style type="text/gss">
     #the-grid-promo {
       top: == 0 !require;
+      left: == 0 !require;
       width: == ::window[width] !strong;
 
-      @virtual "area";
-      @h |-["area"]-| in(::) gap(::[$area-h-gap]);
-      @v |-["area"]-| in(::) gap(48);
-      "area"[center-x] == ::[center-x];
+      area-gap == 48;
+      @h |-("area")-| in(&) gap(area-h-gap);
+      @v |-("area")-| in(&) gap(area-gap) !strong;
+      "area"[center-x] == &[center-x];
       "area"[width] <= 1080 !strong;
 
-      @virtual "text";
+      @h |(#the-grid-promo-title)| in("text");
+      @h |(#the-grid-promo-subtitle)| in("text");
+      @v |(#the-grid-promo-subtitle)-(#the-grid-promo-title)| in("text") gap($text-v-gap);
 
-      @h |[#the-grid-promo-title]| in("text");
-      @h |[#the-grid-promo-subtitle]| in("text");
-      @v |[#the-grid-promo-subtitle]-[#the-grid-promo-title]| in("text") gap(::[$text-v-gap]);
+      area-h-gap: == 32 !require;
+      text-v-gap: == 8 !require;
+
+      text-gap == 0;
+
+      "text"[center-x] == ::window[center-x];
+      "text"[width] >= #the-grid-promo-title[width];
+
+      @h |-("text")-| in("area") gap(text-gap);
+      @h |-(#the-grid-promo-button)-| in("area") gap(0);
+      @v |("text")-(#the-grid-promo-button)| in("area") gap(32);
+
+      #the-grid-promo-button[center-x] == "area"[center-x];
 
 
-      @if ::window[width] < 1080 {
-        $area-h-gap: == 32 !require;
-        $text-v-gap: == 8 !require;
-
-        @h |["text"]| in("area");
-        @h |~-~[#the-grid-promo-button]~-~| in("area") gap(0);
-        @v |["text"]-[#the-grid-promo-button]| in("area") gap(32);
-
-        #the-grid-promo-button[center-x] == "area"[center-x];
-
-
-        #the-grid-promo-title {
-          font-size: == 32 !require;
-        }
-
-        #the-grid-promo-subtitle {
-          font-size: == 16 !require;
-        }
-
-        #the-grid-promo-button {
-          font-size: == 16 !require;
-        }
+      #the-grid-promo-title {
+        width: == &[intrinsic-width];
+        font-size: == 32 !require;
       }
-      @else {
-        $area-h-gap: == 64 !require;
-        $text-v-gap: == 0 !require;
 
-        @h |["text"]~-~[#the-grid-promo-button]| in("area") gap(64);
-        @v |~-~["text"]~-~| in("area") gap(0);
-
-        @v |~-~[#the-grid-promo-button]~-~| in("area") gap(0);
-        #the-grid-promo-button[center-y] == "text"[center-y] == "area"[center-y];
-
-
-        #the-grid-promo-title {
-          font-size: == 40 !require;
-        }
-
-        #the-grid-promo-subtitle {
-          font-size: == 16 !require;
-        }
-
-        #the-grid-promo-button {
-          font-size: == 18 !require;
-        }
+      #the-grid-promo-subtitle {
+        width: == &[intrinsic-width];
+        font-size: == 16 !require;
       }
+
+      #the-grid-promo-button {
+        font-size: == 16 !require;
+      }
+
     }
 
     #the-grid-promo-title {
-      height: == ::[intrinsic-height];
+      height: == &[intrinsic-height];
       margin: == 0 !require;
     }
 
     #the-grid-promo-subtitle {
-      height: == ::[intrinsic-height];
+      height: == &[intrinsic-height];
       margin: == 0 !require;
     }
 
     #the-grid-promo-button {
-      size: == ::[intrinsic-size];
+      size: == &[intrinsic-size];
     }
   </style>
 

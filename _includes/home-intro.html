@@ -29,13 +29,12 @@
         width: <= ::window[width] / 2 !strong;
         height: == &width * 450/409 !require;
         @h |-(&)-| in(^) gap(other-top-image-gap) !require;
-        @v |-(&) in(^) gap(top-image-gap) !strong;
       }
 
-      @v |-(#top-home-image)-(#top-title)-(#top-subtitle)-(#top-button-install)
-          in(&) gap($baseline) outer-gap($baseline * 2) !strong;
+      intro-outer-gap == 0;
 
-      @v (#top-button-install)-(#top-button-docs)-| in(&) gap(btn-vgap) outer-gap($baseline * 2) !strong;
+      @v |-(#top-home-image)-(#top-title)-(#top-subtitle)-(#top-button-install)-20-(#top-button-docs)-|
+          in(&) gap($baseline) outer-gap(intro-outer-gap) !strong;
 
       @h |-(#top-button-install)-(#top-button-source)-| in(&) gap(btn-vgap) outer-gap(btn-outer-gap) {
         &top == :next[top];

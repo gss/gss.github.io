@@ -10,7 +10,7 @@
     width: == &[intrinsic-width];
 
     height: >= 500 !require;
-    height: >= ::window[height] - $baseline !require;
+    //height: >= ::window[height] - $baseline !require;
 
     #demos-title {
       height: == &[intrinsic-height] !require;
@@ -28,7 +28,7 @@
     }
 
     article {
-      height: == ::window[height] / 2 !strong;
+      height: == &[intrinsic-height];
 
       h2, p, .top-button {
         width: == &[intrinsic-width] !require;
@@ -52,10 +52,8 @@
       center-x: == ::window[center-x] !require;
     }
 
-    ogap == $baseline * 2;
-    @v |-ogap-(#demos-title)-10-(#demos-subtitle)-$baseline-(#demo1)~ogap~| in(&) !strong;
 
-    somegap == 10 !require;
+    somegap == 15 !require;
     @v |-(#title-demo1)-(#description-demo1)-(#img-demo1)-(#btn-view-demo1)-| in(#demo1) gap(somegap) !strong {
       center-x: == ($ #demo1)[center-x];
     }
@@ -67,12 +65,15 @@
 
     @if ::window[width] >= $breakpoint1 {
 
+      ogap == $baseline;
+      @v |-ogap-(#demos-title)-10-(#demos-subtitle)-$baseline-(#demo1)-ogap-| in(&) !strong;
+
       article {
         width: == ::window[width] / 3;
       }
 
       someoutergap >= 0;
-      somehgap == 80 !require;
+      somehgap == 20 !require;
       @h |-(#demo1)-(#separator)-(#demo2)-| in(&) gap(somehgap) outer-gap(someoutergap) {
         &top == :next[top];
       }
@@ -85,7 +86,7 @@
 
       someoutergap >= 0;
       somehgap == 30 !require;
-      @v (#demo1)-(#demo2)-| in(&) gap(somehgap) outer-gap(someoutergap) !strong;
+      @v |-(#demos-title)-10-(#demos-subtitle)-(#demo1)-(#demo2)-| in(&) gap(somehgap) outer-gap($baseline * 2) !strong;
     }
   }
 
