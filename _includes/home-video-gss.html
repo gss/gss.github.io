@@ -1,0 +1,101 @@
+<section id="fluent-section" class="section color-a" style="position: relative">
+
+  <style type="text/css">
+    #fluent-section {
+      background-image:
+        url('../assets/images/Video/background.jpg');
+      background-position:
+        center center;
+      background-repeat:
+        no-repeat;
+      background-size:
+        cover;
+    }
+  </style>
+
+
+  <style type="text/gss">
+
+  #fluent-section {
+
+    top: == ::window[top] !strong;
+    left: == ::window[left] !strong;
+    x: == &[intrinsic-x];
+    y: == &[intrinsic-y];
+    width: == ::window[width];
+    height: <= ::window[height] - $top-margin;
+
+    #fluent-img {
+      width: <= ::window[width];
+      height: ==  &[width] * 9 / 16 !require;
+    }
+
+    0 <= h-gap <= 2 * $top-margin !strong;
+
+    h1, h2, p {
+      size: == &[intrinsic-size];
+      center-x: == ^[center-x];
+      text-align: center;
+    }
+
+
+
+    header {
+
+      @v |-(h1)-(h2)-| in(&) gap($baseline) outer-gap($top-margin / 2) !strong;
+
+      h1 {
+        cx: == ^cx;
+        font-size: == $title-font-size * 0.9;
+        padding: == 0;
+      }
+
+      h2 {
+        cx: == ^cx;
+        font-size: == $subtitle-font-size;
+      }
+    }
+
+
+    a[size] == #fluent-img[size];
+
+    0 <= v-gap <= $baseline;
+
+    @h |-(#fluent-img(>= $max-p-width, <= ::window[width] !strong))-| in(&) gap(h-gap) !strong;
+    @v |-(h1)-(h2)-(#fluent-img)-(p)-...-| in(&) gap(v-gap) outer-gap($baseline) !strong;
+
+    #fluent-play {
+      padding: 0 !important;
+      height: == 96;
+      width: == &[height] * 1.6;
+      center-x: == ^[center-x];
+      center-y: == ^[center-y];
+    }
+
+    #fluent-play-tri {
+      width: == 51;
+      height: == 59;
+      center-x: == ^[center-x] + 5;
+      center-y: == ^[center-y] - 5;
+    }
+  }
+  </style>
+
+  <header>
+    <h1>Video</h1>
+    <h2>O'Reilly | Fluent Conf' 2014</h2>
+  </header>
+
+  <a href="http://vimeo.com/91393694" target="_blank">
+    <img id="fluent-img" src="assets/images/fluent-video-cover.jpg" alt="Kid">
+    <button id="fluent-play" class="button-play">
+      <svg class="icon" id="fluent-play-tri" width="51px" height="59px" version="1.1" xmlns="http://www.w3.org/2000/svg" baseProfile="full" >
+        <path d="M51,29.5L0,59V0L51,29.5z"/>
+      </svg>
+    </button>
+  </a>
+
+  <p>Since this talk GSS 2.0 has been released!</p>
+  <p>For updates and improvements view our <a href="/guides/ccss">documentations</a></p>
+
+</section>

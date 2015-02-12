@@ -2,36 +2,136 @@
 #spaceman {
   background-image:url('assets/images/spaceman-purple.png');
   background-size:contain;
-  opacity: .5;
+  background-repeat: no-repeat;
 }
 </style>
 <style type="text/gss">
-  #spaceman {
-    width:  <= 267;
-    height: <= 604;
-    center-y: == ::parent[center-y];
-  }
+
+
   #{{ post.uid }} {
-    @if [Wwin] >= [breakpoint1] {
-      p, blockquote {
-        padding-left: == 2 * [col-size];
+
+    top: == ::window[top] !strong;
+    left: == ::window[left] !strong;
+    x: == &[intrinsic-x];
+    y: == &[intrinsic-y];
+    width: == &[intrinsic-width];
+
+    header {
+      @h |-(&)-| in(^) gap($col-size);
+      bottom: == ^title-bottom;
+
+      h1 {
+        height: == &[intrinsic-height] !require;
+        padding-bottom: == $baseline;
+        font-size: == $title-font-size * 0.9;
+        padding: == 0;
+
+        a {
+          height: == &[intrinsic-height];
+          width: == &[intrinsic-width];
+        }
       }
+
+      h2 {
+        height: == &[intrinsic-height] !require;
+        center-x: == ^center-x;
+        font-size: == $subtitle-font-size;
+      }
+
+
+      header-out-gap == 30 !strong;
+      header-in-gap == 10 !strong;
+
+      @v |-(h1)-(h2)-| in(&) gap(header-in-gap ) outer-gap(header-out-gap) !strong;
+    }
+
+    .content {
+      bottom: <= ^bottom - bottom-margin !medium;
+      padding: == 0;
+      font-size: == $content-font-size;
+      line-height: == $baseline;
+      top: == ^title-bottom + $baseline;
+      height: == &[intrinsic-height] !require;
+      center-x: == ^center-x !medium;
+      x: == &content-left;
+
       #spaceman {
-        right: == ::parent[content-left] + [col-size];
+        width:  <= 267;
+        height: <= 604;
+        center-y: == ^center-y;
       }
     }
-    @else {
-      blockquote {
-       padding-left: == [baseline];
-     }
-      p {
-        padding-left: == 0;
-      }
-      #spaceman {
-        right: == ::parent[content-left];
-      }
+
+   .content h2 {
+      font-size: == $subtitle-font-size * 1.9;
+      padding: == $baseline;
+      margin-top: == $baseline * 2;
     }
+
+    p, blockquote, pre, h2, ul, ol {
+      margin-bottom: == $baseline;
+    }
+
+    header-gap == 40 !strong;
+    o-gap == $baseline !strong;
+
+    @if ::window[width] >= $breakpoint1 {
+
+      header > h1 {
+        @h |-(&)-| in(^) gap($col-size);
+      }
+
+      (.content)[width] <= $max-p-width - $baseline * 4;
+
+      #spaceman[opacity] == 0.5;
+
+
+      device-out-gap == 0;
+      device-in-gap == 50 !strong;
+
+      @v |-(header)-(.content)-| in(&) gap($baseline / 2) outer-gap($baseline * 2) !strong;
+      @h |-(#spaceman)-(.content)-| in(&) gap(device-in-gap) outer-gap(device-out-gap) !strong;
+
+    } @else {
+
+      #spaceman[opacity] == 0.15;
+      #spaceman[center-x] == (.content)[center-x];
+
+      header > h1 {
+        @h |-(&)-| in(^) gap($col-size / 2);
+      }
+
+      (.content)[width] <= $max-p-width - $baseline;
+
+      @v |-(header)-(.content)-| in(&) gap($baseline / 2) outer-gap($baseline);
+      .content[center-x] == ^center-x;
+    }
+
   }
 </style>
 
 <div id="spaceman" class="trans"></div>
+
+
+<!--
+@if [Wwin] >= [breakpoint1] {
+  p, blockquote {
+    padding-left: == 2 * [col-size];
+  }
+  #spaceman {
+    right: == ::parent[content-left] + [col-size];
+  }
+}
+@else {
+  blockquote {
+   padding-left: == [baseline];
+ }
+  p {
+    padding-left: == 0;
+  }
+  #spaceman {
+    right: == ::parent[content-left];
+  }
+}
+
+-->

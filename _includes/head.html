@@ -40,6 +40,7 @@
       $baseline == 30 !require;
       $col-size == ::window[width] / 12 !strong;
       $col-size <= 72 !require;
+      $top-margin == $baseline * 4 !require;
       $title-font-size == 65 !require;
       $subtitle-font-size == 18 !require;
       $max-p-width == 720 !require;
@@ -48,6 +49,7 @@
     @else {
       $baseline == 24 !require;
       $col-size == ::window[width] / 6 !require;
+      $top-margin == $baseline * 3 !require;
       $title-font-size == 45 !require;
       $subtitle-font-size == 14 !require;
       $max-p-width == $col-size * 5 !require;
