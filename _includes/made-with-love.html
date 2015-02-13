@@ -9,8 +9,9 @@
     y: == &[intrinsic-y];
     width: == ::window[width];
     //height: == &[intrinsic-height];
-    height: == ::window[height] * 2;
+    //height: == ::window[height] * 2;
     //height: <= ::window[height] - $top-margin;
+    height: >= #grid-section-content[height];
 
     .astro-person {
       width: >= 200;
@@ -53,22 +54,28 @@
 
       @if ::window[width] >= 720 {
 
+        v-astro-gap == $baseline * 3 !strong;
+        v-astro-gap >= 0 !require;
+
         @h |(#astro-d4)-(#astro-greg)| in(&) gap(astro-gap1) {
           top: == :next[top];
           width: == :next[width];
         }
+
+        astro-gap2 == 40 !require;
+
+        @v |-(#astro-d4)-(#astro-yaroslaff)-(#astro-carl) in(&) gap(v-astro-gap) !strong;
 
         @h |(#astro-yaroslaff)-(#astro-alex)-(#astro-bergie)| in(&) gap(astro-gap2) {
           top: == :next[top];
           width: == :next[width];
         }
 
-        @h |-(#astro-tom)-(#astro-paul)-(#astro-carl)| in(&) gap(astro-gap2) {
+        @h |(#astro-paul)-(#astro-tom)-(#astro-carl)| in(&) gap(astro-gap2) {
           top: == :next[top];
           width: == :next[width];
         }
 
-        @v |-(#astro-d4)-(#astro-yaroslaff)-(#astro-tom) in(&) gap([baseline] * 3);
 
       } @else {
 
@@ -76,12 +83,11 @@
           @h |-(&)-| in(^) gap(astro-gap0);
         }
 
-        @v |-(#astro-greg)-(#astro-d4)-(#astro-alex)-(#astro-bergie)-(#astro-yaroslaff)-(#astro-tom)-(#astro-paul)-(#astro-carl)
+        @v |-(#astro-greg)-(#astro-d4)-(#astro-alex)-(#astro-bergie)-(#astro-yaroslaff)-(#astro-paul)-(#astro-tom)-(#astro-carl)
         in(&)
         gap($baseline * 3)
         outer-gap($baseline * 5);
       }
-
 
       @v (#astro-carl)-(#prefinery_iframe_inline) gap(200);
 
@@ -97,8 +103,9 @@
         center-x: == ::window[center-x];
         opacity: .3;
       }
+    } //#grid-section-content
 
-    }
+
   }
   </style>
   <style>
@@ -160,21 +167,21 @@
 
     <div id="astro-yaroslaff" class="astro-person link">
       <a href="https://twitter.com/inviz">
-        <img src="/assets/images/purple-yellow/alex.jpg" width="100%" alt="D4">
+        <img src="/assets/images/purple-yellow/yaro.jpg" width="100%" alt="D4">
         <p>Yaroslaff Fedin</p>
       </a>
     </div>
 
     <div id="astro-paul" class="astro-person link">
       <a href="http://paulyoung.me/">
-        <img src="/assets/images/purple-yellow/bergie.jpg" width="100%" alt="D4">
+        <img src="/assets/images/purple-yellow/paul.jpg" width="100%" alt="D4">
         <p>Paul Young</p>
       </a>
     </div>
 
     <div id="astro-carl" class="astro-person link">
       <a href="http://twitter.com/cbchouinard">
-        <img src="/assets/images/purple-yellow/tom2.jpg" width="100%" alt="D4">
+        <img src="/assets/images/purple-yellow/carl.jpg" width="100%" alt="D4">
         <p>Carl Chouinard</p>
       </a>
     </div>
