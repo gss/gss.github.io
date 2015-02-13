@@ -13,14 +13,7 @@
 
   #{{ post.uid }} {
 
-    top: == ::window[top] !strong;
-    left: == ::window[left] !strong;
-    x: == &[intrinsic-x];
-    y: == &[intrinsic-y];
-    width: == &[intrinsic-width];
-
     height: >= 600;
-    //height: >= ::window[height] - $baseline !strong;
 
     top-margin == 30;
     bottom-margin == 50;
@@ -42,6 +35,7 @@
       }
 
       h2 {
+        width: == &[intrinsic-width];
         height: == &[intrinsic-height] !require;
         center-x: == ^center-x;
         font-size: == $subtitle-font-size;

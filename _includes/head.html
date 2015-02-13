@@ -64,4 +64,13 @@
         font-size: == $content-font-size;
       }
 
+      section.top-section {
+        //v2.0 has a problem with intrinsic-top & left. Should be able to only use intrinsic-top, left with v2.1
+        top: == ::window[top] !strong;
+        left: == ::window[left] !strong;
+        x: == &[intrinsic-x];
+        y: == &[intrinsic-y];
+        width: == &[intrinsic-width];
+      }
+
     </style>

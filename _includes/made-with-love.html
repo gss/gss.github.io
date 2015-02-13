@@ -1,30 +1,24 @@
-<section id="grid-section" class="color-a" style="position: relative">
+<section id="grid-section" class="top-section color-a" style="position: relative">
 <style type="text/gss">
 
   #grid-section {
 
-    top: == ::window[top] !strong;
-    left: == ::window[left] !strong;
-    x: == &[intrinsic-x];
-    y: == &[intrinsic-y];
-    width: == ::window[width];
     height: == #grid-section-content[height];
 
     .astro-person {
       width: >= 200;
       height: >= 200;
       width: == &[height] * 666/777;
-      //bottom: <= ^[bottom] - $baseline * 5;
     }
 
     h1, h2 {
       size: == &[intrinsic-size];
-      center-x: == ^[center-x];
+      //center-x: == ^[center-x];
       text-align: center;
     }
 
     header {
-      //TODO - check if usefull. Probably not since h1-h2 are used in later VFL @v
+      center-x: == ^center-x;
       @v |-(h1)-(h2)-| in(&) gap($baseline) outer-gap($top-margin / 2) !strong;
 
       h1 {

@@ -1,4 +1,4 @@
-<section id="fluent-section" class="section color-a" style="position: relative">
+<section id="fluent-section" class="section top-section color-a" style="position: relative">
 
   <style type="text/css">
     #fluent-section {
@@ -13,16 +13,10 @@
     }
   </style>
 
-
   <style type="text/gss">
 
   #fluent-section {
 
-    top: == ::window[top] !strong;
-    left: == ::window[left] !strong;
-    x: == &[intrinsic-x];
-    y: == &[intrinsic-y];
-    width: == ::window[width];
     height: <= ::window[height] - $top-margin;
 
     #fluent-img {
@@ -34,11 +28,11 @@
 
     h1, h2, p {
       size: == &[intrinsic-size];
-      center-x: == ^[center-x];
       text-align: center;
     }
 
     header {
+      center-x: == ^center-x;
       @v |-(h1)-(h2)-| in(&) gap($baseline) outer-gap($top-margin / 2) !strong;
 
       h1 {
@@ -53,13 +47,14 @@
       }
     }
 
-
     a[size] == #fluent-img[size];
 
     0 <= v-gap <= $baseline;
 
     @h |-(#fluent-img(>= $max-p-width, <= ::window[width] !strong))-| in(&) gap(h-gap) !strong;
     @v |-(h1)-(h2)-(#fluent-img)-(p)-...-| in(&) gap(v-gap) outer-gap($baseline) !strong;
+
+    p[center-x] == #fluent-img[center-x];
 
     #fluent-play {
       padding: 0 !important;
