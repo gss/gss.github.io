@@ -23,7 +23,44 @@
 
     <script src="/bower_components/gss/dist/gss.js"></script>
     <script>
-      window.engine = new GSS(document);
+
+      engine = new GSS(document)
+
+      var lastWidth = 0;
+      onResize = function() {
+          if (window.innerWidth > 900) {
+            engine.solve({
+              "baseline": 30,
+              "col-size": window.innerWidth / 12 <= 72 ? window.innerWidth / 12 : 72,
+              "top-margin": 120,
+              "title-font-size": 65,
+              "subtitle-font-size": 18,
+              "max-p-width": 720,
+              "content-font-size": 20,
+              "large-content-font-size": 24,
+              "large-content-line-height": 36,
+              "v-outer-gap": 90
+            });
+          } else {
+            engine.solve({
+              "baseline": 24,
+              "col-size": window.innerWidth / 6,
+              "top-margin": 90,
+              "title-font-size": 45,
+              "subtitle-font-size": 14,
+              "max-p-width": (window.innerWidth / 6) * 5,
+              "content-font-size": 16,
+              "large-content-font-size": 20,
+              "large-content-line-height": 30,
+              "v-outer-gap": 60
+            });
+          }
+
+      }
+      onResize();
+
+      window.engine.addEventListener('resize', onResize)
+
     </script>
 
 
@@ -33,35 +70,6 @@
     <style type="text/gss">
 
       $breakpoint1 == 900 !require;
-      $content-right == ::window[center-x] + $max-p-width / 2 !require;
-      $content-left == ::window[center-x] - $max-p-width / 2 !require;
-      $baseline >= 0 !require;
-
-      @if ::window[width] >= $breakpoint1 {
-        $baseline == 30 !require;
-        $col-size == ::window[width] / 12 !strong;
-        $col-size <= 72 !require;
-        $top-margin == $baseline * 4 !require;
-        $title-font-size == 65 !require;
-        $subtitle-font-size == 18 !require;
-        $max-p-width == 720 !require;
-        $content-font-size == 20 !require;
-        $large-content-font-size == 24 !require;
-        $large-content-line-height == 36 !require;
-        $v-outer-gap == $baseline * 3 !require;
-      }
-      @else {
-        $baseline == 24 !require;
-        $col-size == ::window[width] / 6 !require;
-        $top-margin == $baseline * 3 !require;
-        $title-font-size == 45 !require;
-        $subtitle-font-size == 14 !require;
-        $max-p-width == $col-size * 5 !require;
-        $content-font-size == 16 !require;
-        $large-content-font-size == 20 !require;
-        $large-content-line-height == 30 !require;
-        $v-outer-gap == $baseline * 2 !require;
-      }
 
       p {
         font-size: == $content-font-size;

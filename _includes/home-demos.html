@@ -3,6 +3,8 @@
   <style type="text/gss">
     #home-demos {
 
+    content-right == ::window[center-x] + $max-p-width / 2 !require;
+    content-left == ::window[center-x] - $max-p-width / 2 !require;
     height: >= 500 !require;
 
     #demos-title {
@@ -15,8 +17,8 @@
 
     #demos-subtitle {
       height: == &[intrinsic-height] !require;
-      left: == $content-left !require;
-      right: == $content-right !require;
+      left: == content-left !require;
+      right: == content-right !require;
       font-size: == $subtitle-font-size;
     }
 

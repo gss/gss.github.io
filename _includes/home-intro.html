@@ -41,10 +41,13 @@
         color: #fdf9ad;
       }
 
+      content-right == ::window[center-x] + $max-p-width / 2 !require;
+      content-left == ::window[center-x] - $max-p-width / 2 !require;
+
       #top-subtitle {
         height: == &[intrinsic-height] !require;
-        left: == $content-left !require;
-        right: == $content-right !require;
+        left: == content-left !require;
+        right: == content-right !require;
         text-align: center;
         font-style: italic;
         font-size: == $subtitle-font-size;
