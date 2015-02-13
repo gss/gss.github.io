@@ -33,7 +33,7 @@
 
     header {
       center-x: == ^center-x;
-      @v |-(h1)-(h2)-| in(&) gap($baseline) outer-gap($top-margin / 2) !strong;
+      @v |(h1)-(h2)| in(&) gap($baseline) !strong;
 
       h1 {
         cx: == ^cx;
@@ -52,7 +52,7 @@
     0 <= v-gap <= $baseline;
 
     @h |-(#fluent-img(>= $max-p-width, <= ::window[width] !strong))-| in(&) gap(h-gap) !strong;
-    @v |-(h1)-(h2)-(#fluent-img)-(p)-...-| in(&) gap(v-gap) outer-gap($baseline) !strong;
+    @v |-(h1)-(h2)-(#fluent-img)-(p)-...-| in(&) gap(v-gap) outer-gap($v-outer-gap) !strong;
 
     p[center-x] == #fluent-img[center-x];
 

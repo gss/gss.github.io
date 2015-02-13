@@ -46,12 +46,12 @@
     }
 
 
-    somegap == 15 !require;
-    @v |-(#title-demo1)-(#description-demo1)-(#img-demo1)-(#btn-view-demo1)-| in(#demo1) gap(somegap) !strong {
+    demo-content-gap == $baseline / 2 !require;
+    @v |-(#title-demo1)-(#description-demo1)-(#img-demo1)-(#btn-view-demo1)-| in(#demo1) gap(demo-content-gap) !strong {
       center-x: == ($ #demo1)[center-x];
     }
 
-    @v |-(#title-demo2)-(#description-demo2)-(#img-demo2)-(#btn-view-demo2)-| in(#demo2) gap(somegap) !strong{
+    @v |-(#title-demo2)-(#description-demo2)-(#img-demo2)-(#btn-view-demo2)-| in(#demo2) gap(demo-content-gap) !strong{
       center-x: == ($ #demo2)[center-x];
     }
 
@@ -59,17 +59,13 @@
 
     @if ::window[width] >= $breakpoint1 {
 
-      ogap == $baseline;
-      @v |-ogap-(#demos-title)-10-(#demos-subtitle)-$baseline-(#demo1)-ogap-| in(&) !strong;
+      @v |-(#demos-title)-10-(#demos-subtitle)-$baseline-(#demo1)-| in(&) outer-gap($v-outer-gap) !strong;
 
-      article {
-        width: == ::window[width] / 3;
-      }
+      article[width] == ::window[width] / 3;
 
-      someoutergap >= 0;
-      somehgap == 20 !require;
-      @h |-(#demo1)-(#separator)-(#demo2)-| in(&) gap(somehgap) outer-gap(someoutergap) {
-        &top == :next[top];
+      align-top == #demo1[top];
+      @h |-(#demo1)-(#separator)-(#demo2)-| in(&) gap($baseline * 2) outer-gap(demo-outer-gap) {
+        top: == align-top;
       }
     }
     @else {
@@ -78,9 +74,7 @@
         center-x: == ::window[center-x];
       }
 
-      someoutergap >= 0;
-      somehgap == 30 !require;
-      @v |-(#demos-title)-10-(#demos-subtitle)-(#demo1)-(#demo2)-| in(&) gap(somehgap) outer-gap($baseline * 2) !strong;
+      @v |-(#demos-title)-10-(#demos-subtitle)-(#demo1)-(#demo2)-| in(&) gap($baseline) outer-gap($v-outer-gap) !strong;
     }
   }
 

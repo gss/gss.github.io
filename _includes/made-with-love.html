@@ -13,13 +13,12 @@
 
     h1, h2 {
       size: == &[intrinsic-size];
-      //center-x: == ^[center-x];
       text-align: center;
     }
 
     header {
       center-x: == ^center-x;
-      @v |-(h1)-(h2)-| in(&) gap($baseline) outer-gap($top-margin / 2) !strong;
+      @v |(h1)-(h2)| in(&) gap($baseline) !strong;
 
       h1 {
         cx: == ^cx;
@@ -33,7 +32,7 @@
       }
     }
 
-    @v |-(h1)-(h2)-(#grid-section-content)-| in(&) gap($baseline);
+    @v |-(h1)-(h2)-(#grid-section-content)-| in(&) gap($baseline) outer-gap($v-outer-gap);
 
     astro-gap1 == $col-size;
     astro-gap0 == $col-size;

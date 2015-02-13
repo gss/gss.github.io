@@ -8,13 +8,10 @@
     <style type="text/gss">
 
       #count-me-in {
-        top: == ::window[top] !strong;
-        left: == ::window[left] !strong;
-        x: == &[intrinsic-x];
-        y: == &[intrinsic-y];
-        width: == ::window[width];
 
-        @v |-(#gss_logo)-(#prefinery_iframe_inline)-(#pp-link)-| in(&) gap($baseline) !strong;
+        z-index: == -1;
+
+        @v |-(#gss_logo)-(#prefinery_iframe_inline)-(#pp-link)-| in(&) gap($baseline) outer-gap($v-outer-gap / 2) !strong;
 
         #gss_logo {
           size: == &[intrinsic-size];
@@ -23,7 +20,7 @@
       }
 
       #prefinery_iframe_inline {
-        height: == &[intrinsic-height];
+        height: == 80;
       }
 
       #pp-link {
@@ -34,13 +31,19 @@
         color: #5f4851;
       }
 
+      @if ::window[width] <= $breakpoint1 {
+        #prefinery_iframe_inline {
+          height: == 180;
+        }
+      }
+
     </style>
 
-    <section id="count-me-in" style="position: relative">
+    <section class="top-section" id="count-me-in" style="position: relative">
 
       <img id="gss_logo" src="/assets/images/GSSv2.png" />
 
-      <iframe id='prefinery_iframe_inline' allowTransparency='true' width='100%' height='120' scrolling='no' frameborder='0' src="https://thegrid.prefinery.com/betas/4620/testers/new?display=inline&version=2"></iframe>
+      <iframe id='prefinery_iframe_inline' allowTransparency='true' width='100%' height='70' scrolling='no' frameborder='0' src="https://thegrid.prefinery.com/betas/4620/testers/new?display=inline&version=2"></iframe>
 
       <a id="pp-link" href="/legal/privacy-policy/">privacy policy</a>
 

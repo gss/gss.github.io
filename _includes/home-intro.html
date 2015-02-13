@@ -6,13 +6,10 @@
     #top-home-section {
 
       height: >= 500 !require;
-      height: >= ::window[height] - $baseline !require;
+      height: >= ::window[height] - $baseline * 2 !require;
 
-      top-image-gap == 30;
-      top-image-gap >= 0 !require;
-      btn-vgap == 20 !require;
+      btn-gap == 20 !require;
       other-top-image-gap >= 0 !require;
-      btn-outer-gap == 0;
 
       .top-button {
         height: == &[intrinsic-height] !require;
@@ -26,12 +23,10 @@
         @h |-(&)-| in(^) gap(other-top-image-gap) !require;
       }
 
-      intro-outer-gap == 0;
-
       @v |-(#top-home-image)-(#top-title)-(#top-subtitle)-(#top-button-install)-20-(#top-button-docs)-|
-          in(&) gap($baseline) outer-gap(intro-outer-gap) !strong;
+          in(&) gap($baseline) outer-gap($v-outer-gap) !strong;
 
-      @h |-(#top-button-install)-(#top-button-source)-| in(&) gap(btn-vgap) outer-gap(btn-outer-gap) {
+      @h |-(#top-button-install)-(#top-button-source)-| in(&) gap(btn-gap) outer-gap(btn-outer-gap) {
         &top == :next[top];
       }
 

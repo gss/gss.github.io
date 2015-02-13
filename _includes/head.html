@@ -47,6 +47,7 @@
         $content-font-size == 20 !require;
         $large-content-font-size == 24 !require;
         $large-content-line-height == 36 !require;
+        $v-outer-gap == $baseline * 3 !require;
       }
       @else {
         $baseline == 24 !require;
@@ -58,10 +59,12 @@
         $content-font-size == 16 !require;
         $large-content-font-size == 20 !require;
         $large-content-line-height == 30 !require;
+        $v-outer-gap == $baseline * 2 !require;
       }
 
       p {
         font-size: == $content-font-size;
+        line-height: == 30;
       }
 
       section.top-section {
@@ -71,6 +74,19 @@
         x: == &[intrinsic-x];
         y: == &[intrinsic-y];
         width: == &[intrinsic-width];
+      }
+
+      ul.large-list {
+        li {
+          margin-bottom: == $large-content-font-size;
+          text-align: left;
+        }
+      }
+
+      .large-font, .large-list li {
+        font-family: "adelle", georgia, serif;
+        font-size: == $large-content-font-size;
+        line-height: == $large-content-line-height;
       }
 
     </style>

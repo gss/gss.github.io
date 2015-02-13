@@ -38,11 +38,7 @@
         font-size: == $subtitle-font-size;
       }
 
-
-      header-out-gap == 30 !strong;
-      header-in-gap == 10 !strong;
-
-      @v |-(h1)-(h2)-| in(&) gap(header-in-gap ) outer-gap(header-out-gap) !strong;
+      @v |(h1)-(h2)| in(&) gap($baseline / 2) !strong;
     }
 
     .content {
@@ -50,10 +46,8 @@
       padding: == 0;
       font-size: == $content-font-size;
       line-height: == $baseline;
-      top: == ^title-bottom + $baseline;
+      //top: == ^title-bottom + $baseline;
       height: == &[intrinsic-height] !require;
-      center-x: == ^center-x !medium;
-      x: == &content-left;
 
       #spaceman {
         width:  <= 267;
@@ -73,7 +67,7 @@
     }
 
     header-gap == 40 !strong;
-    o-gap == $baseline !strong;
+    .content[width] <= $max-p-width - $baseline * 4;
 
     @if ::window[width] >= $breakpoint1 {
 
@@ -81,30 +75,29 @@
         @h |-(&)-| in(^) gap($col-size);
       }
 
-      (.content)[width] <= $max-p-width - $baseline * 4;
-
-      #spaceman[opacity] == 0.5;
-
-
-      device-out-gap == 0;
+      device-out-gap >= 0 !require;
       device-in-gap == 50 !strong;
 
-      @v |-(header)-(.content)-| in(&) gap($baseline / 2) outer-gap($baseline * 2) !strong;
+      @v |-(header)-(.content)-| in(&) gap($baseline) outer-gap($v-outer-gap) !strong;
       @h |-(#spaceman)-(.content)-| in(&) gap(device-in-gap) outer-gap(device-out-gap) !strong;
+
+
+      #spaceman[opacity] == 0.5;
 
     } @else {
 
       #spaceman[opacity] == 0.15;
       #spaceman[center-x] == (.content)[center-x];
 
-      header > h1 {
+      header > h1, .content {
         @h |-(&)-| in(^) gap($col-size / 2);
       }
 
-      (.content)[width] <= $max-p-width - $baseline;
+
+      .content[width] == ::window[width] - 4 * $baseline !strong;
 
       @v |-(header)-(.content)-| in(&) gap($baseline / 2) outer-gap($baseline);
-      .content[center-x] == ^center-x;
+      .content[center-x] == ^center-x !strong;
     }
 
   }

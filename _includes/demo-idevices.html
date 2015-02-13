@@ -41,11 +41,9 @@
         font-size: == $subtitle-font-size;
       }
 
+      header-in-gap == 10 !require;
 
-      header-out-gap == 30 !strong;
-      header-in-gap == 10 !strong;
-
-      @v |-(h1)-(h2)-| in(&) gap(header-in-gap ) outer-gap(header-out-gap) !strong;
+      @v |(h1)-(h2)| in(&) gap(header-in-gap ) !strong;
     }
 
     .content {
@@ -72,7 +70,7 @@
     header-gap == 40 !strong;
     o-gap == $baseline !strong;
 
-    @if ::window[width] >= $breakpoint1 * 0.8 {
+    @if ::window[width] >= $breakpoint1 {
 
       header > h1 {
         @h |-(&)-| in(^) gap($col-size);
@@ -81,10 +79,9 @@
       (.content)[width] <= $max-p-width / 2;
 
       #ipad[center-y] == .content[center-y] !strong;
-      device-out-gap == 0;
       device-in-gap == 50 !strong;
 
-      @v |-(header)-(.content)-| in(&) gap($baseline / 2) outer-gap($baseline * 2) !strong;
+      @v |-(header)-(.content)-| in(&) gap($baseline * 2) outer-gap($v-outer-gap) !strong;
       @h |-(.content)-(#ipad)-| in(&) gap(device-in-gap) outer-gap(device-out-gap) !strong;
 
     } @else {
@@ -95,7 +92,7 @@
 
       (.content)[width] <= $max-p-width;
 
-      @v |-(header)-(.content)-(#ipad)-| in(&) gap($baseline / 2) outer-gap($baseline);
+      @v |-(header)-(.content)-(#ipad)-| in(&) gap($baseline / 2) outer-gap($v-outer-gap);
       .content[center-x] == ^center-x;
       #ipad[center-x] == .content[center-x];
     }

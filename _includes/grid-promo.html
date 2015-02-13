@@ -2,30 +2,16 @@
 <section class="top-section" id="the-grid-promo" style="position: relative">
   <style type="text/gss">
     #the-grid-promo {
-  
-      area-gap == 48;
-      @h |-("area")-| in(&) gap(area-h-gap);
-      @v |-("area")-| in(&) gap(area-gap) !strong;
-      "area"[center-x] == &[center-x];
-      "area"[width] <= 1080 !strong;
 
-      @h |(#the-grid-promo-title)| in("text");
-      @h |(#the-grid-promo-subtitle)| in("text");
-      @v |(#the-grid-promo-subtitle)-(#the-grid-promo-title)| in("text") gap($text-v-gap);
+      h1, h2, a {
+        center-x: == ^center-x;
+      }
 
-      area-h-gap: == 32 !require;
-      text-v-gap: == 8 !require;
+      v-text-gap: == 8 !require;
+      @v |-(#the-grid-promo-subtitle)-(#the-grid-promo-title)-(#the-grid-promo-button)-|
+        gap(v-text-gap)
+        outer-gap($v-outer-gap);
 
-      text-gap == 0;
-
-      "text"[center-x] == ::window[center-x];
-      "text"[width] >= #the-grid-promo-title[width];
-
-      @h |-("text")-| in("area") gap(text-gap);
-      @h |-(#the-grid-promo-button)-| in("area") gap(0);
-      @v |("text")-(#the-grid-promo-button)| in("area") gap(32);
-
-      #the-grid-promo-button[center-x] == "area"[center-x];
 
       #the-grid-promo-title {
         width: == &[intrinsic-width];
