@@ -29,13 +29,12 @@
       }
 
       #sidenav-menu-button {
-        margin-left: -23px !important;
+        margin-left: -30px !important;
         width: == &[intrinsic-width];
         height: == &[intrinsic-height];
-        //center-x: == 0 - ::window[center-y] - &[width] / 2;
         left: == 0;
-        //center-y: == ::window[center-y] !strong;
         top: == ::window[height] / 2 !require;
+        font-size: == $large-content-font-size * 0.8;
       }
 
   }
@@ -164,6 +163,7 @@
       height: == &[intrinsic-height];
       center-y: == ($ #menu)[center-y];
       left: == ($ #menu)[left];
+      font-size: == $large-content-font-size * 0.8;
     }
 
 

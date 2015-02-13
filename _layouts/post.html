@@ -1,7 +1,84 @@
 {% include head.html %}
-  {% include grid-promo.html %}  
+  {% include grid-promo.html %}
 
-  <section class="section color-{{page.color}}" id="{{ page.uid }}">
+
+  <style type="text/gss">
+
+    #{{ page.uid }} {
+      overflow: hidden;
+      top: >= ::window[top];
+
+      @h |(&)| in(::window) !require;
+
+      header {
+
+        height: == &[intrinsic-height] !require;
+        top: == ^[top] + $top-margin !strong;
+        @h |-(&)-| in(^) gap($col-size);
+
+        bottom: == ^title-bottom;
+
+
+        h2 {
+          font-size: == $subtitle-font-size;
+        }
+        h1 {
+          font-size: == $title-font-size;
+          margin-bottom: == $baseline / 2;
+        }
+      }
+
+      .content h2 {
+        font-size: == $subtitle-font-size * 1.9;
+        padding: == $baseline;
+        margin-top: == $baseline * 2;
+      }
+
+      .content {
+        bottom: <= ^[bottom] - $bottom-margin;
+
+        font-size: == $content-font-size;
+        line-height: == $baseline;
+        top: == ^title-bottom + $baseline;
+        height: == &intrinsic-height;
+        width: <= $max-p-width;
+        center-x: == ^center-x;
+        x: == content-left;
+      }
+
+      p, blockquote, pre, h2, ul, ol {
+        margin-bottom: == $baseline;
+      }
+
+    }
+
+    ul.large-list {
+      li {
+        margin-bottom: == $large-content-font-size;
+        text-align: left;
+      }
+    }
+
+    .large-font, .large-list li {
+      font-family: "adelle", georgia, serif;
+      font-size: == $large-content-font-size;
+      line-height: == $large-content-line-height;
+    }
+
+  </style>
+
+  <style type="text/css">
+    .cols-2 {
+      -webkit-column-count: 2;
+         -moz-column-count: 2;
+              column-count: 2;
+      -webkit-column-gap: == 30px;
+         -moz-column-gap: == 30px;
+              column-gap: == 30px;
+    }
+  </style>
+
+  <section class="section color-{{page.color}}" id="{{ page.uid }}" style="position: relative">
     {% if page.title %}
     <header>
       <h1>{{ page.title }}</h1>
