@@ -10,7 +10,6 @@
     width: == &[intrinsic-width];
 
     height: >= 500 !require;
-    //height: >= ::window[height] - $baseline !require;
 
     #demos-title {
       height: == &[intrinsic-height] !require;
@@ -62,6 +61,7 @@
       center-x: == ($ #demo2)[center-x];
     }
 
+    #demos-title[bottom] <= #demos-subtitle[top];
 
     @if ::window[width] >= $breakpoint1 {
 
