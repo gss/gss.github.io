@@ -1,0 +1,86 @@
+<section id="fluent-section" class="section top-section color-a" style="position: relative">
+
+  <style type="text/css">
+    #fluent-section {
+      background-image:
+        url('../assets/images/Video/background.jpg');
+      background-position:
+        center center;
+      background-repeat:
+        no-repeat;
+      background-size:
+        cover;
+    }
+  </style>
+
+  <style type="text/gss">
+
+  #fluent-section {
+
+    height: <= ::window[height] - $top-margin;
+
+    #fluent-img {
+      width: == ::window[width] - $top-margin;
+      width: <= $max-p-width;
+      height: ==  &[width] * 9 / 16 !require;
+    }
+
+    0 <= h-gap <= 2 * $top-margin !strong;
+
+    h1, h2, p {
+      size: == &[intrinsic-size];
+      text-align: center;
+    }
+
+    header {
+      center-x: == ^center-x;
+      @v |(h1)-(h2)| in(&) gap($baseline) !strong;
+
+      h1 {
+        cx: == ^cx;
+        font-size: == $title-font-size * 0.9;
+        padding: == 0;
+      }
+
+      h2 {
+        cx: == ^cx;
+        font-size: == $subtitle-font-size;
+      }
+    }
+
+    a[size] == #fluent-img[size];
+
+    0 <= v-gap <= $baseline;
+
+    @h |-(#fluent-img(>= $max-p-width, <= ::window[width] !strong))-| in(&) gap(h-gap) !strong;
+    @v |-(h1)-(h2)-(#fluent-img)-(p)-...-| in(&) gap(v-gap) outer-gap($v-outer-gap) !strong;
+
+    p[center-x] == #fluent-img[center-x];
+
+    #fluent-play {
+      padding: 10px !important;
+      height: == &intrinsic-height;
+      width: == &intrinsic-width;
+      center-x: == ^[center-x];
+      center-y: == ^[center-y];
+      font-size: == $subtitle-font-size * 0.8;
+    }
+  }
+  </style>
+
+  <header>
+    <h1>Video</h1>
+    <h2>O'Reilly | Fluent Conf' 2014</h2>
+  </header>
+
+  <a href="http://vimeo.com/91393694" target="_blank">
+    <img id="fluent-img" src="assets/images/oreilly-fluent-cover-purple.jpg" alt="Kid">
+    <button id="fluent-play" class="button">
+      Play video
+    </button>
+  </a>
+
+  <p>Since this talk GSS 2.0 has been released!</p>
+  <p>For updates and improvements view our <a href="/guides/ccss">documentations</a></p>
+
+</section>

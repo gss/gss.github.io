@@ -1,0 +1,71 @@
+<section id="top-home-section" class="top-section color-a" style="position: relative">
+
+  <style type="text/gss">
+
+  body {
+    #top-home-section {
+
+      height: >= 500 !require;
+      height: >= ::window[height] - $baseline * 2 !require;
+
+      btn-gap == 20 !require;
+      other-top-image-gap >= 0 !require;
+
+      .top-button {
+        height: == &[intrinsic-height] !require;
+        width: == &[intrinsic-width] !require;
+      }
+
+      #top-home-image {
+        width: <= 325 !require;
+        width: <= ::window[width] / 2 !strong;
+        height: == &width * 450/409 !require;
+        @h |-(&)-| in(^) gap(other-top-image-gap) !require;
+      }
+
+      @v |-(#top-home-image)-(#top-title)-(#top-subtitle)-(#top-button-install)-20-(#top-button-docs)-|
+          in(&) gap($baseline) outer-gap($v-outer-gap) !strong;
+
+      @h |-(#top-button-install)-(#top-button-source)-| in(&) gap(btn-gap) outer-gap(btn-outer-gap) {
+        &top == :next[top];
+      }
+
+      #top-button-docs[center-x] == &[center-x];
+
+      #top-title {
+        height: == &[intrinsic-height] !require;
+        @h |-(&)-| in(^) gap($col-size);
+        padding-bottom: == $baseline;
+        font-size: == $title-font-size;
+        padding: == 0;
+        color: #fdf9ad;
+      }
+
+      content-right == ::window[center-x] + $max-p-width / 2 !require;
+      content-left == ::window[center-x] - $max-p-width / 2 !require;
+
+      #top-subtitle {
+        height: == &[intrinsic-height] !require;
+        left: == content-left !require;
+        right: == content-right !require;
+        text-align: center;
+        font-style: italic;
+        font-size: == $subtitle-font-size;
+        color: #784e78;
+      }
+    }
+  }
+
+  </style>
+
+  <div id="top-home-image"></div>
+
+  <h1 id="top-title">Grid Style Sheets 2.0</h1>
+  <h3 id="top-subtitle" class="large-font">GSS reimagines CSS layout & replaces the browser’s layout engine with one that
+    harnesses the Cassowary Constraint Solver — the same algorithm Apple uses to compute native layout.</h3>
+
+  <a href="/usage/client-side" class="top-button button" id="top-button-install">Install</a>
+  <a href="//github.com/gss/engine" class="top-button button" id="top-button-source">Source</a>
+  <a href="/guides/ccss" class="top-button button" id="top-button-docs">Documentation</a>
+
+</section>

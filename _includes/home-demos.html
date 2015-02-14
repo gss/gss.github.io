@@ -1,0 +1,108 @@
+<section id="home-demos" class="top-section color-a" style="position: relative">
+
+  <style type="text/gss">
+    #home-demos {
+
+    content-right == ::window[center-x] + $max-p-width / 2 !require;
+    content-left == ::window[center-x] - $max-p-width / 2 !require;
+    height: >= 500 !require;
+
+    #demos-title {
+      height: == &[intrinsic-height] !require;
+      @h |-(&)-| in(^) gap($col-size);
+      font-size: == $title-font-size * 0.9;
+      padding: == 0;
+      color: #784e78;
+    }
+
+    #demos-subtitle {
+      height: == &[intrinsic-height] !require;
+      left: == content-left !require;
+      right: == content-right !require;
+      font-size: == $subtitle-font-size;
+    }
+
+    article {
+      height: == &[intrinsic-height];
+
+      h2, p, .top-button {
+        width: == &[intrinsic-width] !require;
+        height: == &[intrinsic-height] !require;
+      }
+
+      p {
+        text-align: center;
+      }
+
+      .img-demo {
+        height: >= 200 !strong;
+        width: == 340;
+        center-x: == ^center-x;
+      }
+    }
+
+    #separator {
+      width: == 10;
+      height: == ^[height];
+      center-x: == ::window[center-x] !require;
+    }
+
+
+    demo-content-gap == $baseline / 2 !require;
+    @v |-(#title-demo1)-(#description-demo1)-(#img-demo1)-(#btn-view-demo1)-| in(#demo1) gap(demo-content-gap) !strong {
+      center-x: == ($ #demo1)[center-x];
+    }
+
+    @v |-(#title-demo2)-(#description-demo2)-(#img-demo2)-(#btn-view-demo2)-| in(#demo2) gap(demo-content-gap) !strong{
+      center-x: == ($ #demo2)[center-x];
+    }
+
+    #demos-title[bottom] <= #demos-subtitle[top];
+
+    @if ::window[width] >= $breakpoint1 {
+
+      @v |-(#demos-title)-10-(#demos-subtitle)-$baseline-(#demo1)-| in(&) outer-gap($v-outer-gap) !strong;
+
+      article[width] == ::window[width] / 3;
+
+      align-top == #demo1[top];
+      //@h |-(#demo1)-(#separator)-(#demo2)-| in(&) gap($baseline * 2) outer-gap(demo-outer-gap) {
+      //  top: == align-top;
+      //}
+
+      @h |-(#demo1)-| in(&) gap($baseline * 2) outer-gap(demo-outer-gap);
+    }
+    @else {
+      article {
+        width: == ::window[width] / 2;
+        center-x: == ::window[center-x];
+      }
+
+      //@v |-(#demos-title)-10-(#demos-subtitle)-(#demo1)-(#demo2)-| in(&) gap($baseline) outer-gap($v-outer-gap) !strong;
+      @v |-(#demos-title)-10-(#demos-subtitle)-(#demo1)-| in(&) gap($baseline) outer-gap($v-outer-gap) !strong;
+    }
+  }
+
+  </style>
+
+  <h1 id="demos-title">Demos</h1>
+  <h3 id="demos-subtitle" class="large-font">GSS in action</h3>
+
+  <article id="demo1">
+    <h2 id="title-demo1">Profile card demo</h2>
+    <p id="description-demo1">View conditionals and VFL cushions in action</p>
+    <div class="img-demo" id="img-demo1"></div>
+    <a href="/demos/profile-card/index.html" class="top-button button" id="btn-view-demo1" target="_blank">View demo</a>
+  </article>
+
+  <!--
+  <div id="separator">
+
+  <article id="demo2">
+    <h2 id="title-demo2">GSS Animation</h2>
+    <p id="description-demo2">Constraint width of element with animation</p>
+    <div class="img-demo" id="img-demo2"></div>
+    <a href="/demos/profile-card/index.html" class="top-button button" id="btn-view-demo2">View demo</a>
+  </article>
+  -->
+</section>

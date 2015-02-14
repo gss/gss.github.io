@@ -3,189 +3,12 @@ title: CSS polyfills from the future
 layout: default
 ---
 
+{% include home-intro.html %}
 
-
-
-
-<section id="top-home-section" class="top-section color-a">
-
-  <style type="text/gss">
-
-  .top-button {
-    height: == ::[intrinsic-height] !require;
-    width: == ::[intrinsic-width] !require;
-    bottom: == ::[$bottom];
-  }
-
-  @horizontal |-[#top-button1]-[#top-button2]-| in(::window) gap([baseline] / 2) outer-gap([btnOuterGap]) chain-top;
-
-  [top-image-gap] == [baseline];
-  [top-image-gap] >= 0 !require;
-
-  #top-home-image {
-    width: <= 656 !require;
-    height: == ::[width] * 754/656 !require;
-    height: >= 400 !require;
-    center-x: == ::parent[center-x] !require;
-    @horizontal |~-~[::]~-~| in(::parent) gap([other-top-image-gap]) !require;
-    @vertical   |-[::] in(::parent) gap([top-image-gap]) !strong;
-  }
-  .top-section {
-    height: >= 0;
-  }
-  #top-home-section {
-    height: >= 500 !require;
-    height: >= ::window[height] - [baseline] !strong;
-  }
-
-  @vertical [#top-home-image]-[#top-title] gap([top-image-gap]) !require;
-
-  @vertical [#top-title]-[#top-subtitle]-[#top-text]-[#top-button1] gap([baseline]) !require;
-
-
-  @vertical [#top-button1]-| in(#top-home-section) gap([bottom-margin]) !require;
-
-  #top-title {
-    height: == ::[intrinsic-height] !require;
-    @horizontal |-[::]-| in(::parent) gap([col-size]);
-    padding-bottom: == [baseline];
-    font-size: == [title-font-size] * 1.3;
-  }
-
-  #top-subtitle {
-    height: == ::[intrinsic-height] !require;
-    left: == [content-left] !require;
-    right: == [content-right] !require;
-    text-align: center;
-    font-style: italic;
-  }
-
-  #top-text {
-    padding-bottom: == [baseline];
-  }
-
-  /*
-  .top-section {
-    top: == ::window[top];
-  }
-  */
-
-  #top-text {
-    height: == ::[intrinsic-height] !require;
-    left: == [content-left] !require;
-    right: == [content-right] !require;
-    padding-top: == [baseline];
-    text-align: center;
-    font-style: italic;
-  }
-
-  </style>
-
-  <div id="top-home-image"></div>
-
-  <h1 id="top-title">Grid Style Sheets</h1>
-  <h3 id="top-subtitle" class="large-font">GSS reimagines CSS layout & replaces the browser’s layout engine with one that harnesses the
-    Cassowary Constraint Solver — the same algorithm Apple uses to compute native layout.</h3>
-
-  <h3 id="top-text" class="large-font">Version 2.0 is out!</h3>
-
-  <a href="/usage" class="top-button button" id="top-button1">Install</a>
-  <a href="/guides/ccss" class="top-button button" id="top-button2">Get started</a>
-
-</section>
-
-<section id="features-section" class="section color-b">
-
-  <style type="text/gss">
-
-    #img-kid {
-      width: <= 556 !require;
-      height: ==  ::[width] * 469/556 !require;
-      bottom: == ::parent[bottom];
-
-      @if [Wwin] >= [breakpoint1] {
-        center-x: == [content-right] + [baseline];
-        right: <= ::window[right] + 100;
-      }
-      @else {
-        center-x: == ::window[right];
-      }
-    }
-
-  </style>
-
-  <img id="img-kid" src="assets/images/purple-yellow/kid.jpg" width="556" height="469" alt="Kid">
-
-  <header>
-    <h1><a name="features">Features</a></h1>
-  </header>
-
-  <div class="content">
-
-    <ul class="large-list cols-2">
-      <li><a href="/guides/ccss">CCSS</a>: property constraints</li>
-      <li><a href="/guides/vfl">VFL</a>: 1-D element alignment</li>
-      <li><a href="/guides/ifelse">@if @else Blocks</a></li>
-      <li><a href="/guides/ifelse">Per-Element Responsiveness</a></li>
-      <li><a href="/guides/ccss">Custom Constraint Variables</a></li>
-      <li><a>Mixed GSS-CSS positioning</a></li>
-      <li><a href="/guides/ccss">New Pseudo Selectors</a></li>
-      <li><a href="/guides/ccss">Nested Rules</a></li>
-      <li><a>Respects Text Re-Flows</a></li>
-      <li><a href="/guides/ccss">Constraint Strengths</a></li>
-      <li><a>True Source Order Independence</a></li>
-      <li><a>Works with Normal CSS</a></li>
-    </ul>
-
-    <p style="text-align:center;"><span class="super">*</span> <small>Maintains compatibility with browsers that don't support this feature</small></p>
-  </div>
-</section>
-
-
-<section id="fluent-section" class="section color-a">
-
-  <style type="text/gss">
-
-  #fluent-section {
-    height: <= ::window[height] - [top-margin];
-    #fluent-img {
-      height: ==  ::[width] * 9 / 16 !require;
-    }
-    [top-margin] <= ::[h-gap] <= 2 * [top-margin] !strong;
-    [top-margin] * 1.5 <= ::[v-gap] <= 2 * [top-margin] !strong;
-    @h |-[#fluent-img(>= [max-p-width] !strong, >= 600 !require)]-| in(::) gap(::[h-gap]) !strong;
-    @v |-[#fluent-img]-| in(::) gap(::[v-gap]);
-
-    #fluent-play {
-      padding: 0 !important;
-      height: == 96;
-      width: == ::[height] * 1.6;
-      center-x: == #fluent-section[center-x];
-      center-y: == #fluent-section[center-y];
-    }
-
-    #fluent-play-tri {
-      width: == 51;
-      height: == 59;
-      center-x: == #fluent-section[center-x] + 5;
-      center-y: == #fluent-section[center-y] - 5;
-    }
-  }
-  </style>
-
-  <a href="http://vimeo.com/91393694" target="_blank">
-    <img id="fluent-img" src="assets/images/fluent-video-cover.jpg" alt="Kid">
-    <button id="fluent-play" class="button-play">
-      <svg class="icon" id="fluent-play-tri" width="51px" height="59px" version="1.1" xmlns="http://www.w3.org/2000/svg" baseProfile="full" >
-        <path d="M51,29.5L0,59V0L51,29.5z"/>
-      </svg>
-    </button>
-  </a>
-
-</section>
+{% include home-demos.html %}
 
 {% for post in site.categories.home %}
-  <section class="section color-{{post.color}}" id="{{ post.uid }}">
+  <section class="section top-section color-{{post.color}}" id="{{ post.uid }}" style="position: relative">
     {% if post.title %}
     <header>
       <h1><a name="{{ post.uid }}">{{ post.title }}</a></h1>
@@ -199,7 +22,12 @@ layout: default
       {% endif %}
     </div>
   </section>
+
+  {% if post.displayPromo %}
+    {% include grid-promo.html %}
+  {% endif %}
 {% endfor %}
 
+{% include home-video-gss.html %}
 
 {% include made-with-love.html %}

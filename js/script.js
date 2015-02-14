@@ -7,7 +7,7 @@
       console.time("display");
     }
   }
-  GSS.once("display", function() {
+  engine.once("solve", function() {
     if (typeof console !== "undefined" && console !== null) {
       if (typeof console.timeEnd === "function") {
         console.timeEnd("display");
@@ -74,7 +74,7 @@
       scrollDirection = "up";
     }
     /*
-    [windowW, windowH] = getWindowSize()    
+    [windowW, windowH] = getWindowSize()
     scrollBottom = scroll + windowH
     */
 

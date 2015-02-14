@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ page.title }} | {{ site.title }}</title>
-    <link rel="shortcut icon" href="/favicon.ico">    
-    
+    <link rel="shortcut icon" href="/favicon.ico">
+
     <link rel="stylesheet" href="/style/pygments.css" type="text/css" media="screen" title="no title" charset="utf-8">
-    <link rel="stylesheet" href="/style/styles.css" type="text/css" media="screen" title="no title" charset="utf-8">        
+    <link rel="stylesheet" href="/style/styles.css" type="text/css" media="screen" title="no title" charset="utf-8">
 
     <!-- The Grid promo -->
     <link rel="stylesheet" type="text/css" href="//s3-us-west-2.amazonaws.com/cdn.thegrid.io/fonts/National/National-Book.css">
@@ -15,298 +15,87 @@
 
     <script type="text/javascript" src="//use.typekit.net/les8uug.js"></script>
     <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
-    
+
     {% include analytics.html %}
-    
+
   </head>
   <body class="style-a">
-    
+
+    <script src="/bower_components/gss/dist/gss.js"></script>
     <script>
-    GSS_CONFIG = {
-      worker: "/bower_components/gss/dist/worker.js",
-      defaultStrength: "weak",
-      fractionalPixels: false
-    }
+
+      window.engine = new GSS(document)
+
+      var lastWidth = 0;
+      onResize = function() {
+          if (window.innerWidth > 900) {
+            engine.solve({
+              "baseline": 30,
+              "col-size": window.innerWidth / 12 <= 72 ? window.innerWidth / 12 : 72,
+              "top-margin": 120,
+              "title-font-size": 65,
+              "subtitle-font-size": 18,
+              "max-p-width": 720,
+              "content-font-size": 20,
+              "large-content-font-size": 24,
+              "large-content-line-height": 36,
+              "v-outer-gap": 90
+            });
+          } else {
+            engine.solve({
+              "baseline": 24,
+              "col-size": window.innerWidth / 6,
+              "top-margin": 90,
+              "title-font-size": 45,
+              "subtitle-font-size": 14,
+              "max-p-width": (window.innerWidth / 6) * 5,
+              "content-font-size": 16,
+              "large-content-font-size": 20,
+              "large-content-line-height": 30,
+              "v-outer-gap": 60
+            });
+          }
+
+      }
+      onResize();
+
+      window.engine.addEventListener('resize', onResize)
+
     </script>
-    <script src="/bower_components/gss/dist/gss.js"></script>        
+
+
     <script src="/js/script.js"></script>
     <script src="/js/vendor/classie.js"></script>
-    
+
     <style type="text/gss">
 
-    [Wwin] == ::window[width] == body[width] !require;
-    [Hwin] == ::window[height] == body[height] !require;
+      $breakpoint1 == 900 !require;
 
-    [breakpoint1] == 900 !require;
-    
-    [content-right] == ::window[center-x] + [max-p-width] / 2 !require;
-    [content-left] == ::window[center-x] - [max-p-width] / 2 !require;
-
-    @if [Wwin] >= [breakpoint1] {
-      [baseline] == 30 !require;
-      [top-margin] == [baseline] * 4 !require;
-      [bottom-margin] == [baseline] * 4 !require;
-      [col-size] == [Wwin] / 12 !strong;
-      [col-size] <= 72 !require;
-      [max-p-width] == 720 !require;      
-      [title-font-size] == 65 !require;
-      [subtitle-font-size] == 18 !require;
-      [content-font-size] == 20 !require;
-      [button-font-size] == 26 !require;
-      [large-content-font-size] == 24 !require;
-      [large-content-line-height] == 36 !require;
-      
-    } @else {
-      [baseline] == 24 !require;
-      [top-margin] == [baseline] * 3 !require;
-      [bottom-margin] == [baseline] * 2 !require;
-      [col-size] == [Wwin] / 6 !require;
-      [max-p-width] == [col-size] * 5 !require;
-      [title-font-size] == 35 !require;
-      [subtitle-font-size] == 14 !require;
-      [content-font-size] == 16 !require;
-      [button-font-size] == 20 !require;
-      [large-content-font-size] == 20 !require;
-      [large-content-line-height] == 30 !require;
-    }
-    
-    button, .button {
-      font-size: == [button-font-size];
-    }
-    
-    @vertical section;
-
-    section {
-      overflow: hidden;
-      top: >= ::window[top];
-  
-      /*height: >= 500;*/
-      @horizontal |[::]| in(::window) !require;    
-  
-  
-      header {
-        
-        height: == ::[intrinsic-height] !require;
-        top: == ::parent[top] + [top-margin] !strong;        
-        @horizontal |-[::]-| in(::parent) gap([col-size]);    
-    
-        /* bridge vars b/c no floats */
-        bottom: == ::parent[title-bottom];
-        /*bottom: <= ::parent[bottom] - [top-margin];*/
-    
-        h2 {
-          font-size: == [subtitle-font-size];          
-        }
-        h1 {
-          font-size: == [title-font-size];
-          margin-bottom: == [baseline] / 2;
-        }
-      }
-  
-      .content h2 {
-        font-size: == [subtitle-font-size] * 1.9;
-        padding: == [baseline];
-        margin-top: == [baseline] * 2;
-      }
-  
-      
-  
-      .content {
-        bottom: <= ::parent[bottom] - [bottom-margin] !medium;
-        
-        font-size: == [content-font-size];
-        line-height: == [baseline];
-        top: == ::parent[title-bottom] + [baseline];
-        height: == ::[intrinsic-height];
-        width: <= [max-p-width];
-        center-x: == ::parent[center-x] !medium;
-        x: == ::[content-left];
-      }
-  
-      p, blockquote, pre, h2, ul, ol {
-        margin-bottom: == [baseline];
-      }  
-  
-    }
-    
-    
-    .cols-2 {
-      -webkit-column-count: 2;
-         -moz-column-count: 2;
-              column-count: 2;
-      -webkit-column-gap: == [baseline];
-         -moz-column-gap: == [baseline];
-              column-gap: == [baseline];
-    }
-    
-    ul.large-list {                
-      li {        
-        margin-bottom: == [large-content-font-size];
-        text-align: left;                      
-      }
-    }
-    
-    .large-font, .large-list li {
-      font-family: "adelle", georgia, serif;
-      font-size: == [large-content-font-size];
-      line-height: == [large-content-line-height];
-    }
-      
-
-    /* */
-    </style>
-
-    <style type="text/css">
-      #the-grid-promo {
-        background-image: url('//s3-us-west-2.amazonaws.com/cdn.thegrid.io/assets/images/responsive.jpg');
-        background-position: center;
-        background-size: cover;
-        position: relative;
+      p {
+        font-size: == $content-font-size;
+        line-height: == 30;
       }
 
-      #the-grid-promo:before {
-        background-color: hsla(0, 0%, 0%, .6);
-        content: "";
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
+      section.top-section {
+        //v2.0 has a problem with intrinsic-top & left. Should be able to only use intrinsic-top, left with v2.1
+        top: == ::window[top] !strong;
+        left: == ::window[left] !strong;
+        x: == &[intrinsic-x];
+        y: == &[intrinsic-y];
+        width: == &[intrinsic-width];
       }
 
-      #the-grid-promo-title,
-      #the-grid-promo-subtitle {
-        color: hsl(0, 0%, 100%);
-        letter-spacing: .28em;
-        position: relative;
-        text-transform: uppercase;
-      }
-
-      #the-grid-promo-title {
-        color: hsl(270, 33%, 99%);
-        font-family: 'National Thin', sans-serif;
-      }
-
-      #the-grid-promo-subtitle {
-        color: hsl(46, 23%, 56%);
-        font-family: 'National Book', sans-serif;
-      }
-
-      #the-grid-promo-button {
-        background-color: transparent;
-        border: 2px solid hsl(43, 82%, 69%);
-        color: hsl(43, 82%, 69%);
-        cursor: pointer;
-        font-family: 'National Book', sans-serif;
-        letter-spacing: .1em;
-        padding: 16px 24px;
-        position: relative;
-        text-transform: uppercase;
-      }
-
-      #the-grid-promo-button:hover {
-        background-color: hsl(43, 82%, 69%) !important;
-        color: hsl(42, 84%, 8%);
-      }
-
-      @media (max-width: 1079px) {
-        #the-grid-promo-title,
-        #the-grid-promo-subtitle {
-          text-align: center;
-        }
-      }
-
-      @media (min-width: 1080px) {
-        #the-grid-promo-title,
-        #the-grid-promo-subtitle {
+      ul.large-list {
+        li {
+          margin-bottom: == $large-content-font-size;
           text-align: left;
         }
       }
+
+      .large-font, .large-list li {
+        font-family: "adelle", georgia, serif;
+        font-size: == $large-content-font-size;
+        line-height: == $large-content-line-height;
+      }
+
     </style>
-
-    <style type="text/gss">
-      #the-grid-promo {
-        top: == 0 !require;
-        width: == ::window[width] !strong;
-
-        @virtual "area";
-        @h |-["area"]-| in(::) gap(::[$area-h-gap]);
-        @v |-["area"]-| in(::) gap(48);
-        "area"[center-x] == ::[center-x];
-        "area"[width] <= 1080 !strong;
-
-        @virtual "text";
-
-        @h |[#the-grid-promo-title]| in("text");
-        @h |[#the-grid-promo-subtitle]| in("text");
-        @v |[#the-grid-promo-subtitle]-[#the-grid-promo-title]| in("text") gap(::[$text-v-gap]);
-
-
-        @if ::window[width] < 1080 {
-          $area-h-gap: == 32 !require;
-          $text-v-gap: == 8 !require;
-
-          @h |["text"]| in("area");
-          @h |~-~[#the-grid-promo-button]~-~| in("area") gap(0);
-          @v |["text"]-[#the-grid-promo-button]| in("area") gap(32);
-
-          #the-grid-promo-button[center-x] == "area"[center-x];
-
-
-          #the-grid-promo-title {
-            font-size: == 32 !require;
-          }
-
-          #the-grid-promo-subtitle {
-            font-size: == 16 !require;
-          }
-
-          #the-grid-promo-button {
-            font-size: == 16 !require;
-          }
-        }
-        @else {
-          $area-h-gap: == 64 !require;
-          $text-v-gap: == 0 !require;
-
-          @h |["text"]~-~[#the-grid-promo-button]| in("area") gap(64);
-          @v |~-~["text"]~-~| in("area") gap(0);
-
-          @v |~-~[#the-grid-promo-button]~-~| in("area") gap(0);
-          #the-grid-promo-button[center-y] == "text"[center-y] == "area"[center-y];
-
-
-          #the-grid-promo-title {
-            font-size: == 40 !require;
-          }
-
-          #the-grid-promo-subtitle {
-            font-size: == 16 !require;
-          }
-
-          #the-grid-promo-button {
-            font-size: == 18 !require;
-          }
-        }
-      }
-
-      #the-grid-promo-title {
-        height: == ::[intrinsic-height];
-        margin: == 0 !require;
-      }
-
-      #the-grid-promo-subtitle {
-        height: == ::[intrinsic-height];
-        margin: == 0 !require;
-      }
-
-      #the-grid-promo-button {
-        size: == ::[intrinsic-size];
-      }
-    </style>
-
-    <section id="the-grid-promo">
-      <h2 id="the-grid-promo-subtitle">AI websites that design themselves</h2>
-      <h1 id="the-grid-promo-title">Join the evolution</h1>
-      <a id="the-grid-promo-button" href="https://thegrid.io" target="_blank">Become a founding member</a>
-    </section>

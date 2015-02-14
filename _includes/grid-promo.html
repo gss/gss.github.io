@@ -1,0 +1,119 @@
+
+<section class="top-section" id="the-grid-promo" style="position: relative">
+  <style type="text/gss">
+    #the-grid-promo {
+
+      h1, h2, a {
+        center-x: == ^center-x;
+      }
+
+      v-text-gap: == 8 !require;
+      @v |-(#the-grid-promo-subtitle)-(#the-grid-promo-title)-(#the-grid-promo-button)-|
+        gap(v-text-gap)
+        outer-gap($v-outer-gap / 2) !strong;
+
+
+      #the-grid-promo-title {
+        width: == &[intrinsic-width];
+        font-size: == 32 !require;
+      }
+
+      #the-grid-promo-subtitle {
+        width: == &[intrinsic-width];
+        font-size: == 16 !require;
+      }
+
+      #the-grid-promo-button {
+        font-size: == 16 !require;
+      }
+
+    }
+
+    #the-grid-promo-title {
+      height: == &[intrinsic-height];
+      margin: == 0 !require;
+    }
+
+    #the-grid-promo-subtitle {
+      height: == &[intrinsic-height];
+      margin: == 0 !require;
+    }
+
+    #the-grid-promo-button {
+      size: == &[intrinsic-size];
+    }
+  </style>
+
+
+  <style type="text/css">
+    #the-grid-promo {
+      background-image: url('//s3-us-west-2.amazonaws.com/cdn.thegrid.io/assets/images/responsive.jpg');
+      background-position: center;
+      background-size: cover;
+      position: relative;
+    }
+
+    #the-grid-promo:before {
+      background-color: hsla(0, 0%, 0%, .6);
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+    }
+
+    #the-grid-promo-title,
+    #the-grid-promo-subtitle {
+      color: hsl(0, 0%, 100%);
+      letter-spacing: .28em;
+      position: relative;
+      text-transform: uppercase;
+    }
+
+    #the-grid-promo-title {
+      color: hsl(270, 33%, 99%);
+      font-family: 'National Thin', sans-serif;
+    }
+
+    #the-grid-promo-subtitle {
+      color: hsl(46, 23%, 56%);
+      font-family: 'National Book', sans-serif;
+    }
+
+    #the-grid-promo-button {
+      background-color: transparent;
+      border: 2px solid hsl(43, 82%, 69%);
+      color: hsl(43, 82%, 69%);
+      cursor: pointer;
+      font-family: 'National Book', sans-serif;
+      letter-spacing: .1em;
+      padding: 16px 24px;
+      position: relative;
+      text-transform: uppercase;
+    }
+
+    #the-grid-promo-button:hover {
+      background-color: hsl(43, 82%, 69%) !important;
+      color: hsl(42, 84%, 8%);
+    }
+
+    @media (max-width: 1079px) {
+      #the-grid-promo-title,
+      #the-grid-promo-subtitle {
+        text-align: center;
+      }
+    }
+
+    @media (min-width: 1080px) {
+      #the-grid-promo-title,
+      #the-grid-promo-subtitle {
+        text-align: left;
+      }
+    }
+  </style>
+
+  <h2 id="the-grid-promo-subtitle">AI websites that design themselves</h2>
+  <h1 id="the-grid-promo-title">Join the evolution</h1>
+  <a id="the-grid-promo-button" href="https://thegrid.io" target="_blank">Become a founding member</a>
+</section>
