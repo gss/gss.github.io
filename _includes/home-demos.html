@@ -66,9 +66,11 @@
       article[width] == ::window[width] / 3;
 
       align-top == #demo1[top];
-      @h |-(#demo1)-(#separator)-(#demo2)-| in(&) gap($baseline * 2) outer-gap(demo-outer-gap) {
-        top: == align-top;
-      }
+      //@h |-(#demo1)-(#separator)-(#demo2)-| in(&) gap($baseline * 2) outer-gap(demo-outer-gap) {
+      //  top: == align-top;
+      //}
+
+      @h |-(#demo1)-| in(&) gap($baseline * 2) outer-gap(demo-outer-gap);
     }
     @else {
       article {
@@ -76,7 +78,8 @@
         center-x: == ::window[center-x];
       }
 
-      @v |-(#demos-title)-10-(#demos-subtitle)-(#demo1)-(#demo2)-| in(&) gap($baseline) outer-gap($v-outer-gap) !strong;
+      //@v |-(#demos-title)-10-(#demos-subtitle)-(#demo1)-(#demo2)-| in(&) gap($baseline) outer-gap($v-outer-gap) !strong;
+      @v |-(#demos-title)-10-(#demos-subtitle)-(#demo1)-| in(&) gap($baseline) outer-gap($v-outer-gap) !strong;
     }
   }
 
@@ -86,12 +89,13 @@
   <h3 id="demos-subtitle" class="large-font">GSS in action</h3>
 
   <article id="demo1">
-    <h2 id="title-demo1">GSS Scrolling</h2>
-    <p id="description-demo1">Constraint width of element with scrolling position</p>
+    <h2 id="title-demo1">Profile card demo</h2>
+    <p id="description-demo1">View conditionals and VFL cushions in action</p>
     <div class="img-demo" id="img-demo1"></div>
     <a href="/demos/profile-card/index.html" class="top-button button" id="btn-view-demo1">View demo</a>
   </article>
 
+  <!--
   <div id="separator">
 
   <article id="demo2">
@@ -100,4 +104,5 @@
     <div class="img-demo" id="img-demo2"></div>
     <a href="/demos/profile-card/index.html" class="top-button button" id="btn-view-demo2">View demo</a>
   </article>
+  -->
 </section>

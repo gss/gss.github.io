@@ -4,7 +4,7 @@ radius == 10 !require;
 
 /* elements */
 #profile-card {
-  width: == ::window[width] - 480;
+  width: == ::window[width] - 120;
   height: == ::window[height] - 350;
   center-x: == ::window[center-x];
   center-y: == ::window[center-y];
@@ -67,6 +67,6 @@ button {
         center-x: == ($ #profile-card)[center-x];
     }
 
-    @h |-10-(#cover)-10-| in(#profile-card);
+    @h |-10-(#cover)-10-| in(#profile-card) !strong;
     @v |-10-(#cover)-10-| in(#profile-card);
   }
