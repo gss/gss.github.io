@@ -12,17 +12,7 @@
     <link rel="stylesheet" type="text/css" href="texture.css">
     <link rel="stylesheet" type="text/gss" href="structure.gss">
     <!-- GSS -->
-    <script>
-      GSS_CONFIG = {
-        useWorker: true,
-        worker: "bower_components/gss/dist/worker.js",
-        fractionalPixels: false,
-        resizeDebounce: 16, 
-        debug: false,
-        verticalScroll: false
-      }
-    </script>
-    <script src="bower_components/gss/dist/gss.js" type="text/javascript"></script>    
+
   </head>
   <body>
     <script>
@@ -33,6 +23,16 @@
       ga('create', 'UA-47811332-1', 'gridstylesheets.org');
       ga('send', 'pageview');
     </script>
+
+    <script src="bower_components/gss/dist/gss.js" type="text/javascript"></script>
+    <script>
+      window.engine = new GSS(document, {
+        "sgap": 20,
+        "outer-radius": 20
+      });
+    </script>
+
+
     <div id="background"></div>
     <div id="profile-card"></div>
     <div id="cover"></div>
