@@ -57,18 +57,12 @@
     p[center-x] == #fluent-img[center-x];
 
     #fluent-play {
-      padding: 0 !important;
-      height: == 96;
-      width: == &[height] * 1.6;
+      padding: 10px !important;
+      height: == &intrinsic-height;
+      width: == &intrinsic-width;
       center-x: == ^[center-x];
       center-y: == ^[center-y];
-    }
-
-    #fluent-play-tri {
-      width: == 51;
-      height: == 59;
-      center-x: == ^[center-x] + 5;
-      center-y: == ^[center-y] - 5;
+      font-size: == $subtitle-font-size * 0.8;
     }
   }
   </style>
@@ -80,10 +74,8 @@
 
   <a href="http://vimeo.com/91393694" target="_blank">
     <img id="fluent-img" src="assets/images/oreilly-fluent-cover-purple.jpg" alt="Kid">
-    <button id="fluent-play" class="button-play">
-      <svg class="icon" id="fluent-play-tri" width="51px" height="59px" version="1.1" xmlns="http://www.w3.org/2000/svg" baseProfile="full" >
-        <path d="M51,29.5L0,59V0L51,29.5z"/>
-      </svg>
+    <button id="fluent-play" class="button">
+      Play video
     </button>
   </a>
 

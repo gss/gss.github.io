@@ -176,9 +176,7 @@ ul.large-list a {
   color: hsl(58, 100%, 84%);
 }
 
-button {
-  /*color: hsl(282, 99%, 31%);*/
-  /*background-color: hsl(58, 100%, 84%);*/
+/*button {
   color: #fdf9ad;
   border-color: #784e78;
   background-color: #2c182f;
@@ -190,13 +188,10 @@ button:hover, a:hover button,
 .button:hover, a:hover .button,
 button.transparent:hover
  {
-  /*border-color: hsl(282, 99%, 31%);
-  background-color: hsl(282, 99%, 31%);
-  color: hsl(58, 100%, 84%);*/
   color: #2c182f;
   border-color: #784e78;
   background-color: #fdf9ad;
-}
+}*/
 
 button.inverse {
   border-color: hsl(282, 99%, 31%);
@@ -291,12 +286,13 @@ hr {
     cover;
 }
 
-#top-home-section .button {
+button, .button {
+  background-color: #231028;
   color: #fdf9ad;
   border-color: #784e78;
 }
 
-#top-home-section .button:hover {
+button:hover, .button:hover {
    background: #784e78 !important;
 }
 
@@ -319,7 +315,7 @@ hr {
 }
 
 
-#home-demos .button {
+/*#home-demos .button {
   color: hsl(282, 99%, 31%);
 }
 
@@ -328,7 +324,7 @@ hr {
   border-color: hsl(282, 99%, 31%);
   background-color: hsl(282, 99%, 31%);
   color: hsl(58, 100%, 84%);
-}
+}*/
 
 #home-demos #demos-subtitle {
   text-align: center;
