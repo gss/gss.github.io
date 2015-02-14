@@ -20,7 +20,8 @@
     height: <= ::window[height] - $top-margin;
 
     #fluent-img {
-      width: <= ::window[width];
+      width: == ::window[width] - $top-margin;
+      width: <= $max-p-width;
       height: ==  &[width] * 9 / 16 !require;
     }
 
