@@ -1,0 +1,50 @@
+---
+uid: hello-world-tutorial
+title: Hello World tutorial
+subtitle: Get started with GSS
+color: b
+layout: post
+---
+
+This tutorial will guide you through your first GSS layout design. CodePen are provided for each step so
+you can see GSS in action and experiment with it.
+
+## Create your project
+
+CodePen will be use in this tutorial to create your first GSS layout:
+
+1 - Create a new <a href="http://codepen.io/hello/" target="_blank">CodePen</a> or create a simple HTML page that you
+can run locally if you prefer.
+
+## Wake up the beast
+
+1 - Add the GSS engine script in the HTML section of your CodePen:
+
+{% highlight html %}
+
+<!-- for minified GSS file use: gss.min.js -->
+<script src="https://s3-us-west-2.amazonaws.com/cdn.thegrid.io/gss/v2.0.0/v2.0.0/gss.js"></script>
+
+{% endhighlight %}
+
+2 - Under the GSS reference script, give GSS the <a href="https://developer.mozilla.org/en/docs/Web/API/Document" target="_blank">document object</a>
+on which it will work:
+
+{% highlight html %}
+
+<script type="text/javascript">
+  /* you can see what is going on in the engine with console.log(window.engine) */
+  window.engine = new GSS(document);
+</script>
+
+{% endhighlight %}
+
+3 - Add in the `JS` section in CodePen the following script:
+
+{% highlight javascript %}
+
+  console.log(window.engine);
+
+{% endhighlight %}
+
+Check our <a href="http://codepen.io/thegridgssdocs/pen/MYQRzV" target="_blank">live demo</a>
