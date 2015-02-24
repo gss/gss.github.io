@@ -49,11 +49,11 @@
 
 
     demo-content-gap == $baseline / 2 !require;
-    @v |-(#title-demo1)-(#description-demo1)-(#img-demo1)-(#btn-view-demo1)-| in(#demo1) gap(demo-content-gap) !strong {
+    @v |-(#title-demo1)-(#description-demo1)~-~(#img-demo1)-(#btn-view-demo1)-| in(#demo1) gap(demo-content-gap) !strong {
       center-x: == ($ #demo1)[center-x];
     }
 
-    @v |-(#title-demo2)-(#description-demo2)-(#img-demo2)-(#btn-view-demo2)-| in(#demo2) gap(demo-content-gap) !strong{
+    @v |-(#title-demo2)-(#description-demo2)~-~(#img-demo2)-(#btn-view-demo2)-| in(#demo2) gap(demo-content-gap) !strong{
       center-x: == ($ #demo2)[center-x];
     }
 
@@ -66,11 +66,13 @@
       article[width] == ::window[width] / 3;
 
       align-top == #demo1[top];
-      //@h |-(#demo1)-(#separator)-(#demo2)-| in(&) gap($baseline * 2) outer-gap(demo-outer-gap) {
-      //  top: == align-top;
-      //}
+      @h |-(#demo1)-(#separator)-(#demo2)-| in(&) gap($baseline * 2) outer-gap(demo-outer-gap) {
+        top: == align-top;
+      }
 
-      @h |-(#demo1)-| in(&) gap($baseline * 2) outer-gap(demo-outer-gap);
+      #title-demo1[center-y] == #title-demo2[center-y] !strong;
+      #img-demo1[center-y] == #img-demo2[center-y] !strong;
+      #img-demo1[size] == #img-demo2[size] !strong;
     }
     @else {
       article {
@@ -78,8 +80,7 @@
         center-x: == ::window[center-x];
       }
 
-      //@v |-(#demos-title)-10-(#demos-subtitle)-(#demo1)-(#demo2)-| in(&) gap($baseline) outer-gap($v-outer-gap) !strong;
-      @v |-(#demos-title)-10-(#demos-subtitle)-(#demo1)-| in(&) gap($baseline) outer-gap($v-outer-gap) !strong;
+      @v |-(#demos-title)-10-(#demos-subtitle)-(#demo1)-(#demo2)-| in(&) gap($baseline) outer-gap($v-outer-gap) !strong;
     }
   }
 
@@ -95,14 +96,13 @@
     <a href="/demos/profile-card/index.html" class="top-button button" id="btn-view-demo1" target="_blank">View demo</a>
   </article>
 
-  <!--
   <div id="separator">
 
   <article id="demo2">
-    <h2 id="title-demo2">GSS Animation</h2>
-    <p id="description-demo2">Constraint width of element with animation</p>
+    <h2 id="title-demo2">GSS Hello World</h2>
+    <p id="description-demo2">Create your first layout using GSS</p>
     <div class="img-demo" id="img-demo2"></div>
-    <a href="/demos/profile-card/index.html" class="top-button button" id="btn-view-demo2">View demo</a>
+    <a href="/demos/hello-world" class="top-button button" id="btn-view-demo2">Tutorial</a>
   </article>
-  -->
+
 </section>
