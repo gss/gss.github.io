@@ -1,20 +1,20 @@
 ---
 uid: hello-world-tutorial
 title: Hello World tutorial
-subtitle: Get started with GSS
+subtitle: Create your first GSS layout in 10 minutes
 color: b
 layout: post
 ---
 
-This tutorial will guide you through your first GSS layout design. CodePen are provided for each step so
+This tutorial will guide you through your first GSS layout design using CodePen. Some CodePen are provided for each step so
 you can see GSS in action and experiment with it.
 
 ## Create your project
 
 CodePen will be use in this tutorial to create your first GSS layout:
 
-1 - Create a new <a href="http://codepen.io/hello/" target="_blank">CodePen</a> or create a simple HTML page that you
-can run locally if you prefer.
+1 - Create a new <a href="http://codepen.io/hello/" target="_blank">CodePen</a>. You can very easily follow the steps using another
+tool or a simple web page hosted locally.
 
 ## Wake up the beast
 
@@ -47,6 +47,130 @@ on which it will work:
 
 {% endhighlight %}
 
-Check our <a href="http://codepen.io/thegridgssdocs/pen/MYQRzV" target="_blank">live demo</a>
+Check our <a href="http://codepen.io/thegridgssdocs/pen/MYQRzV" target="_blank">live demo</a>.
 
-For more information on adding GSS to your document see our <a href="/usage/client-side" target="_blank">Install Guide<a/>
+For more information on adding GSS to your document see our <a href="/usage/client-side" target="_blank">Install Guide</a>
+
+## Add some content
+
+Let's now add some content. We will add an `img` tag, a `h1` tag and a `p` tag.
+
+1 - Add the following elements in the HTML section of your CodePen:
+
+{% highlight html %}
+
+<img id="cassowaryImg" src="http://gridstylesheets.org/assets/images/Intro/CassowaryBird.png" />
+<h1>Hello!</h1>
+<p>Could you help me enter my beak in my helmet please?</p>
+
+{% endhighlight %}
+
+2 - Add some CSS in the CSS section of your CodePen so the rest of this tutorial feels better.
+
+{% highlight css %}
+
+body {
+  background-color: #231028;
+  color: #fdf9ad;
+  font-family: "museo-sans",sans-serif;
+  font-style: normal;
+  font-weight: 300;
+}
+
+h1 {
+  font-family: "adelle", georgia,serif;
+  font-style: normal;
+  font-weight: 400;
+}
+
+{% endhighlight %}
+
+You should now have something that looks like this : <a href="http://codepen.io/thegridgssdocs/pen/jExKbm" target="_blank">live demo</a>
+
+## Lay it out
+Let's now create the layout using GSS. We want to center the image in the screen. We will position the `h1` tag to appear
+on top of the image with a gap of 30 pixels. We will then position the `p` tags to be under the image with a gap of 20 pixels.
+
+The horizontal center of the `h1` and `p` tags should be horizontally aligned with the center of the image.
+
+1 - We first need a style block to define our GSS. Add a `style` tag in the HTML section of your CodePen with the type text/**gss**:
+
+{% highlight html %}
+
+<style type="text/gss">
+</style>
+
+{% endhighlight %}
+
+2 - Now let's center the image in the screen.
+
+{% highlight css %}
+
+<style type="text/gss">
+  /* GSS needs the dimension of the image to calculate its position. */
+  #cassowaryImg[height] == 250;
+  /* The width == the height multiply by the width/height ratio */
+  #cassowaryImg[width] == #cassowaryImg[height] * 409/450;
+  /* This will position the image to be in the center of the window! That's easy! */
+  #cassowaryImg[center] == ::window[center];
+</style>
+
+{% endhighlight %}
+
+`#cassowaryImg[size]` will set the `width` and `height` of the image. The ID selector `#cassowaryImg` is used to select the good
+image element in the page. For more information on selectors see our <a href="/guides/selectors">guide</a>. `::window` is one of
+GSS special pseudo-selectors that represent the visible portion of the page on screen.
+
+3 - We will now align the `h1` and `p` tags using VFL. First we need to inform GSS of the size of the `h1` and `p` tags.
+
+{% highlight css %}
+
+<style type="text/gss">
+  #cassowaryImg[height] == 250;
+  #cassowaryImg[width] == #cassowaryImg[height] * 409/450;
+  #cassowaryImg[center] == ::window[center];
+
+  /* Get the size of the h1 and p tags using their intrinsic size */
+  h1[size] == h1[intrinsic-size];
+  p[size] == p[intrinsic-size];
+
+  /* VFL to vertically align the elements */
+  @v (h1)-30-(#cassowaryImg)-20-(p);
+</style>
+
+{% endhighlight %}
+
+Intrinsic values allow GSS to know the dimension of an element using the place it occupies in the DOM or the dimension set in CSS.
+For more information on dimension see our layout <a href="/guide/layout">guide</a>.
+
+Now `@v` is a VFL statement. Here we are asking GSS to vertically align the `h1`, `img` and `p` tag placing a gap of 30 pixels
+between the `h1` and the `img` tags and a gap of 20 pixels between the `img` and the `p` tags. Learn more about VFL in
+our  <a href="/guides/vfl">guide</a>.
+
+We are almost done.
+
+4 - Now let's horizontally align the `h1` and `p` tags with the image.
+
+{% highlight css %}
+
+<style type="text/gss">
+  #cassowaryImg[height] == 250;
+  #cassowaryImg[width] == #cassowaryImg[height] * 409/450;
+  #cassowaryImg[center] == ::window[center];
+  h1[size] == h1[intrinsic-size];
+  p[size] == p[intrinsic-size];
+  @v (#cassowaryImg)-30-(h1)-20-(p);
+
+  /* Horizontally align the h1 and p with the image */
+  h1[center-x] == p[center-x] == #cassowaryImg[center-x];
+</style>
+
+{% endhighlight %}
+
+## Bravo!
+You just created your first layout using GSS. While this is a very simple layout we hope it gives you
+a sense of how easy and powerful it is to work with GSS.
+
+Your final result should look like: <a href="http://codepen.io/thegridgssdocs/pen/PweaGN" target="_blank">live demo</a>
+
+We invite you to learn more by reading our <a href="/guides/ccss/">documentation</a>.
