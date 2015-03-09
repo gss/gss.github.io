@@ -14,7 +14,7 @@ radius == 10 !require;
 #avatar {
   height: == 160 !require;
   width: == &[height];
-  border-radius: == &[height] / 2;
+  border-radius: 50%;
 }
 
 #name {
@@ -48,7 +48,7 @@ button {
 
   @v |-(#cover)-(#follow)-| in(#profile-card) gap($sgap) !require;
 
-  //#follow[center-x] == #profile-card[center-x];
+  #follow[center-x] == #profile-card[center-x];
 
   @h |-(#message)~-~(#follow)~-~(#following)-(#followers)-|
     in(#profile-card)
