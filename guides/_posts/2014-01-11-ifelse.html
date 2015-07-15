@@ -75,7 +75,7 @@ constrained by the @if block, otherwise by the @else block.
 In order to determine if a conditional holds, GSS needs to evaluate every constraints outside of the conditional before evaluating if it is met.
 This includes constraints appearing after the conditional's declaration.
 
-As explained in the [GSS constraints guide](/guide/constraints), the constraint declaration order can affect the
+As explained in the [CCSS guide](/guides/ccss), the constraint declaration order can affect the
 resulting solution.
 
 In the following example, if the conditional is true, the constraint within it will be added to the solver after the outer constraints.
@@ -97,7 +97,7 @@ In this example, if the `width` of the screen is smaller than 400px, the `height
 though there's a `height` constraint defined after the condition.
 
 ### Condition looping
-As described in the [GSS constraints guide](/guide/constraints), constraints are two-way. This should be carefully considered when using
+As described in the [CCSS guide](/guides/ccss), constraints are two-way. This should be carefully considered when using
 conditionals. Although GSS has been designed to detect and prevent cases when looping could occur, complex nesting of conditionals can
 still cause infinite loops.
 
