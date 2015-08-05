@@ -11,12 +11,12 @@ Solver & [recently retired Facebook VP](http://allthingsd.com/20130920/facebook-
 proposed [Constraint CSS (CCSS)](http://www.cs.washington.edu/research/constraints/web/ccss-uwtr.pdf) as a general solution for CSS layout.
 Back in '99 Badros demonstrated *responsive* layouts with CCSS that today's designers still can't reproduce without grinding out piles of JavaScript.
 For more than a decade, no one seemed to take notice outside of academia until Apple implemented Cassowary & Greg's pioneering concepts in its new
-AutoLayout engine with the launch of OS X Lion. Despite the evolutionary leap for app developers, web designer's have had to settle
+AutoLayout engine with the launch of OS X Lion. Despite the evolutionary leap for app developers, web designers have had to settle
 with [float-based](http://www.sitepoint.com/give-floats-the-flick-in-css-layouts/) & table-based layouts that have remained unimproved to this day.
 
 > "We should contemplate how very, very far behind the web platform is in making it delightful to build the sorts of things that are work-a-day in native environments." <a href="http://infrequently.org/2012/02/misdirection/">Alex Russell</a>
 
-The foundation of GSS is a modernized implementation of CCSS on which we build more exotic layout API's can and are accomplished.
+The foundation of GSS is a modernized implementation of CCSS on which we build more exotic layout APIs can and are accomplished.
 
 
 <a name="basicconstraint"></a>
@@ -152,7 +152,7 @@ For example, the following GSS constraints will be unsolvable and thus throw an 
 {% endhighlight %}
 
 We're asking GSS to find a solution where the widths of the #gss and #cassowary element must be 200px
-and their sum must be 350px which is impossible.
+and their sum must be 350px, which is impossible.
 
 ### Constraints order
 Generally speaking, later constraint declarations of the same strength are more powerful than earlier ones. There are exceptions to this behavior,
@@ -266,7 +266,7 @@ It is possible to constrain custom properties, that are not recognized by CSS, t
 {% endhighlight %}
 
 This will automatically create a `custom-property` for each element having a `.post` class. The element's `custom-property`
-will be constrained to be tree time its own `line-height`.
+will be constrained to be three times its own `line-height`.
 
 Because of the 2-way binding, changing either `custom-property` or `line-height` will affect the other property of the element.
 
@@ -289,8 +289,8 @@ body {
 
 Properties are attached to a specific element:
 
-- In rulesets, it's an element that matches the selector
-- In topmost level of a stylesheet, it's a `<link>` or `<style>` that defines the stylesheet.
+- In rulesets, it's an element that matches the selector.
+- In the topmost level of a stylesheet, it's a `<link>` or `<style>` that defines the stylesheet.
 - In a stylesheet element with the `scoped` attribute, topmost properties are attached to the parent element of a stylesheet.
 
 Variables prefixed with `$` combinator are considered global, and can be shared accross different stylesheets.
@@ -313,7 +313,7 @@ provides its own scope. Top level properties are not directly accessible from ot
 {% endhighlight %}
 
 In this example, `#elm1` will have a width of 100px and `#elm2` will have a width of 200px.
-The two `varX` are in different scopes and are therefore indenpendent from each other.
+The two `varX` are in different scopes and are therefore independent from each other.
 <a href="http://codepen.io/thegridgssdocs/pen/EaXmRp" target="_blank">Live example.</a>
 
 Global variables prefixed with `$`, are accessible accross stylesheets. In the previous example, using `$varX`
@@ -353,7 +353,7 @@ of changes. <a href="http://codepen.io/thegridgssdocs/pen/XJgRPq" target="_blank
 <a name="variables"></a>
 ## Variables
 Variables are properties that dont have explicit scope and can be accessed from inner scopes.  This concept is known as lexical
-scoping. The scoping is determined by the source code, so it's *static* and does not change in runtime.
+scoping. The scoping is determined by the source code, so it's *static* and does not change during runtime.
 
 We say that topmost scope that defines variable *captures* the variable, making variables in the inner scopes *hoisted*.
 
