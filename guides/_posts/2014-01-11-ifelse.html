@@ -6,11 +6,11 @@ color: b
 layout: post
 ---
 
-The age of "Responsive Web Design" is upon us and it's mandate for designs that elegantly adapt to the user's viewing context has made
+The age of "Responsive Web Design" is upon us and its mandate for designs that elegantly adapt to the user's viewing context has made
 web dev "hard, really hard, actually" as Mr Jeff Croft [lamented](http://jeffcroft.com/blog/2012/mar/02/implementing-responsive-design/).
 Conceptualizing Responsive layouts is difficult enough, but implementing such layouts with
 [CSS Media Queries](https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Media_queries) is an awkward affair
-because as Ian Taylor [illuminated](http://ianstormtaylor.com/media-queries-are-a-hack/), Media Queries are a hack.
+because, as Ian Taylor [illuminated](http://ianstormtaylor.com/media-queries-are-a-hack/), Media Queries are a hack.
 
 ## Element Queries
 
@@ -18,8 +18,7 @@ Media Queries allow layouts to adapt to the size of the viewport, but if you wan
 W3C members have received an [onslaught](http://www.xanthir.com/b4PR0) of requests for "Element Queries" - because web designers
 are desperate to achieve higher levels of adaptiveness with their layouts.  The idea with Element Queries is simple - individual elements
 can be responsive to their own size, which would allow for richer designs & more modular Style Sheets. W3C have
-[start discussion](http://responsiveimagescg.github.io/eq-usecases/) about element queries but as this point they still don't have official
-endorsement of element queries.
+[started a discussion](http://responsiveimagescg.github.io/eq-usecases/) about element queries but as this point they still don't have official endorsement of element queries.
 
 Yet, even with the hypothetical Element Query, elements could only be adaptive to their size.  Why not allow elements to be adaptive to any property
 like `col-count` or even to a custom variable?
@@ -30,10 +29,10 @@ Which brings us to `@if` and `@else` directives.  Think of them as a more expres
 much desired Element Query, that allow CSS rules to be adaptive to any arbitrary property or custom constraint variable.
 <a href="http://codepen.io/thegridgssdocs/pen/emEaQR" target="_blank">Live example.</a>
 
-Instead of continuing the tradition of the Query types; `min-width`, `max-width`, `min-height` & `max-height`; for every
+Instead of continuing the tradition of the Query types (`min-width`, `max-width`, `min-height` & `max-height`) for every
 available CSS property, `@if` `@else` directives use the conditional operators: `<`, `<=`, `>`, `>=`, `!=`, `==`, `or`, and `and`.
 
-As an example, if we wanted a set of CSS rules to kick when the screen is less than 960px:
+For example, if we want a set of CSS rules to kick-in when the viewport is narrower than 960px:
 
 {% highlight css %}
 
@@ -72,7 +71,7 @@ When the width of the section element goes below 400px, the article elements wil
 constrained by the @if block, otherwise by the @else block.
 
 ### Constraint evaluation within conditionals
-In order to determine if a conditional holds, GSS needs to evaluate every constraints outside of the conditional before evaluating if it is met.
+In order to determine if a conditional holds, GSS needs to evaluate every constraint outside of the conditional before evaluating if it is met.
 This includes constraints appearing after the conditional's declaration.
 
 As explained in the [CCSS guide](/guides/ccss), the constraint declaration order can affect the
