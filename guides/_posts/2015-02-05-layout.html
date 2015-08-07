@@ -9,7 +9,7 @@ layout: post
 <a name="position"></a>
 ## Positioning
 
-Elements are positioned relative to the scope element, so its top left corner is considered a (0, 0) point. GSS initialized upon `document`, `<html>`, `<body>` or `<head>` position against the `<html>` element. Global properties like `$left`, `$right`, `$scroll-top` and `$bottom` point to respective properties of `::window`.
+Elements are positioned relative to the scope element, so its top-left corner is considered a (0, 0) point. GSS initialized upon `document`, `<html>`, `<body>` or `<head>` position against the `<html>` element. Global properties like `$left`, `$right`, `$scroll-top` and `$bottom` point to respective properties of `::window`.
 
 Cassowary is a general purpose solver, so it does not make any assumptions about the positioning or even geometry. If there's nothing that is bound to absolute values like zero or edges of the screen, the whole layout can be solved to be positioned off-screen. Negative `top` and `left` values is a common gotcha in *underconstrained* systems.
 
@@ -91,7 +91,7 @@ Place the right of the element 100px from the left of the page.
 {% endhighlight %}
 
 Position the `#someElm` top-left corner to be at 100px from the top-left of the page.
-Same thing for `#otherElm` excepts its the top-right corner that's been position 200px
+Same thing for `#otherElm` except it's the top-right corner that's been positioned 200px
 from the top-left of the page.
 
 ### bottom-left, bottom-right
@@ -102,7 +102,7 @@ from the top-left of the page.
 {% endhighlight %}
 
 Position the `#someElm` bottom-left corner to be at 100px from the top-left of the page.
-Same thing for `#otherElm`, excepts its the bottom-right corner that's been position 200px
+Same thing for `#otherElm`, except it's the bottom-right corner that's been positioned 200px
 from the top-left of the page.
 
 ### center-x, cx
@@ -118,7 +118,7 @@ from the top-left of the page.
 
 {% endhighlight %}
 
-Horizontally place the horizontal center of the element at 100px from the left of the page.
+Set the horizontal coordinate for the center of the element at 100px from the left of the page.
 
 ### center-y, cy
 
@@ -134,7 +134,7 @@ Horizontally place the horizontal center of the element at 100px from the left o
 
 {% endhighlight %}
 
-Place the vertical center of the element 100px from the top of the page.
+Set the vertical coordinate for center of the element at 100px from the top of the page.
 
 ### Center
 
@@ -188,11 +188,11 @@ In this example, each element having `container` class will have its `top` and `
 
 By employing CSS to lay out big chunks of layout, we make each section solution independent. This leads to smaller individual constraint graphs and better overall performance.
 
-With the `position: relative` declared in the `style` attribute, GSS will solve independently each sections which
-should results in better performance. <a href="http://codepen.io/thegridgssdocs/pen/pvwaNN" target="_blank">Live example.</a>
+With the `position: relative` declared in the `style` attribute, GSS will solve independently each section which
+should result in better performance. <a href="http://codepen.io/thegridgssdocs/pen/pvwaNN" target="_blank">Live example.</a>
 
 ## Dimensions
-GSS provides property to constrain the dimension of an element. We've already saw the `width` and `height`.
+GSS provides a property to constrain the dimension of an element. We already saw the `width` and `height` properties.
 GSS provides syntax sugar called 2d properties to constrain both height and width of an element as a single property.
 
 {% highlight css %}
@@ -205,34 +205,34 @@ GSS provides syntax sugar called 2d properties to constrain both height and widt
 
 ## Intrinsic values
 
-Positioning elements with `top` and `left` properties doesn't require GSS to know the dimensions of that elements. But `right` and `bottom` properties need to know about `width` and `height` of the element respectively. Properly constrained system will provide those values indirectly with no regard to elements contents.
+Positioning elements with `top` and `left` properties doesn't require GSS to know the dimensions of those elements. But `right` and `bottom` properties need to know about `width` and `height` of the element respectively. Properly constrained systems will provide those values indirectly with no regard to an element's contents.
 
-However it's often desirable to know the computed dimensions of specific elements which GSS has no control over - be it text, images or blocks styled with CSS. Measurements provide dynamic "islands" to the layout, which can be automatically recomputed, whenever measured things are updated from the outside. It also may act as a feedback to the solver, disallowing content to shrink too much or helping to decide if things fit.
+However, it's often desirable to know the computed dimensions of specific elements which GSS has no control over - be it text, images or blocks styled with CSS. Measurements provide dynamic "islands" to the layout, which can be automatically recomputed, whenever measured things are updated from the outside. It also may act as a feedback to the solver, disallowing content to shrink too much or helping to decide if things fit.
 
-Prepending property with `intrinsic-` or `computed-` prefix makes GSS measure the values.
+Prefixing a property with `intrinsic-` or `computed-` prefix makes GSS measure the value.
 
-Using `intrinsic` property is used on the element, makes the property to be *read-only*. Declaration of `intrinsic-width` [propertywill ensure that `width` style is never applied to that element. This allows dimensions to change and update naturally. Otherwise, the width would be computed and applied only the first time, making it static.
+Prefixing a property with `intrinsic-` makes it *read-only* and it won't apply on the element. For example, declaring `intrinsic-width` will ensure that the `width` style is never applied to that element. This allows dimensions to change and update naturally. Otherwise, the width would be computed and applied only the first time, making it static.
 
-`computed` properties can be used to measure styles regardless of their origin - either GSS constraints or CSS styles. Computed properties will not make styles *read-only*, unlike intrinsic properties.
+`computed`-prefixed properties can be used to measure styles regardless of their origin - either GSS constraints or CSS styles. Computed properties will not make styles *read-only*, unlike `intrinsic`-prefixed properties.
 
 {% highlight css %}
 
-  // apply static width, measure height
-  // (height style will not be set)
-  .selectorA {
-    width: == 200;
-    height: == &intrinsic-height;
-  }
+// apply static width, measure height
+// (height style will not be set)
+.selectorA {
+  width: == 200;
+  height: == &intrinsic-height;
+}
 
-  // only measure dimensions
-  // (height & width styles will not be set)
-  .selectorB {
-    width: == &intrinsic-width;
-    height: == &intrinsic-height;
-  }
+// only measure dimensions
+// (height & width styles will not be set)
+.selectorB {
+  width: == &intrinsic-width;
+  height: == &intrinsic-height;
+}
 
-  // use dimension information to position elements
-  .selectorA[right] == .selectorB[left];
+// use dimension information to position elements
+.selectorA[right] == .selectorB[left];
 
 {% endhighlight %}
 
@@ -241,7 +241,7 @@ If you come from the CCSS guide [continue your learning of CCSS](/guides/ccss/#p
 
 Learn how to use [CCSS constraints](/guides/ccss)
 
-GSS provides conditionnal statements to allow you to do responsive design. Read our [@if @else guide](/guides/ifelse) to learn more.
+GSS provides conditional statements to allow you to do responsive design. Read our [@if @else guide](/guides/ifelse) to learn more.
 
 With only CCSS constraints at your disposal, constraining common layout scenarios quickly becomes tedious. Read our
 [VFL guide](/guides/ifelse) to learn how to more efficiently constrain your layout.
