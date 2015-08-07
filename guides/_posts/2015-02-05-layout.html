@@ -205,13 +205,13 @@ GSS provides syntax sugar called 2d properties to constrain both height and widt
 
 ## Intrinsic values
 
-Positioning elements with `top` and `left` properties doesn't require GSS to know the dimensions of those elements. But `right` and `bottom` properties need to know about `width` and `height` of the element respectively. Properly constrained systems will provide those values indirectly with no regard to element contents.
+Positioning elements with `top` and `left` properties doesn't require GSS to know the dimensions of those elements. But `right` and `bottom` properties need to know about `width` and `height` of the element respectively. Properly constrained systems will provide those values indirectly with no regard to an element's contents.
 
 However, it's often desirable to know the computed dimensions of specific elements which GSS has no control over - be it text, images or blocks styled with CSS. Measurements provide dynamic "islands" to the layout, which can be automatically recomputed, whenever measured things are updated from the outside. It also may act as a feedback to the solver, disallowing content to shrink too much or helping to decide if things fit.
 
-Prepending a property with `intrinsic-` or `computed-` prefix makes GSS measure the values.
+Prefixing a property with `intrinsic-` or `computed-` prefix makes GSS measure the value.
 
-Prefixing a property with `intrinsic-` makes it *read-only* and it won't apply on the element. Declaring `intrinsic-width` property will ensure that `width` style is never applied to that element. This allows dimensions to change and update naturally. Otherwise, the width would be computed and applied only the first time, making it static.
+Prefixing a property with `intrinsic-` makes it *read-only* and it won't apply on the element. For example, declaring `intrinsic-width` will ensure that the `width` style is never applied to that element. This allows dimensions to change and update naturally. Otherwise, the width would be computed and applied only the first time, making it static.
 
 `computed`-prefixed properties can be used to measure styles regardless of their origin - either GSS constraints or CSS styles. Computed properties will not make styles *read-only*, unlike `intrinsic`-prefixed properties.
 
