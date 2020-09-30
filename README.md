@@ -1,5 +1,5 @@
 GSS website :
-===========
+=======================
 
 Jump to [Jekyll](http://jekyllrb.com/) sources for the GSS website. You can easily follow the steps and learn GSS. Changes pushed to this repository will automatically appear on the website.
 
@@ -21,7 +21,7 @@ Primary site contents are handled as [Jekyll posts](http://jekyllrb.com/docs/pos
 * `guide`: user guide articles
 * `example`: example articles
 
-### Content ordering :
+### Content ordering : 
 
 As usual with Jekyll, the contents listings for each section will be ordered by post date, newest first. Set a correct date for each post (in the file name or metadata) to get the arranged in the way you like.
 
