@@ -27,7 +27,7 @@ As usual with Jekyll, the contents listings for each section will be ordered by 
 
 ### Section IDs
 
-To provide helpful styling hooks, the `section` tags on content listings will have IDs based on the URL of the post. So, for example the file `home/_posts/YYYY-MM-DD-hello-world.md` would generate the following section:
+To provide with some helpful styling hooks, the `section` tags on content listings will have IDs based on the URL of the post. So, for example the file `home/_posts/YYYY-MM-DD-hello-world.md` would generate the following section:
 
 ```html
 <section id="home_hello_world">
