@@ -1,7 +1,7 @@
 GSS website
 ===========
 
-This repository contains the [Jekyll](http://jekyllrb.com/) sources for the GSS website. Changes pushed to this repository will automatically appear on the website.
+This repository contains the [Jekyll](http://jekyllrb.com/) sources for the GSS website. Changes that are pushed to this repository will automatically appear on the website.
 
 ## Local development
 
@@ -11,7 +11,7 @@ Simply [install Jekyll](http://jekyllrb.com/docs/installation/) and run:
 $ jekyll serve --watch
 ```
 
-This will start website generation and serve the site at <http://localhost:4000>. Any file changes will cause a regeneration, and will be available on the site after a browser reload.
+This will start the website generation and serve the site at <http://localhost:4000>. Any file changes will cause a regeneration, and will be available on the site after a browser reload.
 
 ## Content management
 
