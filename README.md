@@ -1,7 +1,7 @@
 GSS website
 ===========
 
-This repository contains the [Jekyll](http://jekyllrb.com/) sources for the GSS website. Changes pushed to this repository will automatically appear on the website.
+Hello Everyone.This repository contains the [Jekyll](http://jekyllrb.com/) sources for the GSS website. Changes pushed to this repository will automatically appear on the website.Thank you and keep contributing.
 
 ## Local development
 
