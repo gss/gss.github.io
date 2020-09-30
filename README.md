@@ -1,4 +1,4 @@
-GSS website
+GSS website - A project 
 ===========
 
 This repository contains the [Jekyll](http://jekyllrb.com/) sources for the GSS website. Changes pushed to this repository will automatically appear on the website.
